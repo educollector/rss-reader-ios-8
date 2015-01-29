@@ -21,6 +21,7 @@
 		239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */; };
 		239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */; };
 		239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */; };
+		239D4E641A7A919500C797C2 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 239D4E631A7A919500C797C2 /* share.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavouritesTableViewController.m; sourceTree = "<group>"; };
 		239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTableViewController.h; sourceTree = "<group>"; };
 		239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTableViewController.m; sourceTree = "<group>"; };
+		239D4E631A7A919500C797C2 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
+				239D4E631A7A919500C797C2 /* share.png */,
 				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
 				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
 				239D4E221A7A59AD00C797C2 /* Info.plist */,
@@ -267,6 +270,7 @@
 				239D4E301A7A59AD00C797C2 /* Main.storyboard in Resources */,
 				239D4E351A7A59AD00C797C2 /* LaunchScreen.xib in Resources */,
 				239D4E321A7A59AD00C797C2 /* Images.xcassets in Resources */,
+				239D4E641A7A919500C797C2 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

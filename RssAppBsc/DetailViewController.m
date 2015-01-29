@@ -16,16 +16,31 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSURL *url = [[NSURL alloc] initWithString: @"http://google.com"];
+    self.webView.delegate = self;
+    NSURL *url = [[NSURL alloc] initWithString: @"http://programmingteam.pl"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"Error : %@",error);
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSLog(@"shouldStartLoadWithRequest: %@", [[request URL] absoluteString]);
+    return YES;
+}
+- (void)webViewDidStartLoad:(UIWebView *)webViewa {
+    NSLog(@"webViewDidStartLoad");
+    
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSLog(@"webViewDidFinishLoad");
 }
 
 /*

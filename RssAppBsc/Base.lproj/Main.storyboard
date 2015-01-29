@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="hyJ-RL-5F6">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main Feed Table View Controller-->
@@ -58,6 +57,7 @@
         <!--Detail View Controller-->
         <scene sceneID="xu3-Ek-N93">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tfr-D2-jX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Vxb-UY-t5L" customClass="DetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AlY-Uj-9t5"/>
@@ -67,27 +67,20 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
+                                <rect key="frame" x="16" y="87" width="278" height="424"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="1g6-Sw-dht" firstAttribute="leading" secondItem="Anl-5K-3eq" secondAttribute="leadingMargin" constant="-16" id="Ri8-u2-1f3"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="1g6-Sw-dht" secondAttribute="trailing" constant="-16" id="Sln-LZ-ghy"/>
-                            <constraint firstItem="1g6-Sw-dht" firstAttribute="top" secondItem="Anl-5K-3eq" secondAttribute="topMargin" id="fAZ-Dj-lFK"/>
-                            <constraint firstItem="5Nd-6e-Agz" firstAttribute="top" secondItem="1g6-Sw-dht" secondAttribute="bottom" id="sGr-jb-qRT"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RuN-5q-cxn"/>
                     <connections>
                         <outlet property="webView" destination="1g6-Sw-dht" id="nDk-4h-pwe"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Tfr-D2-jX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2030" y="896"/>
+            <point key="canvasLocation" x="2019" y="896"/>
         </scene>
         <!--Menu Table View Controller-->
         <scene sceneID="vGU-Uu-UKL">
@@ -136,7 +129,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Red Items" id="Ojv-jh-gwD">
+                            <tableViewSection headerTitle="Read Items" id="Ojv-jh-gwD">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="LtI-9q-egh">
                                         <autoresizingMask key="autoresizingMask"/>
