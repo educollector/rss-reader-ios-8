@@ -11,7 +11,8 @@
 
 @interface FeedTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIView *postImage;
+//@property (weak, nonatomic) IBOutlet UIView *postImage;
+@property (weak, nonatomic) IBOutlet UIImageView *postImage;
 @property (weak, nonatomic) IBOutlet UILabel *postTitle;
 @property (weak, nonatomic) IBOutlet UILabel *postAdditionalInfo;
 

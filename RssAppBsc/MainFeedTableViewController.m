@@ -24,7 +24,6 @@
     feedItems =[[NSMutableArray alloc] initWithObjects:item, nil];
     for(int i=0; i<15; i++){
         [feedItems addObject:item];
-        NSLog(@"%@", item.title);
     }
 }
 
@@ -49,6 +48,7 @@
     FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
     FeedItem *tmpItem = [feedItems objectAtIndex:indexPath.row];
+    cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@"%@ | %@ ago",tmpItem.site, tmpItem.time];
     

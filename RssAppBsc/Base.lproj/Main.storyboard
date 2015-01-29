@@ -28,7 +28,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="websie name | 2 hours ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-Qa-vBt">
-                                            <rect key="frame" x="92" y="64" width="183" height="12"/>
+                                            <rect key="frame" x="92" y="55" width="183" height="27"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -37,7 +37,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="postAdditionalInfo" destination="Dlo-Qa-vBt" id="bPx-HQ-RCT"/>
-                                    <outlet property="postImage" destination="MpB-xd-icE" id="Ui3-DY-Jku"/>
+                                    <outlet property="postImage" destination="MpB-xd-icE" id="2D8-M1-fTo"/>
                                     <outlet property="postTitle" destination="Z8v-SU-EF5" id="BEz-dc-lKk"/>
                                 </connections>
                             </tableViewCell>
@@ -50,7 +50,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXy-JG-BEb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="254" y="445"/>
+            <point key="canvasLocation" x="254" y="444"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
