@@ -22,6 +22,7 @@
     // Override point for customization after application launch.
     [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x067AB5)]; // navigation bar color
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]]; //back button color
+    [UIApplication sharedApplication].statusBarStyle =  UIStatusBarStyleLightContent;
     
     return YES;
 }
