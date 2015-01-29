@@ -18,6 +18,9 @@
 		239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */; };
 		239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */; };
 		239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E541A7A761500C797C2 /* DetailViewController.m */; };
+		239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */; };
+		239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */; };
+		239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,12 @@
 		239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedTableViewCell.m; sourceTree = "<group>"; };
 		239D4E531A7A761500C797C2 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		239D4E541A7A761500C797C2 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		239D4E561A7A82BB00C797C2 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
+		239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
+		239D4E591A7A832800C797C2 /* FavouritesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavouritesTableViewController.h; sourceTree = "<group>"; };
+		239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavouritesTableViewController.m; sourceTree = "<group>"; };
+		239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTableViewController.h; sourceTree = "<group>"; };
+		239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,17 +104,10 @@
 				239D4E251A7A59AD00C797C2 /* AppDelegate.h */,
 				239D4E261A7A59AD00C797C2 /* AppDelegate.m */,
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
-				239D4E531A7A761500C797C2 /* DetailViewController.h */,
-				239D4E541A7A761500C797C2 /* DetailViewController.m */,
-				239D4E4A1A7A59F800C797C2 /* MainFeedTableViewController.h */,
-				239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */,
-				239D4E501A7A651C00C797C2 /* FeedTableViewCell.h */,
-				239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */,
-				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
-				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
-				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
-				239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */,
-				239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */,
+				239D4E5F1A7A840700C797C2 /* MainFeed */,
+				239D4E601A7A843800C797C2 /* Browser */,
+				239D4E611A7A844900C797C2 /* Favourites */,
+				239D4E621A7A845A00C797C2 /* Menu */,
 				239D4E211A7A59AD00C797C2 /* Supporting Files */,
 			);
 			path = RssAppBsc;
@@ -114,6 +116,9 @@
 		239D4E211A7A59AD00C797C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
+				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
+				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
 				239D4E221A7A59AD00C797C2 /* Info.plist */,
 				239D4E231A7A59AD00C797C2 /* main.m */,
 			);
@@ -135,6 +140,48 @@
 				239D4E3F1A7A59AD00C797C2 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		239D4E5F1A7A840700C797C2 /* MainFeed */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E4A1A7A59F800C797C2 /* MainFeedTableViewController.h */,
+				239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */,
+				239D4E501A7A651C00C797C2 /* FeedTableViewCell.h */,
+				239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */,
+				239D4E531A7A761500C797C2 /* DetailViewController.h */,
+				239D4E541A7A761500C797C2 /* DetailViewController.m */,
+				239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */,
+				239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */,
+			);
+			name = MainFeed;
+			sourceTree = "<group>";
+		};
+		239D4E601A7A843800C797C2 /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */,
+				239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */,
+			);
+			name = Browser;
+			sourceTree = "<group>";
+		};
+		239D4E611A7A844900C797C2 /* Favourites */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E591A7A832800C797C2 /* FavouritesTableViewController.h */,
+				239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */,
+			);
+			name = Favourites;
+			sourceTree = "<group>";
+		};
+		239D4E621A7A845A00C797C2 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */,
+				239D4E561A7A82BB00C797C2 /* MenuTableViewController.h */,
+			);
+			name = Menu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,13 +284,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
+				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
+				239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
