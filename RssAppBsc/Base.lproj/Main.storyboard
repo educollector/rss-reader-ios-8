@@ -5,12 +5,12 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Main Feed-->
+        <!--Main Feed Table View Controller-->
         <scene sceneID="jrV-UQ-Uql">
             <objects>
                 <tableViewController id="pAC-XT-jsG" customClass="MainFeedTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="92" sectionHeaderHeight="22" sectionFooterHeight="22" id="1lE-d6-qu2">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -49,7 +49,7 @@
                             <outlet property="delegate" destination="pAC-XT-jsG" id="Jse-Cm-7js"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Main Feed" id="nDF-Ib-g97"/>
+                    <navigationItem key="navigationItem" id="nDF-Ib-g97"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXy-JG-BEb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -64,10 +64,10 @@
                         <viewControllerLayoutGuide type="bottom" id="5Nd-6e-Agz"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Anl-5K-3eq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
+                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>

@@ -19,6 +19,8 @@
     NSURL *url = [[NSURL alloc] initWithString: @"http://google.com"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
