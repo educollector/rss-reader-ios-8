@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  MainFeedTableViewController.h
 //  RssAppBsc
 //
 //  Created by Ola Skierbiszewska on 29/01/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface MainFeedTableViewController : UITableViewController
 
 @end
-
