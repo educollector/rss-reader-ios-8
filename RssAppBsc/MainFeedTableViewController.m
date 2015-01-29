@@ -7,21 +7,25 @@
 //
 
 #import "MainFeedTableViewController.h"
+#import "FeedItem.h"
+#import "FeedTableViewCell.h"
 
 @interface MainFeedTableViewController ()
 
 @end
 
-@implementation MainFeedTableViewController
+@implementation MainFeedTableViewController{
+    NSMutableArray *feedItems;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    FeedItem *item = [[FeedItem alloc] initWithDefaultValues];
+    feedItems =[[NSMutableArray alloc] initWithObjects:item, nil];
+    for(int i=0; i<15; i++){
+        [feedItems addObject:item];
+        NSLog(@"%@", item.title);
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,26 +36,24 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return feedItems.count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
+    static NSString * cellIdentifier = @"FeedCell";
+    FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
+    //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
+    FeedItem *tmpItem = [feedItems objectAtIndex:indexPath.row];
+    cell.postTitle.text = tmpItem.title;
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@"%@ | %@ ago",tmpItem.site, tmpItem.time];
     
     return cell;
 }
-*/
 
 /*
 // Override to support conditional editing of the table view.

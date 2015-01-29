@@ -13,7 +13,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedCell" rowHeight="90" id="wn9-hj-pYY">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedCell" rowHeight="90" id="wn9-hj-pYY" customClass="FeedTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wn9-hj-pYY" id="z0k-t9-Jkf">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -35,6 +35,11 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="postAdditionalInfo" destination="Dlo-Qa-vBt" id="bPx-HQ-RCT"/>
+                                    <outlet property="postImage" destination="MpB-xd-icE" id="Ui3-DY-Jku"/>
+                                    <outlet property="postTitle" destination="Z8v-SU-EF5" id="BEz-dc-lKk"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
