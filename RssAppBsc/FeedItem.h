@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *site;
 @property (nonatomic, strong) NSString *time;
+@property (nonatomic, strong) NSString *url;
 
 -(FeedItem*)initWithDefaultValues;
 
