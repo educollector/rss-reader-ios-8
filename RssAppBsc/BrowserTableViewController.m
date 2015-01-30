@@ -70,6 +70,12 @@ return urls.count;
     url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
     url.url = searchController.searchBar.text;
     NSLog(@"url.url : %@", url.url);
+    NSError *error;
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
     [searchBar resignFirstResponder];
     
 }
