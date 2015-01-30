@@ -8,6 +8,7 @@
 
 #import "BrowserTableViewController.h"
 #import "AppDelegate.h"
+#import "CustomTableViewCell.h"
 
 
 @interface BrowserTableViewController ()
@@ -16,12 +17,17 @@
 
 @implementation BrowserTableViewController{
     UISearchController *searchController;
-    NSMutableArray *urls;
+    NSFetchedResultsController *fetchResultController;
+    NSArray *urls;
     Url *url;
+    NSArray *tablica;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    tablica = [NSArray arrayWithObjects:@"Aston Martin", @"Lotus", @"Jaguar", @"Bentley", nil];
+    NSLog(@"Tablica count: %ld", tablica.count);
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     searchController.searchBar.delegate = self; //potrzebna jest delegata, żeby wywołac searchBarSearchButtonClicked:
@@ -31,7 +37,24 @@
     searchController.searchResultsUpdater = self;
     searchController.dimsBackgroundDuringPresentation = NO;
     
-    
+    //fetchnig data from database
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    if (managedObjectContext != nil) {
+        fetchResultController = [[NSFetchedResultsController alloc]
+                                 initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
+                                 sectionNameKeyPath:nil cacheName:nil];
+        fetchResultController.delegate = self;
+        NSError *error;
+        if ([fetchResultController performFetch:&error]) {
+            urls = fetchResultController.fetchedObjects;
+        } else {
+            NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,7 +80,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-return urls.count;
+    //NSLog(@"Number of rows - Tablica count: %d", tablica.count);
+    return [urls count];
 }
 
 //---Keyboard----
@@ -98,15 +122,16 @@ return urls.count;
     
     return isKeyboardShown;
 }
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+    //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    Url *url = (Url*) urls[indexPath.row];
+    static NSString *cellIdentifier = @"Cell";
+    CustomTableViewCell *cell = (CustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    cell.label.text = url.url;
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

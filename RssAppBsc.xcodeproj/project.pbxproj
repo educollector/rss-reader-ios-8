@@ -23,6 +23,7 @@
 		239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */; };
 		239D4E641A7A919500C797C2 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 239D4E631A7A919500C797C2 /* share.png */; };
 		239D4E701A7BA62300C797C2 /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E6F1A7BA62300C797C2 /* Url.m */; };
+		239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		239D4E631A7A919500C797C2 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 		239D4E6E1A7BA62300C797C2 /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Url.h; sourceTree = "<group>"; };
 		239D4E6F1A7BA62300C797C2 /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Url.m; sourceTree = "<group>"; };
+		239D4E721A7BB8B100C797C2 /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
+		239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +171,8 @@
 			children = (
 				239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */,
 				239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */,
+				239D4E721A7BB8B100C797C2 /* CustomTableViewCell.h */,
+				239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */,
 			);
 			name = Browser;
 			sourceTree = "<group>";
@@ -303,6 +308,7 @@
 			files = (
 				239D4E701A7BA62300C797C2 /* Url.m in Sources */,
 				239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */,
+				239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
