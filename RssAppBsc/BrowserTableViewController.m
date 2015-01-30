@@ -68,7 +68,7 @@
 
 - (void) updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSLog(@"updateSearchResultsForSearchController");
-    [self filterContentForSearchText:searchController.searchBar.text];
+    //[self filterContentForSearchText:searchController.searchBar.text];
 }
 
 #pragma mark - Table view data source
@@ -86,6 +86,13 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+    BOOL isTheLinkValid = [self validateUrl:searchController.searchBar.text];
+    if(!isTheLinkValid){
+        NSLog(@"String walidation : invalid: %d",isTheLinkValid);
+    }
+    else{
+        NSLog(@"String walidation : valid");
+    }
     NSLog(@"searchBarSearchButtonClicked");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
@@ -99,27 +106,32 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
-    
 }
 
-- (BOOL) isKeyboardOnScreen
-{
-    BOOL isKeyboardShown = NO;
-    
-    NSArray *windows = [UIApplication sharedApplication].windows;
-    if (windows.count > 1) {
-        NSArray *wSubviews =  [windows[1]  subviews];
-        if (wSubviews.count) {
-            CGRect keyboardFrame = [wSubviews[0] frame];
-            CGRect screenFrame = [windows[1] frame];
-            if (keyboardFrame.origin.y+keyboardFrame.size.height == screenFrame.size.height) {
-                isKeyboardShown = YES;
-            }
-        }
-    }
-    
-    return isKeyboardShown;
+- (BOOL) validateUrl: (NSString *) candidate {
+    NSString *urlRegEx =
+    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    return [urlTest evaluateWithObject:candidate];
 }
+
+//- (BOOL) isKeyboardOnScreen
+//{
+//    BOOL isKeyboardShown = NO;
+//    
+//    NSArray *windows = [UIApplication sharedApplication].windows;
+//    if (windows.count > 1) {
+//        NSArray *wSubviews =  [windows[1]  subviews];
+//        if (wSubviews.count) {
+//            CGRect keyboardFrame = [wSubviews[0] frame];
+//            CGRect screenFrame = [windows[1] frame];
+//            if (keyboardFrame.origin.y+keyboardFrame.size.height == screenFrame.size.height) {
+//                isKeyboardShown = YES;
+//            }
+//        }
+//    }
+//    return isKeyboardShown;
+//}
 
 - (void) controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
