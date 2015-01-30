@@ -99,7 +99,8 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
-    
+    [self.tableView reloadData];
+    searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
     
 }
