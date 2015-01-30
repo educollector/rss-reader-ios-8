@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
+#import "Url.h"
 
-@interface BrowserTableViewController : UITableViewController
+@interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating>
+
 
 @end

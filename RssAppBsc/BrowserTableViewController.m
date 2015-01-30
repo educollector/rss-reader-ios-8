@@ -7,26 +7,47 @@
 //
 
 #import "BrowserTableViewController.h"
+#import "AppDelegate.h"
+
 
 @interface BrowserTableViewController ()
 
 @end
 
-@implementation BrowserTableViewController
+@implementation BrowserTableViewController{
+    UISearchController *searchController;
+    NSMutableArray *urls;
+    Url *url;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    searchController.searchBar.delegate = self; //potrzebna jest delegata, żeby wywołac searchBarSearchButtonClicked:
+    [searchController.searchBar sizeToFit];
+    self.tableView.tableHeaderView = searchController.searchBar;
+    self.definesPresentationContext = YES;
+    searchController.searchResultsUpdater = self;
+    searchController.dimsBackgroundDuringPresentation = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)filterContentForSearchText:(NSString *)searchText {
+    NSLog(@"filterContentForSearchText + %@", searchController.searchBar.text);
+    [self.tableView reloadData];
+}
+
+- (void) updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSLog(@"updateSearchResultsForSearchController");
+    [self filterContentForSearchText:searchController.searchBar.text];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -36,11 +57,41 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+return urls.count;
 }
 
+//---Keyboard----
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSLog(@"searchBarSearchButtonClicked");
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
+    url.url = searchController.searchBar.text;
+    NSLog(@"url.url : %@", url.url);
+    [searchBar resignFirstResponder];
+    
+}
+
+- (BOOL) isKeyboardOnScreen
+{
+    BOOL isKeyboardShown = NO;
+    
+    NSArray *windows = [UIApplication sharedApplication].windows;
+    if (windows.count > 1) {
+        NSArray *wSubviews =  [windows[1]  subviews];
+        if (wSubviews.count) {
+            CGRect keyboardFrame = [wSubviews[0] frame];
+            CGRect screenFrame = [windows[1] frame];
+            if (keyboardFrame.origin.y+keyboardFrame.size.height == screenFrame.size.height) {
+                isKeyboardShown = YES;
+            }
+        }
+    }
+    
+    return isKeyboardShown;
+}
 /*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
