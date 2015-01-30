@@ -8,6 +8,7 @@
 
 #import "DetailViewController.h"
 
+
 @interface DetailViewController ()
 
 @end
@@ -23,9 +24,18 @@
     [self.webView loadRequest:request];
     
     //---NAV BAR Buttons----
+    UIImage *shareImage = [[UIImage alloc] init];
+    NSString *image = @"share.png";
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cache = [paths objectAtIndex:0];
+    NSString *fullPath = [NSString stringWithFormat:@"%@/%@", cache, image];
+    shareImage = [UIImage imageWithContentsOfFile:fullPath];
+    
+    UIBarButtonItem *btn =[[UIBarButtonItem alloc] initWithImage:shareImage landscapeImagePhone:shareImage style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
+    
     UIBarButtonItem *addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle: @"Share" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
-    NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton,nil];
+    NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton,btn, nil];
     [self.navigationItem setRightBarButtonItems:barItemArray];
 }
 
