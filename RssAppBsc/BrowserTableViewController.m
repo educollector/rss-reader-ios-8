@@ -64,13 +64,11 @@
 
 - (void)filterContentForSearchText:(NSString *)searchText {
     NSLog(@"filterContentForSearchText + %@", searchController.searchBar.text);
-    [self.tableView reloadData];
 }
 
 - (void) updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSLog(@"updateSearchResultsForSearchController");
     [self filterContentForSearchText:searchController.searchBar.text];
-    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -99,7 +97,6 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
-    [self.tableView reloadData];
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
     
@@ -122,6 +119,35 @@
     }
     
     return isKeyboardShown;
+}
+
+- (void) controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    [self.tableView beginUpdates];
+}
+- (void) controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+       newIndexPath:(NSIndexPath *)newIndexPath {
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        case NSFetchedResultsChangeUpdate:
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        default:
+            [self.tableView reloadData];
+            break;
+    }
+    urls = controller.fetchedObjects;
+}
+- (void) controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.tableView endUpdates];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
