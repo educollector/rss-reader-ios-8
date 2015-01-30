@@ -16,10 +16,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //---WEBVIEW----
     self.webView.delegate = self;
     NSURL *url = [[NSURL alloc] initWithString: @"http://programmingteam.pl"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
+    
+    //---NAV BAR Buttons----
+    UIBarButtonItem *addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle: @"Share" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
+    NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton,nil];
+    [self.navigationItem setRightBarButtonItems:barItemArray];
+}
+
+-(void)testMethod{
+    NSLog(@"I am a test method!");
 }
 
 - (void)didReceiveMemoryWarning {
