@@ -22,6 +22,7 @@
 		239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */; };
 		239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */; };
 		239D4E641A7A919500C797C2 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 239D4E631A7A919500C797C2 /* share.png */; };
+		239D4E701A7BA62300C797C2 /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E6F1A7BA62300C797C2 /* Url.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTableViewController.h; sourceTree = "<group>"; };
 		239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTableViewController.m; sourceTree = "<group>"; };
 		239D4E631A7A919500C797C2 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
+		239D4E6E1A7BA62300C797C2 /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Url.h; sourceTree = "<group>"; };
+		239D4E6F1A7BA62300C797C2 /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Url.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +109,7 @@
 				239D4E251A7A59AD00C797C2 /* AppDelegate.h */,
 				239D4E261A7A59AD00C797C2 /* AppDelegate.m */,
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
+				239D4E711A7BA63200C797C2 /* CoreData */,
 				239D4E5F1A7A840700C797C2 /* MainFeed */,
 				239D4E601A7A843800C797C2 /* Browser */,
 				239D4E611A7A844900C797C2 /* Favourites */,
@@ -121,7 +125,6 @@
 				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
 				239D4E631A7A919500C797C2 /* share.png */,
 				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
-				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
 				239D4E221A7A59AD00C797C2 /* Info.plist */,
 				239D4E231A7A59AD00C797C2 /* main.m */,
 			);
@@ -185,6 +188,16 @@
 				239D4E561A7A82BB00C797C2 /* MenuTableViewController.h */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		239D4E711A7BA63200C797C2 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
+				239D4E6F1A7BA62300C797C2 /* Url.m */,
+				239D4E6E1A7BA62300C797C2 /* Url.h */,
+			);
+			name = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,6 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				239D4E701A7BA62300C797C2 /* Url.m in Sources */,
 				239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
