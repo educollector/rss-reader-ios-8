@@ -11,6 +11,7 @@
 @interface DetailViewController : UIViewController <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (weak, nonatomic) NSString *link;
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;

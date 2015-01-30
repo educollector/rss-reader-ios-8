@@ -19,7 +19,7 @@
     [super viewDidLoad];
     //---WEBVIEW----
     self.webView.delegate = self;
-    NSURL *url = [[NSURL alloc] initWithString: @"http://programmingteam.pl"];
+    NSURL *url = [[NSURL alloc] initWithString: self.link];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
     
