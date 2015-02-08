@@ -17,7 +17,7 @@
     NSMutableString *title, *link, *description,*pubDate;
     NSString *currentElement;
     FeedItem *currentRssItem;
-
+    UIActivityIndicatorView *spinner;
 }
 
 @end
@@ -28,14 +28,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    FeedItem *item = [[FeedItem alloc] initWithDefaultValues];
-    feedItems =[[NSMutableArray alloc] initWithObjects:item, nil];
-    for(int i=0; i<15; i++){
-        [feedItems addObject:item];
-    }
     // Set this in every view controller so that the back button displays back instead of the root view controller name
-    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    spinner = [[UIActivityIndicatorView alloc]
+                                        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.center = CGPointMake(160, 240);
+    spinner.hidesWhenStopped = YES;
+    [self.view addSubview:spinner];
+    [spinner startAnimating];
     
     NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://segritta.pl/feed"]];
     //Create url connection and fire request
@@ -107,6 +108,7 @@
     [rssParser setDelegate: self];
     [rssParser parse];
     NSLog(@"SUCCESS: connectionDidFinishLoading");
+    [spinner stopAnimating];
     [self performSelectorOnMainThread:@selector(reloadTableContent) withObject:Nil waitUntilDone:YES];
 }
 
