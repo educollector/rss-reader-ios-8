@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainFeedTableViewController : UITableViewController
+@interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate>
+
 
 
 @end
