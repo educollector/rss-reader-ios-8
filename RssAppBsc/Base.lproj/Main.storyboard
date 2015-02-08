@@ -23,14 +23,14 @@
                                             <rect key="frame" x="5" y="5" width="80" height="80"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="News title News Title news title " lineBreakMode="wordWrap" numberOfLines="2" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z8v-SU-EF5">
-                                            <rect key="frame" x="92" y="5" width="219" height="56"/>
+                                            <rect key="frame" x="91" y="0.0" width="214" height="37"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="websie name | 2 hours ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-Qa-vBt">
-                                            <rect key="frame" x="92" y="55" width="183" height="27"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="websie name | 2 hours ago" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="none" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-Qa-vBt">
+                                            <rect key="frame" x="92" y="42" width="194" height="37"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="9"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -53,12 +53,11 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXy-JG-BEb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1358" y="896"/>
+            <point key="canvasLocation" x="1358" y="894"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="xu3-Ek-N93">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Tfr-D2-jX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Vxb-UY-t5L" customClass="DetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AlY-Uj-9t5"/>
@@ -86,6 +85,7 @@
                         <outlet property="webView" destination="1g6-Sw-dht" id="nDk-4h-pwe"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tfr-D2-jX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2019" y="896"/>
         </scene>

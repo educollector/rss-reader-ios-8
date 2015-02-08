@@ -16,6 +16,7 @@
     NSMutableArray *rssItems;
     NSMutableString *title, *link, *description,*pubDate;
     NSString *currentElement;
+    FeedItem *currentRssItem;
 
 }
 
@@ -38,9 +39,7 @@
     
     NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://segritta.pl/feed"]];
     //Create url connection and fire request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    
-    
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 //change status bar icons form black to white http:/ /stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7?rq=1
@@ -60,19 +59,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return feedItems.count;
+    return rssItems.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForRowAtIndexPath");
+    
+    NSLog(@"rssItems.count %ld", rssItems.count);
+    FeedItem *tmpFeedItem = (FeedItem*)[rssItems objectAtIndex:0];
+    NSLog(@"rssItems[0] title %@", tmpFeedItem.title);
+    
     static NSString * cellIdentifier = @"FeedCell";
     FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
-    FeedItem *tmpItem = [feedItems objectAtIndex:indexPath.row];
+    //FeedItem *tmpItem = [feedItems objectAtIndex:indexPath.row];
+    FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@"%@ | %@ ago",tmpItem.site, tmpItem.time];
-    
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, tmpItem.descript];
+    NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
 }
 
@@ -93,17 +99,68 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    // The request is complete and data has been received
-    // You can parse the stuff in your instance variable now
-    NSString *stringWithData = [[NSString alloc] initWithData: _responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"Connection did finisg loading\n%@", stringWithData);
+    //NSString *stringWithData = [[NSString alloc] initWithData: _responseData encoding:NSUTF8StringEncoding];
+    //NSLog(@"Connection did finisg loading\n%@", stringWithData);
+    
+    rssItems = [[NSMutableArray alloc] init];
+    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
+    [rssParser setDelegate: self];
+    [rssParser parse];
+    NSLog(@"SUCCESS: connectionDidFinishLoading");
+    [self performSelectorOnMainThread:@selector(reloadTableContent) withObject:Nil waitUntilDone:YES];
+}
+
+-(void)reloadTableContent{
+    [self.tableView reloadData];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    // The request has failed for some reason!
     // Check the error var
     NSLog(@"Connection error");
 }
+
+//---PARSING------
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
+(NSDictionary *)attributeDict {
+    currentElement = elementName;
+    if ([currentElement isEqualToString:@"item"]) {
+        FeedItem *rssItem = [[FeedItem alloc] init];
+        currentRssItem = rssItem;
+        title = [[NSMutableString alloc] init];
+        link = [[NSMutableString alloc] init];
+        description = [[NSMutableString alloc] init];
+        pubDate = [[NSMutableString alloc] init];
+    }
+}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+    if ([currentElement isEqualToString:@"title"]) {
+        [title appendString:string];
+    } else if ([currentElement isEqualToString:@"link"]) {
+        [link appendString:string];
+    } else if ([currentElement isEqualToString:@"description"]) {
+        [description appendString:string];
+    } else if ([currentElement isEqualToString:@"pubDate"]) {
+        [pubDate appendString:string];
+    }
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:
+(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+    if ([elementName isEqualToString:@"item"]) {
+        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
+        
+        [rssItems addObject:currentRssItem];
+    }
+    NSLog(@"PARSING DONE");
+}
+
+//------END PARSING-------
 
 /*
 // Override to support conditional editing of the table view.
@@ -147,8 +204,8 @@
     if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;
-        FeedItem *item = feedItems[indexPath.row];
-        destinationViewController.link = item.url;
+        FeedItem *item = rssItems[indexPath.row];
+        destinationViewController.link = item.link;
     }
 }
 

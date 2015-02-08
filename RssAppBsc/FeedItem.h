@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *link;
-@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *descript;
 @property (nonatomic, strong) NSString *pubDate;
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *site;

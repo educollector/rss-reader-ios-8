@@ -12,10 +12,14 @@
 
 - (void)awakeFromNib {
     // Initialization code
+//    _postAdditionalInfo.numberOfLines = 0;
+//    [_postAdditionalInfo sizeToFit];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
+    
+    
 
     // Configure the view for the selected state
 }

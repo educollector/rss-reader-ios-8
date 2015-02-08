@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate>
+@interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate, NSXMLParserDelegate>
 {
     NSMutableData *_responseData;
 }
