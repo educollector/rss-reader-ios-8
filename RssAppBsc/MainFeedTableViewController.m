@@ -11,7 +11,13 @@
 #import "FeedTableViewCell.h"
 #import "DetailViewController.h"
 
-@interface MainFeedTableViewController ()
+@interface MainFeedTableViewController (){
+    NSXMLParser *rssParser;
+    NSMutableArray *rssItems;
+    NSMutableString *title, *link, *description,*pubDate;
+    NSString *currentElement;
+
+}
 
 @end
 
@@ -29,6 +35,12 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://segritta.pl/feed"]];
+    //Create url connection and fire request
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    
 }
 
 //change status bar icons form black to white http:/ /stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7?rq=1
@@ -62,6 +74,35 @@
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@"%@ | %@ ago",tmpItem.site, tmpItem.time];
     
     return cell;
+}
+
+//------NS URL Connection
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    _responseData = [[NSMutableData alloc] init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    // Append the new data to the instance variable you declared
+    [_responseData appendData:data];
+}
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
+                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+    // Return nil to indicate not necessary to store a cached response for this connection
+    return nil;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    // The request is complete and data has been received
+    // You can parse the stuff in your instance variable now
+    NSString *stringWithData = [[NSString alloc] initWithData: _responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"Connection did finisg loading\n%@", stringWithData);
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    // The request has failed for some reason!
+    // Check the error var
+    NSLog(@"Connection error");
 }
 
 /*

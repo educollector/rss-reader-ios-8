@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate>
-
+{
+    NSMutableData *_responseData;
+}
 
 
 @end
