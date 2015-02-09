@@ -19,10 +19,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //---WEBVIEW----
     [self uiMakeContent];
-    
-    //---NAV BAR Buttons----
+    [self uiNavigationBarStyling];
+}
+
+-(void)uiNavigationBarStyling{
     UIImage *shareImage = [[UIImage alloc] init];
     NSString *image = @"share.png";
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
