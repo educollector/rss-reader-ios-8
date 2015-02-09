@@ -27,9 +27,9 @@
 }
 
 - (void)viewDidLoad {
-    NSLog(@"View Did load");
     [super viewDidLoad];
     //[self.tableView setHidden:YES];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -41,7 +41,7 @@
     [self.view addSubview:spinner];
     [spinner startAnimating];
     
-    [NSTimer scheduledTimerWithTimeInterval:10.0f
+    [NSTimer scheduledTimerWithTimeInterval:2.0f
                                      target:self
                                    selector: @selector(makeRequestAndConnection)
                                    userInfo:nil
@@ -122,6 +122,7 @@
     [spinner stopAnimating];
     UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
     [tmpSpinner removeFromSuperview];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
