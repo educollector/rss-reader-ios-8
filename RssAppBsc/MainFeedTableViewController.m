@@ -27,18 +27,29 @@
 }
 
 - (void)viewDidLoad {
+    NSLog(@"View Did load");
     [super viewDidLoad];
+    //[self.tableView setHidden:YES];
+    self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    spinner = [[UIActivityIndicatorView alloc]
-                                        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     spinner.center = CGPointMake(160, 240);
     spinner.hidesWhenStopped = YES;
+    spinner.tag = 1;
     [self.view addSubview:spinner];
     [spinner startAnimating];
     
-    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://segritta.pl/feed"]];
+    [NSTimer scheduledTimerWithTimeInterval:10.0f
+                                     target:self
+                                   selector: @selector(makeRequestAndConnection)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+-(void)makeRequestAndConnection{
+    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://wiadomosci.wp.pl/ver,rss,rss.xml"]];
     //Create url connection and fire request
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -66,15 +77,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForRowAtIndexPath");
-    
-    NSLog(@"rssItems.count %ld", rssItems.count);
-    FeedItem *tmpFeedItem = (FeedItem*)[rssItems objectAtIndex:0];
-    NSLog(@"rssItems[0] title %@", tmpFeedItem.title);
-    
     static NSString * cellIdentifier = @"FeedCell";
     FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
-    //FeedItem *tmpItem = [feedItems objectAtIndex:indexPath.row];
     FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
@@ -108,12 +113,15 @@
     [rssParser setDelegate: self];
     [rssParser parse];
     NSLog(@"SUCCESS: connectionDidFinishLoading");
-    [spinner stopAnimating];
     [self performSelectorOnMainThread:@selector(reloadTableContent) withObject:Nil waitUntilDone:YES];
 }
 
 -(void)reloadTableContent{
+    
     [self.tableView reloadData];
+    [spinner stopAnimating];
+    UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
+    [tmpSpinner removeFromSuperview];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
