@@ -34,16 +34,9 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    spinner.center = CGPointMake(160, 240);
-    spinner.transform = CGAffineTransformMakeScale(3.0,3.0);
-    spinner.color = [UIColor redColor];
-    spinner.hidesWhenStopped = YES;
-    spinner.tag = 1;
-    [self.view addSubview:spinner];
-    [spinner startAnimating];
+    [self uiSetSpiner:YES];
     
-    [NSTimer scheduledTimerWithTimeInterval:0.5f
+    [NSTimer scheduledTimerWithTimeInterval:2.0f
                                      target:self
                                    selector: @selector(makeRequestAndConnection)
                                    userInfo:nil
@@ -51,9 +44,15 @@
 }
 
 -(void)makeRequestAndConnection{
-    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://wiadomosci.wp.pl/ver,rss,rss.xml"]];
+    NSLog(@"makeRequestAndConnection");
+    
+    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://wiadomosci.wp.pl/ver,rss,rss.xml"] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
     //Create url connection and fire request
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if(!connection){
+        _responseData = nil;
+        NSLog(@"Request timeout");
+    }
 }
 
 //change status bar icons form black to white http:/ /stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7?rq=1
@@ -86,7 +85,7 @@
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, tmpItem.descript];
-    NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
+    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
 }
 
@@ -115,27 +114,63 @@
     [rssParser setDelegate: self];
     [rssParser parse];
     NSLog(@"SUCCESS: connectionDidFinishLoading");
-    [self performSelectorOnMainThread:@selector(reloadTableContent) withObject:Nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(uiUpdateMainFeedTable) withObject:Nil waitUntilDone:YES];
 }
 
--(void)reloadTableContent{
-    
+-(void)uiUpdateMainFeedTable{
     [self.tableView reloadData];
-    [spinner stopAnimating];
-    UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
-    [tmpSpinner removeFromSuperview];
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    [self uiSetSpiner:NO];
+}
+     
+-(void)uiSetSpiner:(BOOL) isLoading{
+    if(isLoading){
+        spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        spinner.center = CGPointMake(160, 240);
+        spinner.hidesWhenStopped = YES;
+        spinner.tag = 1;
+        [self.view addSubview:spinner];
+        [spinner startAnimating];
+    }
+    else{
+        if(spinner!=NULL){
+            [spinner stopAnimating];
+            UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
+            [tmpSpinner removeFromSuperview];
+            [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        }
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    // Check the error var
     connection = nil;
     _responseData = nil;
-    
-    // inform the user
-    NSLog(@"Connection failed! Error - %@ %@",
+    NSLog(@"Connection failed! Errooooooor - %@ %@",
           [error localizedDescription],
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+    
+    UIAlertController *connectionAlert = [UIAlertController
+                                          alertControllerWithTitle:@"Coś poszło nie tak"
+                                          message:[error localizedDescription]
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okeyAction = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler: ^(UIAlertAction *action){
+                                     [self makeRequestAndConnection];
+                                     NSLog(@"alert - OK clicked");
+                                 }];
+    UIAlertAction *cancelAction = [UIAlertAction
+                                   actionWithTitle:@"Cancel"
+                                   style:UIAlertActionStyleCancel
+                                   handler:^(UIAlertAction *action){
+                                       [self uiUpdateMainFeedTable];
+                                       NSLog(@"alert - Cancel clicked");
+                                   }];
+    
+    [connectionAlert addAction:cancelAction];
+    [connectionAlert addAction:okeyAction];
+    [self presentViewController:connectionAlert animated:YES completion:nil];
 }
 
 //---PARSING------
