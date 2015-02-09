@@ -36,12 +36,14 @@
     
     spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     spinner.center = CGPointMake(160, 240);
+    spinner.transform = CGAffineTransformMakeScale(3.0,3.0);
+    spinner.color = [UIColor redColor];
     spinner.hidesWhenStopped = YES;
     spinner.tag = 1;
     [self.view addSubview:spinner];
     [spinner startAnimating];
     
-    [NSTimer scheduledTimerWithTimeInterval:2.0f
+    [NSTimer scheduledTimerWithTimeInterval:0.5f
                                      target:self
                                    selector: @selector(makeRequestAndConnection)
                                    userInfo:nil
@@ -127,7 +129,13 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     // Check the error var
-    NSLog(@"Connection error");
+    connection = nil;
+    _responseData = nil;
+    
+    // inform the user
+    NSLog(@"Connection failed! Error - %@ %@",
+          [error localizedDescription],
+          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
 }
 
 //---PARSING------
