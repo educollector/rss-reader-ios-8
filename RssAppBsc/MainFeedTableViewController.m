@@ -14,7 +14,7 @@
 @interface MainFeedTableViewController (){
     NSXMLParser *rssParser;
     NSMutableArray *rssItems;
-    NSMutableString *title, *link, *description,*pubDate;
+    NSMutableString *title, *link, *description,*pubDate, *imgLink;
     NSString *currentElement;
     FeedItem *currentRssItem;
     UIActivityIndicatorView *spinner;
@@ -84,9 +84,39 @@
     FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, tmpItem.descript];
-    NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
+    NSString *cleanDescription = [self cleanFromTags: tmpItem.descript];
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
+}
+
+- (NSString *) cleanFromTags:(NSString *)text{
+    NSString *cleanedText;
+    NSCharacterSet *doNotWant;
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:@"<img.*\/>"
+                                  options:NSRegularExpressionCaseInsensitive
+                                  error:&error];
+    
+    cleanedText = [regex stringByReplacingMatchesInString:text
+                            options:0
+                            range:NSMakeRange(0, [text length])
+                            withTemplate:@""];
+    
+    regex = [NSRegularExpression regularExpressionWithPattern:@"<a.*>.*<\/a>"
+                                  options:NSRegularExpressionCaseInsensitive
+                                  error:&error];
+    
+    cleanedText = [regex stringByReplacingMatchesInString:cleanedText
+                                                  options:0
+                                                    range:NSMakeRange(0, [cleanedText length])
+                                             withTemplate:@""];
+    
+    NSLog(@"\n\ncleanedText------%@\n\n", cleanedText);
+    
+    //doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-=+[]{}:/?.><;,!@#$%^&*\n()\r'"];
+    //cleanedText = [[text componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
+    return cleanedText;
 }
 
 #pragma mark - URL Connecting
@@ -183,6 +213,8 @@
         link = [[NSMutableString alloc] init];
         description = [[NSMutableString alloc] init];
         pubDate = [[NSMutableString alloc] init];
+        imgLink = [[NSMutableString alloc] init];
+        
     }
 }
 
@@ -211,6 +243,8 @@
     }
     NSLog(@"PARSING DONE");
 }
+
+
 
 #pragma mark - Navigation
 
