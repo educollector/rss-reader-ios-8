@@ -13,15 +13,14 @@
 
 @end
 
-@implementation DetailViewController
+@implementation DetailViewController{
+    NSURL *url;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     //---WEBVIEW----
-    self.webView.delegate = self;
-    NSURL *url = [[NSURL alloc] initWithString: self.link];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [self.webView loadRequest:request];
+    [self uiMakeContent];
     
     //---NAV BAR Buttons----
     UIImage *shareImage = [[UIImage alloc] init];
@@ -39,6 +38,13 @@
     [self.navigationItem setRightBarButtonItems:barItemArray];
 }
 
+-(void)uiMakeContent{
+    self.webView.delegate = self;
+    url = [[NSURL alloc] initWithString: self.link];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:request];
+}
+
 -(void)testMethod{
     NSLog(@"I am a test method!");
 }
@@ -48,15 +54,42 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark UIWebView delegate methods
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    NSLog(@"Error : %@",error);
+    NSLog(@"could not load the website caused by error: %@", error);
+    
+    NSLog(@"Connection failed! Errooooooor - %@ %@",
+          [error localizedDescription],
+          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+    
+    UIAlertController *connectionAlert = [UIAlertController
+                                          alertControllerWithTitle:@"Coś poszło nie tak"
+                                          message:[error localizedDescription]
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okeyAction = [UIAlertAction
+                                 actionWithTitle:@"Try again"
+                                 style:UIAlertActionStyleDefault
+                                 handler: ^(UIAlertAction *action){
+                                     [self uiMakeContent];
+                                 }];
+    UIAlertAction *cancelAction = [UIAlertAction
+                                   actionWithTitle:@"Cancel"
+                                   style:UIAlertActionStyleCancel
+                                   handler:^(UIAlertAction *action){
+                                       [self.navigationController popViewControllerAnimated:YES];
+                                   }];
+    
+    [connectionAlert addAction:cancelAction];
+    [connectionAlert addAction:okeyAction];
+    [self presentViewController:connectionAlert animated:YES completion:nil];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSLog(@"shouldStartLoadWithRequest: %@", [[request URL] absoluteString]);
     return YES;
 }
-- (void)webViewDidStartLoad:(UIWebView *)webViewa {
+- (void)webViewDidStartLoad:(UIWebView *)webView {
     NSLog(@"webViewDidStartLoad");
     
 }
