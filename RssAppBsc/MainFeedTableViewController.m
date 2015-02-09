@@ -85,17 +85,17 @@
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, tmpItem.descript];
-    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
+    NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
 }
 
-//------NS URL Connection
+#pragma mark - URL Connecting
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     _responseData = [[NSMutableData alloc] init];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    // Append the new data to the instance variable you declared
     [_responseData appendData:data];
 }
 
@@ -106,9 +106,6 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    //NSString *stringWithData = [[NSString alloc] initWithData: _responseData encoding:NSUTF8StringEncoding];
-    //NSLog(@"Connection did finisg loading\n%@", stringWithData);
-    
     rssItems = [[NSMutableArray alloc] init];
     rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
     [rssParser setDelegate: self];
@@ -173,7 +170,7 @@
     [self presentViewController:connectionAlert animated:YES completion:nil];
 }
 
-//---PARSING------
+#pragma mark - Parsing
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
@@ -188,6 +185,7 @@
         pubDate = [[NSMutableString alloc] init];
     }
 }
+
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     if ([currentElement isEqualToString:@"title"]) {
         [title appendString:string];
@@ -214,7 +212,17 @@
     NSLog(@"PARSING DONE");
 }
 
-//------END PARSING-------
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        DetailViewController *destinationViewController = segue.destinationViewController;
+        FeedItem *item = rssItems[indexPath.row];
+        destinationViewController.link = item.link;
+    }
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -251,16 +259,7 @@
 */
 
 
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        DetailViewController *destinationViewController = segue.destinationViewController;
-        FeedItem *item = rssItems[indexPath.row];
-        destinationViewController.link = item.link;
-    }
 }
 
 
