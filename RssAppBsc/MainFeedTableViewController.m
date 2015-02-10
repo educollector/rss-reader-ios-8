@@ -28,10 +28,12 @@
 
 @implementation MainFeedTableViewController{
     NSMutableArray *feedItems;
+    BOOL makeRefresh;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    makeRefresh = NO;
     [self internetConnectionChecking];
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -51,7 +53,7 @@
 -(void)makeRequestAndConnection{
     NSLog(@"makeRequestAndConnection");
     
-    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://wiadomosci.wp.pl/ver,rss,rss.xml"] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
+    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bit.ly/16LQ3NG"] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
     //Create url connection and fire request
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if(!connection){
@@ -70,6 +72,7 @@
     monitor = [[InternetConnectionMonitor alloc]init];
 
     if(!monitor.canAccessInternet){
+        makeRefresh = YES;
         UIAlertController *alert = [UIAlertController
                                      alertControllerWithTitle:@"Brak połączenia z internetem"
                                      message:@"Sprawdź połacznie w Ustawieniach telefonu i spróbuj ponownie"
@@ -87,7 +90,7 @@
                                       actionWithTitle:@"Try again"
                                       style:UIAlertActionStyleCancel
                                       handler:^(UIAlertAction *action){
-                                          //[self uiSetSpiner:NO];
+                                          [self uiSetSpiner:NO];
                                           [self viewDidLoad];
                                       }];
         
@@ -97,7 +100,10 @@
     }
     else{
         NSLog(@"Internet connection: TRUE");
-        [self makeRequestAndConnection];
+        if(makeRefresh){
+            [self makeRequestAndConnection];
+            makeRefresh = NO;
+        }
     }
 }
 
@@ -129,6 +135,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Table view data source
 
@@ -183,6 +190,7 @@
     //cleanedText = [[text componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
     return cleanedText;
 }
+
 
 #pragma mark - URL Connecting
 
@@ -241,6 +249,7 @@
     [self presentViewController:connectionAlert animated:YES completion:nil];
 }
 
+
 #pragma mark - Parsing
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
@@ -255,8 +264,17 @@
         description = [[NSMutableString alloc] init];
         pubDate = [[NSMutableString alloc] init];
         imgLink = [[NSMutableString alloc] init];
-        
     }
+    else if ([currentElement isEqualToString:@"entry"]) {
+        FeedItem *rssItem = [[FeedItem alloc] init];
+        currentRssItem = rssItem;
+        title = [[NSMutableString alloc] init];
+        link = [[NSMutableString alloc] init];
+        description = [[NSMutableString alloc] init];
+        pubDate = [[NSMutableString alloc] init];
+        imgLink = [[NSMutableString alloc] init];
+    }
+    NSLog(@"current element: %@", currentElement);
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -266,9 +284,15 @@
         [link appendString:string];
     } else if ([currentElement isEqualToString:@"description"]) {
         [description appendString:string];
+    } else if ([currentElement isEqualToString:@"summary"]) {// Atom
+        [description appendString:string];
     } else if ([currentElement isEqualToString:@"pubDate"]) {
         [pubDate appendString:string];
+    } else if ([currentElement isEqualToString:@"updated"]) { // Atom
+        [pubDate appendString:string];
     }
+    
+    
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:
@@ -279,7 +303,17 @@
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
-        
+        [rssItems addObject:currentRssItem];
+    } else if ([elementName isEqualToString:@"entry"]) {
+        NSLog(@"current element.title: %@", title);
+        NSLog(@"current element.summary: %@", description);
+        NSLog(@"current element.uoadate: %@", pubDate);
+        NSLog(@"current element.link: %@", link);
+        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
         [rssItems addObject:currentRssItem];
     }
     NSLog(@"PARSING DONE");
