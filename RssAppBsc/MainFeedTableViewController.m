@@ -60,25 +60,13 @@
         request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
         connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
-
-    
-    
-//    NSString *linkToFeed = [linksOfFeeds objectAtIndex:0];
-//    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
-//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-//    
-//    NSLog(@"link %@",[linksOfFeeds objectAtIndex:1]);
-//    linkToFeed = [linksOfFeeds objectAtIndex:1];
-//    request =  [NSURLRequest requestWithURL:[NSURL URLWithString:linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
-//    connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 -(void)endOfLoadingData{
     for(FeedItem* el in rssItems){
         NSLog(@"-Element: %@", el.title);
     }
-    NSLog(@"rssItems count %d", [rssItems count]);
-    
+    NSLog(@"rssItems count %d", (int)[rssItems count]);
     if(isDataLoaded){
         [self uiUpdateMainFeedTable];
     }
@@ -215,10 +203,12 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     _responseData = [[NSMutableData alloc] init];
+    NSLog(@"didReceiveResponse");
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_responseData appendData:data];
+    NSLog(@"didReceiveData");
 }
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection
@@ -332,7 +322,7 @@
         //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
         [rssItems addObject:currentRssItem];
     }
-    NSLog(@"PARSING DONE");
+    NSLog(@"PARSING DONE \t%@", currentRssItem.title);
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
