@@ -24,6 +24,8 @@
 		239D4E641A7A919500C797C2 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 239D4E631A7A919500C797C2 /* share.png */; };
 		239D4E701A7BA62300C797C2 /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E6F1A7BA62300C797C2 /* Url.m */; };
 		239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */; };
+		239D4E771A8A374400C797C2 /* InternetConnectionMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E761A8A374400C797C2 /* InternetConnectionMonitor.m */; };
+		239D4E7A1A8A37E200C797C2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E791A8A37E200C797C2 /* Reachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +70,10 @@
 		239D4E6F1A7BA62300C797C2 /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Url.m; sourceTree = "<group>"; };
 		239D4E721A7BB8B100C797C2 /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
 		239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
+		239D4E751A8A374400C797C2 /* InternetConnectionMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternetConnectionMonitor.h; sourceTree = "<group>"; };
+		239D4E761A8A374400C797C2 /* InternetConnectionMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetConnectionMonitor.m; sourceTree = "<group>"; };
+		239D4E781A8A37E200C797C2 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		239D4E791A8A37E200C797C2 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +131,10 @@
 		239D4E211A7A59AD00C797C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				239D4E781A8A37E200C797C2 /* Reachability.h */,
+				239D4E791A8A37E200C797C2 /* Reachability.m */,
+				239D4E751A8A374400C797C2 /* InternetConnectionMonitor.h */,
+				239D4E761A8A374400C797C2 /* InternetConnectionMonitor.m */,
 				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
 				239D4E631A7A919500C797C2 /* share.png */,
 				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
@@ -316,7 +326,9 @@
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
+				239D4E7A1A8A37E200C797C2 /* Reachability.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
+				239D4E771A8A374400C797C2 /* InternetConnectionMonitor.m in Sources */,
 				239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,6 +520,7 @@
 				239D4E461A7A59AD00C797C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		239D4E471A7A59AD00C797C2 /* Build configuration list for PBXNativeTarget "RssAppBscTests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +529,7 @@
 				239D4E491A7A59AD00C797C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

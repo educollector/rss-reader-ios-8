@@ -10,8 +10,12 @@
 #import "FeedItem.h"
 #import "FeedTableViewCell.h"
 #import "DetailViewController.h"
+#import "InternetConnectionMonitor.h"
+#import "Reachability.h"
+
 
 @interface MainFeedTableViewController (){
+    InternetConnectionMonitor *monitor;
     NSXMLParser *rssParser;
     NSMutableArray *rssItems;
     NSMutableString *title, *link, *description,*pubDate, *imgLink;
@@ -28,7 +32,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //[self.tableView setHidden:YES];
+    [self internetConnectionChecking];
+    
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
     // Set this in every view controller so that the back button displays back instead of the root view controller name
@@ -36,7 +41,7 @@
     
     [self uiSetSpiner:YES];
     
-    [NSTimer scheduledTimerWithTimeInterval:2.0f
+    [NSTimer scheduledTimerWithTimeInterval:0.0f
                                      target:self
                                    selector: @selector(makeRequestAndConnection)
                                    userInfo:nil
@@ -58,6 +63,34 @@
 //change status bar icons form black to white http:/ /stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7?rq=1
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
+}
+
+-(void)internetConnectionChecking{
+    NSLog(@"internetConnectionChecking");
+    monitor = [[InternetConnectionMonitor alloc]init];
+
+    if(!monitor.canAccessInternet){
+        UIAlertController *alert = [UIAlertController
+                                     alertControllerWithTitle:@"Brak połączenia z internetem"
+                                     message:@"Sprawdź połacznie w Ustawieniach telefonu i spróbuj ponownie"
+                                    preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *okeyAction = [UIAlertAction
+                                     actionWithTitle:@"OK"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction *acton){
+                                         NSLog(@"ok action");
+                                         [self uiSetSpiner:NO];
+                                         self.navigationItem.title = @"-----";
+                                     }];
+        
+        [alert addAction:okeyAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else{
+        NSLog(@"Internet connection: TRUE");
+        [self makeRequestAndConnection];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
