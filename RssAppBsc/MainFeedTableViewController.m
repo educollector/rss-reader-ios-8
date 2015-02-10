@@ -15,13 +15,6 @@
 
 
 @interface MainFeedTableViewController (){
-    InternetConnectionMonitor *monitor;
-    NSXMLParser *rssParser;
-    NSMutableArray *rssItems;
-    NSMutableString *title, *link, *description,*pubDate, *imgLink;
-    NSString *currentElement;
-    FeedItem *currentRssItem;
-    UIActivityIndicatorView *spinner;
 }
 
 @end
@@ -29,40 +22,68 @@
 @implementation MainFeedTableViewController{
     NSMutableArray *feedItems;
     BOOL makeRefresh;
+    BOOL isDataLoaded;
+    InternetConnectionMonitor *monitor;
+    NSXMLParser *rssParser;
+    NSMutableArray *rssItems;
+    NSMutableString *title, *link, *description,*pubDate, *imgLink;
+    NSString *currentElement;
+    FeedItem *currentRssItem;
+    UIActivityIndicatorView *spinner;
+    NSMutableArray *linksOfFeeds;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     makeRefresh = NO;
+    isDataLoaded = NO;
     [self internetConnectionChecking];
-    
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
     [self uiSetSpiner:YES];
+    linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
     
-    [NSTimer scheduledTimerWithTimeInterval:0.0f
-                                     target:self
-                                   selector: @selector(makeRequestAndConnection)
-                                   userInfo:nil
-                                    repeats:NO];
+    [self makeRequestAndConnection];
 }
 
 -(void)makeRequestAndConnection{
     NSLog(@"makeRequestAndConnection");
+    _responseData = nil;
+    rssItems = [[NSMutableArray alloc] init];
+    NSURLRequest *request =[[NSURLRequest alloc]init];
+    NSURLConnection *connection = [[NSURLConnection alloc] init];
     
-    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bit.ly/16LQ3NG"] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
-    //Create url connection and fire request
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if(!connection){
-        _responseData = nil;
-        NSLog(@"Request timeout");
+    for(NSString* linkToFeed in linksOfFeeds){
+        NSLog(@"item in table of links: %@", linkToFeed);
+        request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
+        connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
+
+    
+    
+//    NSString *linkToFeed = [linksOfFeeds objectAtIndex:0];
+//    NSURLRequest *request =  [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//    
+//    NSLog(@"link %@",[linksOfFeeds objectAtIndex:1]);
+//    linkToFeed = [linksOfFeeds objectAtIndex:1];
+//    request =  [NSURLRequest requestWithURL:[NSURL URLWithString:linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
+//    connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+-(void)endOfLoadingData{
+    for(FeedItem* el in rssItems){
+        NSLog(@"-Element: %@", el.title);
+    }
+    NSLog(@"rssItems count %d", [rssItems count]);
+    
+    if(isDataLoaded){
+        [self uiUpdateMainFeedTable];
     }
 }
 
-//change status bar icons form black to white http:/ /stackoverflow.com/questions/17678881/how-to-change-status-bar-text-color-in-ios-7?rq=1
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
 }
@@ -108,6 +129,7 @@
 }
 
 -(void)uiUpdateMainFeedTable{
+    NSLog(@"uiUpdateMainFeedTable");
     [self.tableView reloadData];
     [self uiSetSpiner:NO];
 }
@@ -183,9 +205,6 @@
                                                   options:0
                                                     range:NSMakeRange(0, [cleanedText length])
                                              withTemplate:@""];
-    
-    NSLog(@"\n\ncleanedText------%@\n\n", cleanedText);
-    
     //doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-=+[]{}:/?.><;,!@#$%^&*\n()\r'"];
     //cleanedText = [[text componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
     return cleanedText;
@@ -209,12 +228,11 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    rssItems = [[NSMutableArray alloc] init];
     rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
     [rssParser setDelegate: self];
     [rssParser parse];
     NSLog(@"SUCCESS: connectionDidFinishLoading");
-    [self performSelectorOnMainThread:@selector(uiUpdateMainFeedTable) withObject:Nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -274,7 +292,7 @@
         pubDate = [[NSMutableString alloc] init];
         imgLink = [[NSMutableString alloc] init];
     }
-    NSLog(@"current element: %@", currentElement);
+    //NSLog(@"current element: %@", currentElement);
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -291,8 +309,6 @@
     } else if ([currentElement isEqualToString:@"updated"]) { // Atom
         [pubDate appendString:string];
     }
-    
-    
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:
@@ -305,10 +321,10 @@
         //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
         [rssItems addObject:currentRssItem];
     } else if ([elementName isEqualToString:@"entry"]) {
-        NSLog(@"current element.title: %@", title);
-        NSLog(@"current element.summary: %@", description);
-        NSLog(@"current element.uoadate: %@", pubDate);
-        NSLog(@"current element.link: %@", link);
+//        NSLog(@"current element.title: %@", title);
+//        NSLog(@"current element.summary: %@", description);
+//        NSLog(@"current element.uoadate: %@", pubDate);
+//        NSLog(@"current element.link: %@", link);
         currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
@@ -319,6 +335,9 @@
     NSLog(@"PARSING DONE");
 }
 
+- (void)parserDidEndDocument:(NSXMLParser *)parser{
+    isDataLoaded = YES;
+}
 
 
 #pragma mark - Navigation
