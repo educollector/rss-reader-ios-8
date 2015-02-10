@@ -83,13 +83,45 @@
                                          [self uiSetSpiner:NO];
                                          self.navigationItem.title = @"-----";
                                      }];
+        UIAlertAction *retryAction = [UIAlertAction
+                                      actionWithTitle:@"Try again"
+                                      style:UIAlertActionStyleCancel
+                                      handler:^(UIAlertAction *action){
+                                          //[self uiSetSpiner:NO];
+                                          [self viewDidLoad];
+                                      }];
         
+        [alert addAction:retryAction];
         [alert addAction:okeyAction];
         [self presentViewController:alert animated:YES completion:nil];
     }
     else{
         NSLog(@"Internet connection: TRUE");
         [self makeRequestAndConnection];
+    }
+}
+
+-(void)uiUpdateMainFeedTable{
+    [self.tableView reloadData];
+    [self uiSetSpiner:NO];
+}
+
+-(void)uiSetSpiner:(BOOL) isLoading{
+    if(isLoading){
+        spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        spinner.center = CGPointMake(160, 240);
+        spinner.hidesWhenStopped = YES;
+        spinner.tag = 1;
+        [self.view addSubview:spinner];
+        [spinner startAnimating];
+    }
+    else{
+        if(spinner!=NULL){
+            [spinner stopAnimating];
+            UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
+            [tmpSpinner removeFromSuperview];
+            [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        }
     }
 }
 
@@ -175,30 +207,6 @@
     [rssParser parse];
     NSLog(@"SUCCESS: connectionDidFinishLoading");
     [self performSelectorOnMainThread:@selector(uiUpdateMainFeedTable) withObject:Nil waitUntilDone:YES];
-}
-
--(void)uiUpdateMainFeedTable{
-    [self.tableView reloadData];
-    [self uiSetSpiner:NO];
-}
-     
--(void)uiSetSpiner:(BOOL) isLoading{
-    if(isLoading){
-        spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        spinner.center = CGPointMake(160, 240);
-        spinner.hidesWhenStopped = YES;
-        spinner.tag = 1;
-        [self.view addSubview:spinner];
-        [spinner startAnimating];
-    }
-    else{
-        if(spinner!=NULL){
-            [spinner stopAnimating];
-            UIActivityIndicatorView *tmpSpinner = (UIActivityIndicatorView*)[self.view viewWithTag:1];
-            [tmpSpinner removeFromSuperview];
-            [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-        }
-    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
