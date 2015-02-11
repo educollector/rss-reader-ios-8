@@ -17,7 +17,7 @@
 #import "AppDelegate.h"
 
 
-@interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate, NSXMLParserDelegate>
+@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate>
 {
     NSMutableData *_responseData;
 }

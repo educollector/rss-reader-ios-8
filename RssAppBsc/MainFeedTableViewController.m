@@ -14,6 +14,7 @@
 @end
 
 @implementation MainFeedTableViewController{
+    UITabBarController *tabBarController;
     NSFetchedResultsController *fetchResultController;
     Url *urlToMakeRequest;
     BOOL makeRefresh;
@@ -29,7 +30,9 @@
 }
 
 - (void)viewDidLoad {
+    NSLog(@"Main feed - viewDidLoad");
     [super viewDidLoad];
+    tabBarController = [self tabBarController];
     makeRefresh = NO;
     isDataLoaded = NO;
     [self internetConnectionChecking];
@@ -43,7 +46,16 @@
     [self makeRequestAndConnection];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    //[super viewWillAppear:animated];
+    //[self.tableView reloadData];
+    NSLog(@"Main feed - viewWillAppear");
+    [self fetchDataFromDatabase];
+    [self makeRequestAndConnection];
+}
+
 -(void)fetchDataFromDatabase{
+    NSLog(@"Main feed - fetchDataFromDatabase");
     //fetchnig data from database
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
@@ -363,7 +375,12 @@
         FeedItem *item = rssItems[indexPath.row];
         destinationViewController.link = item.link;
     }
+}
 
+// UITabBarControllerDelegate method.
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
+    NSLog(@"tabBarController didSelectViewController:");
+}
 
 /*
 // Override to support conditional editing of the table view.
@@ -398,10 +415,6 @@
     return YES;
 }
 */
-
-
-
-}
 
 
 @end
