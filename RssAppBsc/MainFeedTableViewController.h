@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
 #import "FeedItem.h"
 #import "FeedTableViewCell.h"
 #import "DetailViewController.h"
 #import "InternetConnectionMonitor.h"
 #import "Reachability.h"
 #import "Url.h"
+#import "AppDelegate.h"
 
 
 @interface MainFeedTableViewController : UITableViewController<NSURLConnectionDataDelegate, NSXMLParserDelegate>

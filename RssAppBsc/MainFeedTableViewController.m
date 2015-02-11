@@ -14,7 +14,7 @@
 @end
 
 @implementation MainFeedTableViewController{
-    NSMutableArray *feedItems;
+    NSFetchedResultsController *fetchResultController;
     Url *urlToMakeRequest;
     BOOL makeRefresh;
     BOOL isDataLoaded;
@@ -57,7 +57,7 @@
         fetchResultController.delegate = self;
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
-            urls = fetchResultController.fetchedObjects;
+            rssItems = fetchResultController.fetchedObjects;
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
         }
