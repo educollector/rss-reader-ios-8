@@ -12,5 +12,4 @@
 
 @interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating, NSFetchedResultsControllerDelegate>
 
-
 @end

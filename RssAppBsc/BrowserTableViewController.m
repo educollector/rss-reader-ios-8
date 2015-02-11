@@ -20,14 +20,10 @@
     NSFetchedResultsController *fetchResultController;
     NSArray *urls;
     Url *url;
-    NSArray *tablica;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    tablica = [NSArray arrayWithObjects:@"Aston Martin", @"Lotus", @"Jaguar", @"Bentley", nil];
-    NSLog(@"Tablica count: %ld", tablica.count);
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     searchController.searchBar.delegate = self; //potrzebna jest delegata, żeby wywołac searchBarSearchButtonClicked:
@@ -78,7 +74,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //NSLog(@"Number of rows - Tablica count: %d", tablica.count);
     return [urls count];
 }
 

@@ -7,12 +7,6 @@
 //
 
 #import "MainFeedTableViewController.h"
-#import "FeedItem.h"
-#import "FeedTableViewCell.h"
-#import "DetailViewController.h"
-#import "InternetConnectionMonitor.h"
-#import "Reachability.h"
-
 
 @interface MainFeedTableViewController (){
 }
@@ -21,6 +15,7 @@
 
 @implementation MainFeedTableViewController{
     NSMutableArray *feedItems;
+    Url *urlToMakeRequest;
     BOOL makeRefresh;
     BOOL isDataLoaded;
     InternetConnectionMonitor *monitor;
@@ -46,6 +41,27 @@
     linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
     
     [self makeRequestAndConnection];
+}
+
+-(void)fetchDataFromDatabase{
+    //fetchnig data from database
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    if (managedObjectContext != nil) {
+        fetchResultController = [[NSFetchedResultsController alloc]
+                                 initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
+                                 sectionNameKeyPath:nil cacheName:nil];
+        fetchResultController.delegate = self;
+        NSError *error;
+        if ([fetchResultController performFetch:&error]) {
+            urls = fetchResultController.fetchedObjects;
+        } else {
+            NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+        }
+    }
 }
 
 -(void)makeRequestAndConnection{

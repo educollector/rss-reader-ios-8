@@ -14,7 +14,7 @@
 @end
 
 @implementation DetailViewController{
-    NSURL *url;
+    NSURL *urlRequest;
 }
 
 - (void)viewDidLoad {
@@ -41,8 +41,8 @@
 
 -(void)uiMakeContent{
     self.webView.delegate = self;
-    url = [[NSURL alloc] initWithString: self.link];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    urlRequest = [[NSURL alloc] initWithString: self.link];
+    NSURLRequest *request = [NSURLRequest requestWithURL:urlRequest];
     [self.webView loadRequest:request];
 }
 
