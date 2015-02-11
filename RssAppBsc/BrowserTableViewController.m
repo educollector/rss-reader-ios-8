@@ -159,10 +159,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    Url *url = (Url*) urls[indexPath.row];
+    Url *urlToDisplay = (Url*) urls[indexPath.row];
     static NSString *cellIdentifier = @"Cell";
     CustomTableViewCell *cell = (CustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    cell.label.text = url.url;
+    cell.label.text = urlToDisplay.url;
     return cell;
 }
 

@@ -38,8 +38,8 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
-    linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
-    
+    //linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
+    [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
 }
 
@@ -51,13 +51,20 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if (managedObjectContext != nil) {
+        NSLog(@"Fetch result controler != nil");
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
                                  sectionNameKeyPath:nil cacheName:nil];
         fetchResultController.delegate = self;
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
-            rssItems = fetchResultController.fetchedObjects;
+            NSArray *tmpUrlsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
+            linksOfFeeds = [[NSMutableArray alloc]init];
+            for(Url* el in tmpUrlsArray){
+                [linksOfFeeds addObject:el.url];
+                NSLog(@"%@\n----> %@",el, el.url);
+                
+            }
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
         }
