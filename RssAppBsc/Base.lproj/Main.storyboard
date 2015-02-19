@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="hyJ-RL-5F6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="hyJ-RL-5F6">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -53,7 +53,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXy-JG-BEb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1358" y="894"/>
+            <point key="canvasLocation" x="1366" y="902"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="xu3-Ek-N93">
@@ -313,6 +313,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4se-Fx-5uk" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" systemItem="search" id="yIp-sY-POz"/>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="6LA-vQ-BEd"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3us-d5-XyQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

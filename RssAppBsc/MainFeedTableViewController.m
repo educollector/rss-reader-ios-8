@@ -100,7 +100,7 @@
                                  handler:^(UIAlertAction *acton){
                                      NSLog(@"ok action");
                                      [self uiSetSpiner:NO];
-                                     self.navigationItem.title = @"-----";
+                                     self.tabBarController.selectedIndex = 1;
                                  }];
     [self uiSetSpiner:NO];
     [alert addAction:okeyAction];
@@ -394,6 +394,7 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
+        NSLog(@"CALL prepareForSegue if");
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;
         FeedItem *item = rssItems[indexPath.row];

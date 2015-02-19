@@ -11,6 +11,7 @@
 #import "FeedItem.h"
 #import "FeedTableViewCell.h"
 #import "DetailViewController.h"
+#import "BrowserTableViewController.h"
 #import "InternetConnectionMonitor.h"
 #import "Reachability.h"
 #import "Url.h"
