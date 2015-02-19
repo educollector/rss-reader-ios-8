@@ -41,6 +41,7 @@
 
 -(void)uiMakeContent{
     self.webView.delegate = self;
+    [self.webView sizeToFit];
     urlRequest = [[NSURL alloc] initWithString: self.link];
     NSURLRequest *request = [NSURLRequest requestWithURL:urlRequest];
     [self.webView loadRequest:request];

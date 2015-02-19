@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="hyJ-RL-5F6">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main Feed-->
@@ -67,18 +66,12 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
-                                <rect key="frame" x="-20" y="0.0" width="363" height="568"/>
+                            <webView contentMode="scaleToFill" fixedFrame="YES" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="1g6-Sw-dht">
+                                <rect key="frame" x="-11" y="112" width="331" height="304"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="1g6-Sw-dht" firstAttribute="top" secondItem="Anl-5K-3eq" secondAttribute="topMargin" id="Gy9-Ce-gnb"/>
-                            <constraint firstItem="1g6-Sw-dht" firstAttribute="bottom" secondItem="Anl-5K-3eq" secondAttribute="bottomMargin" id="Hgh-wB-Swx"/>
-                            <constraint firstItem="1g6-Sw-dht" firstAttribute="leading" secondItem="Anl-5K-3eq" secondAttribute="leadingMargin" constant="-36" id="kgP-j2-SdZ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="1g6-Sw-dht" secondAttribute="trailing" constant="-39" id="vXz-Kb-1eC"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RuN-5q-cxn"/>
                     <connections>
