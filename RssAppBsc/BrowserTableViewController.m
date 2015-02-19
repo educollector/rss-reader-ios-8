@@ -102,6 +102,7 @@
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
+    NSLog(@"Browse screen Notification pl.skierbisz.browserscreen.linkadded CREATED");
 }
 
 - (BOOL) validateUrl: (NSString *) candidate {

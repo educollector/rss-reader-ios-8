@@ -21,6 +21,7 @@
     [super viewDidLoad];
     [self uiMakeContent];
     [self uiNavigationBarStyling];
+    _webView.scalesPageToFit = YES;
 }
 
 -(void)uiNavigationBarStyling{

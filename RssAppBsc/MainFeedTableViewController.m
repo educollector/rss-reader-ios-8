@@ -46,6 +46,8 @@
     [self makeRequestAndConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchDataFromDatabase) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
+    NSLog(@"Main Feed Notification pl.skierbisz.browserscreen.linkadded GET IT");
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
