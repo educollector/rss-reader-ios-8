@@ -45,15 +45,19 @@
     [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchDataFromDatabase) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
     NSLog(@"Main Feed Notification pl.skierbisz.browserscreen.linkadded GET IT");
 
 }
 
--(void)viewWillAppear:(BOOL)animated{
-    NSLog(@"Main feed - viewWillAppear");
+-(void)getActualDataFromConnection{
+    NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
     [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    NSLog(@"Main feed - viewWillAppear");
     [super viewWillAppear:animated];
 }
 
@@ -123,7 +127,9 @@
     }
 }
 
+
 -(void)endOfLoadingData{
+    NSLog(@"endOfLoadingData");
     for(FeedItem* el in rssItems){
         NSLog(@"-Element: %@", el.title);
     }
