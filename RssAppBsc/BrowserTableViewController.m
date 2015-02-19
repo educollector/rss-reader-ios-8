@@ -101,6 +101,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
 }
 
 - (BOOL) validateUrl: (NSString *) candidate {

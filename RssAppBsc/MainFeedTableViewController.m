@@ -44,14 +44,15 @@
     //linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
     [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchDataFromDatabase) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    //[super viewWillAppear:animated];
-    //[self.tableView reloadData];
     NSLog(@"Main feed - viewWillAppear");
     [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
+    [super viewWillAppear:animated];
 }
 
 -(void)fetchDataFromDatabase{
@@ -71,16 +72,39 @@
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
             NSArray *tmpUrlsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
+            if([tmpUrlsArray count] <= 0){
+                [self showPopupNoRssAvailable];
+            }
+            else{
             linksOfFeeds = [[NSMutableArray alloc]init];
-            for(Url* el in tmpUrlsArray){
-                [linksOfFeeds addObject:el.url];
-                NSLog(@"%@\n----> %@",el, el.url);
-                
+                for(Url* el in tmpUrlsArray){
+                    [linksOfFeeds addObject:el.url];
+                    NSLog(@"%@\n----> %@",el, el.url);
+                }
             }
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
         }
     }
+}
+
+-(void)showPopupNoRssAvailable{
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:@"Brak wiadomości"
+                                message:@"Dodaj linki do stron, które chcesz obserwować"
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okeyAction = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction *acton){
+                                     NSLog(@"ok action");
+                                     [self uiSetSpiner:NO];
+                                     self.navigationItem.title = @"-----";
+                                 }];
+    [self uiSetSpiner:NO];
+    [alert addAction:okeyAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)makeRequestAndConnection{
