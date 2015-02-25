@@ -32,8 +32,11 @@
     self.definesPresentationContext = YES;
     searchController.searchResultsUpdater = self;
     searchController.dimsBackgroundDuringPresentation = NO;
-    
-    //fetchnig data from database
+    [self fetchDataFromDatabase];
+
+}
+
+-(void)fetchDataFromDatabase{
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
     fetchRequest.sortDescriptors = @[sortDescriptor];
@@ -77,7 +80,7 @@
     return [urls count];
 }
 
-//---Keyboard----
+// addling feed URL to the list
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -105,6 +108,10 @@
     NSLog(@"Browse screen Notification pl.skierbisz.browserscreen.linkadded CREATED");
 }
 
+-(void)deletingFeedUrlFormDatabase{
+}
+
+
 - (BOOL) validateUrl: (NSString *) candidate {
     NSString *urlRegEx =
     @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
@@ -112,23 +119,6 @@
     return [urlTest evaluateWithObject:candidate];
 }
 
-//- (BOOL) isKeyboardOnScreen
-//{
-//    BOOL isKeyboardShown = NO;
-//    
-//    NSArray *windows = [UIApplication sharedApplication].windows;
-//    if (windows.count > 1) {
-//        NSArray *wSubviews =  [windows[1]  subviews];
-//        if (wSubviews.count) {
-//            CGRect keyboardFrame = [wSubviews[0] frame];
-//            CGRect screenFrame = [windows[1] frame];
-//            if (keyboardFrame.origin.y+keyboardFrame.size.height == screenFrame.size.height) {
-//                isKeyboardShown = YES;
-//            }
-//        }
-//    }
-//    return isKeyboardShown;
-//}
 
 - (void) controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
@@ -177,17 +167,25 @@
 }
 */
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
 }
-*/
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    //Delete the row from the data source
+    AppDelegate *appDelegate= (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    if(managedObjectContext != nil){
+        Url *urlToDelete = (Url*)[fetchResultController objectAtIndexPath:indexPath];
+        [managedObjectContext deleteObject:urlToDelete];
+        NSError *error;
+        if(![managedObjectContext save:&error]){
+            NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error
+                                                             localizedDescription]);
+        }
+    }
+    
+}
 
 /*
 // Override to support rearranging the table view.
