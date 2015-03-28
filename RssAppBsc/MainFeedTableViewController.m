@@ -7,6 +7,7 @@
 //
 
 #import "MainFeedTableViewController.h"
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 @interface MainFeedTableViewController (){
 }
@@ -121,33 +122,41 @@
     NSLog(@"makeRequestAndConnection");
     _responseData = nil;
     rssItems = [[NSMutableArray alloc] init];
-    NSURLRequest *request =[[NSURLRequest alloc]init];
+    NSURLRequest __block *request =[[NSURLRequest alloc]init];
     
-    for(NSString* linkToFeed in linksOfFeeds){
-        NSLog(@"item in table of links: %@", linkToFeed);
+    dispatch_async(kBgQueue, ^{
+        for(NSString* linkToFeed in linksOfFeeds){
+            NSLog(@"item in table of links: %@", linkToFeed);
 
-        NSLog(@"postPreparingQueue");
-        request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
-        
-        
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response,
-                                                   NSData *data,
-                                                   NSError *connectionError) {
-                                   // handle response
-                                   _responseData = [[NSMutableData alloc] init];
-                                   NSLog(@"didReceiveResponse");
-                                   [_responseData appendData:data];
-                                   
-                                   if(connectionError!=nil){
-                                       NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
-                                       [self connectionDidFailedWithError:connectionError];
-                                   }
-                                   [self performSelectorOnMainThread:@selector(makeParsing) withObject:Nil waitUntilDone:YES];
-                               }];
-        
-    }
+            NSLog(@"postPreparingQueue");
+            request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
+            
+            
+            [NSURLConnection sendAsynchronousRequest:request
+                                               queue:[NSOperationQueue mainQueue]
+                                   completionHandler:^(NSURLResponse *response,
+                                                       NSData *data,
+                                                       NSError *connectionError) {
+                                       // handle response
+                                       _responseData = [[NSMutableData alloc] init];
+                                       NSLog(@"didReceiveResponse");
+                                       [_responseData appendData:data];
+                                       
+                                       if(connectionError!=nil){
+                                           NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
+                                           [self connectionDidFailedWithError:connectionError];
+                                       }
+                                       [self makeParsing];
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           //UI code on the main queue
+                                           [self endOfLoadingData];
+                                           
+                                       });
+                                       //[self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
+                                   }];
+            
+        }
+    });
 }
 
 -(void)makeParsing{
