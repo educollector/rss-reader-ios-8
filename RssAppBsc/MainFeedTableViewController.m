@@ -139,22 +139,23 @@
                                    _responseData = [[NSMutableData alloc] init];
                                    NSLog(@"didReceiveResponse");
                                    [_responseData appendData:data];
-                                   NSLog(@"didReceiveData");
-                                   
-                                   rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
-                                   [rssParser setDelegate: self];
-                                   [rssParser parse];
-                                   NSLog(@"SUCCESS: connectionDidFinishLoading");
-                                   [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
                                    
                                    if(connectionError!=nil){
                                        NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
                                        [self connectionDidFailedWithError:connectionError];
                                    }
+                                   [self performSelectorOnMainThread:@selector(makeParsing) withObject:Nil waitUntilDone:YES];
                                }];
+        
     }
 }
 
+-(void)makeParsing{
+    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
+    [rssParser setDelegate: self];
+    [rssParser parse];
+    [self endOfLoadingData];
+}
 
 -(void)endOfLoadingData{
     NSLog(@"endOfLoadingData");
