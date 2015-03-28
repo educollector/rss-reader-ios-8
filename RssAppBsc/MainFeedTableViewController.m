@@ -46,7 +46,7 @@
     [self makeRequestAndConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
-    NSLog(@"Main Feed Notification pl.skierbisz.browserscreen.linkadded GET IT");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted" object:nil];
 
 }
 
@@ -122,8 +122,32 @@
     
     for(NSString* linkToFeed in linksOfFeeds){
         NSLog(@"item in table of links: %@", linkToFeed);
-        request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
-        connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        //request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
+        //connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
+        
+        [NSURLConnection sendAsynchronousRequest:request
+                                           queue:[NSOperationQueue mainQueue]
+                               completionHandler:^(NSURLResponse *response,
+                                                   NSData *data,
+                                                   NSError *connectionError) {
+                                   // handle response
+                                   _responseData = [[NSMutableData alloc] init];
+                                   NSLog(@"didReceiveResponse");
+                                   [_responseData appendData:data];
+                                   NSLog(@"didReceiveData");
+                                   
+                                   rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
+                                   [rssParser setDelegate: self];
+                                   [rssParser parse];
+                                   NSLog(@"SUCCESS: connectionDidFinishLoading");
+                                   [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
+                                   
+                                   if(connectionError!=nil){
+                                       NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
+                                       [self connectionDidFailedWithError:connectionError];
+                                   }
+                               }];
     }
 }
 
@@ -267,63 +291,93 @@
 
 
 #pragma mark - URL Connecting
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    _responseData = [[NSMutableData alloc] init];
-    NSLog(@"didReceiveResponse");
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [_responseData appendData:data];
-    NSLog(@"didReceiveData");
-}
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-    // Return nil to indicate not necessary to store a cached response for this connection
-    return nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
-    [rssParser setDelegate: self];
-    [rssParser parse];
-    NSLog(@"SUCCESS: connectionDidFinishLoading");
-    [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    connection = nil;
-    _responseData = nil;
-    NSLog(@"Connection failed! Errooooooor - %@ %@",
-          [error localizedDescription],
-          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+//
+//- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+//    _responseData = [[NSMutableData alloc] init];
+//    NSLog(@"didReceiveResponse");
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+//    [_responseData appendData:data];
+//    NSLog(@"didReceiveData");
+//}
+//
+//- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
+//                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
+//    // Return nil to indicate not necessary to store a cached response for this connection
+//    return nil;
+//}
+//
+//- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+//    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
+//    [rssParser setDelegate: self];
+//    [rssParser parse];
+//    NSLog(@"SUCCESS: connectionDidFinishLoading");
+//    [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
+//}
+//
+//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+//    connection = nil;
+//    _responseData = nil;
+//    NSLog(@"Connection failed! Errooooooor - %@ %@",
+//          [error localizedDescription],
+//          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+//    
+//    UIAlertController *connectionAlert = [UIAlertController
+//                                          alertControllerWithTitle:@"oś poszło nie tak"
+//                                          message:[error localizedDescription]
+//                                          preferredStyle:UIAlertControllerStyleAlert];
+//    
+//    UIAlertAction *okeyAction = [UIAlertAction
+//                                 actionWithTitle:@"OK."
+//                                 style:UIAlertActionStyleDefault
+//                                 handler: ^(UIAlertAction *action){
+//                                     [self makeRequestAndConnection];
+//                                     NSLog(@"alert - OK clicked");
+//                                 }];
+//    UIAlertAction *cancelAction = [UIAlertAction
+//                                   actionWithTitle:@"Cancel."
+//                                   style:UIAlertActionStyleCancel
+//                                   handler:^(UIAlertAction *action){
+//                                       [self uiUpdateMainFeedTable];
+//                                       NSLog(@"alert - Cancel clicked");
+//                                   }];
+//    
+//    [connectionAlert addAction:cancelAction];
+//    [connectionAlert addAction:okeyAction];
+//    [self presentViewController:connectionAlert animated:YES completion:nil];
+//}
+//
+- (void) connectionDidFailedWithError: error{
+        _responseData = nil;
+        NSLog(@"Connection failed! Errooooooor - %@ %@",
+              [error localizedDescription],
+              [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
     
-    UIAlertController *connectionAlert = [UIAlertController
-                                          alertControllerWithTitle:@"Coś poszło nie tak"
-                                          message:[error localizedDescription]
-                                          preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *connectionAlert = [UIAlertController
+                                              alertControllerWithTitle:@"oś poszło nie tak"
+                                              message:[error localizedDescription]
+                                              preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *okeyAction = [UIAlertAction
-                                 actionWithTitle:@"OK"
-                                 style:UIAlertActionStyleDefault
-                                 handler: ^(UIAlertAction *action){
-                                     [self makeRequestAndConnection];
-                                     NSLog(@"alert - OK clicked");
-                                 }];
-    UIAlertAction *cancelAction = [UIAlertAction
-                                   actionWithTitle:@"Cancel"
-                                   style:UIAlertActionStyleCancel
-                                   handler:^(UIAlertAction *action){
-                                       [self uiUpdateMainFeedTable];
-                                       NSLog(@"alert - Cancel clicked");
-                                   }];
+        UIAlertAction *okeyAction = [UIAlertAction
+                                     actionWithTitle:@"OK."
+                                     style:UIAlertActionStyleDefault
+                                     handler: ^(UIAlertAction *action){
+                                         [self makeRequestAndConnection];
+                                         NSLog(@"alert - OK clicked");
+                                     }];
+        UIAlertAction *cancelAction = [UIAlertAction
+                                       actionWithTitle:@"Cancel."
+                                       style:UIAlertActionStyleCancel
+                                       handler:^(UIAlertAction *action){
+                                           [self uiUpdateMainFeedTable];
+                                           NSLog(@"alert - Cancel clicked");
+                                       }];
     
-    [connectionAlert addAction:cancelAction];
-    [connectionAlert addAction:okeyAction];
-    [self presentViewController:connectionAlert animated:YES completion:nil];
+        [connectionAlert addAction:cancelAction];
+        [connectionAlert addAction:okeyAction];
+        [self presentViewController:connectionAlert animated:YES completion:nil];
 }
-
 
 #pragma mark - Parsing
 

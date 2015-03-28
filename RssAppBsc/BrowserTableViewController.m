@@ -183,6 +183,8 @@
             NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error
                                                              localizedDescription]);
         }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
+    NSLog(@"Browse screen Notification pl.skierbisz.browserscreen.linkdeletedDELETED");
     }
     
 }
