@@ -27,6 +27,7 @@
     FeedItem *currentRssItem;
     UIActivityIndicatorView *spinner;
     NSMutableArray *linksOfFeeds;
+    dispatch_queue_t postPreparingQueue;
 }
 
 - (void)viewDidLoad {
@@ -35,6 +36,7 @@
     tabBarController = [self tabBarController];
     makeRefresh = NO;
     isDataLoaded = NO;
+    postPreparingQueue = dispatch_queue_create("com.rssreader.test", NULL);
     [self internetConnectionChecking];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
@@ -119,13 +121,12 @@
     NSLog(@"makeRequestAndConnection");
     _responseData = nil;
     rssItems = [[NSMutableArray alloc] init];
-    NSURLRequest *request =[[NSURLRequest alloc]init];
-    NSURLConnection *connection = [[NSURLConnection alloc] init];
+    NSURLRequest __block *request =[[NSURLRequest alloc]init];
     
     for(NSString* linkToFeed in linksOfFeeds){
         NSLog(@"item in table of links: %@", linkToFeed);
-        //request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed] cachePolicy: NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:3.0f];
-        //connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        dispatch_async(postPreparingQueue, ^{
         request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
         
         [NSURLConnection sendAsynchronousRequest:request
@@ -150,6 +151,7 @@
                                        [self connectionDidFailedWithError:connectionError];
                                    }
                                }];
+        });
     }
 }
 
