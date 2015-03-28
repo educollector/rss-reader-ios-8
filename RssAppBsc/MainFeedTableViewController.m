@@ -70,7 +70,7 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if (managedObjectContext != nil) {
-        NSLog(@"Fetch result controler != nil");
+        NSLog(@"managedObjectContext != nil");
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
                                  sectionNameKeyPath:nil cacheName:nil];
@@ -95,6 +95,7 @@
 }
 
 -(void)showPopupNoRssAvailable{
+    NSLog(@"showPopupNoRssAvailable");
     UIAlertController *alert = [UIAlertController
                                 alertControllerWithTitle:@"Brak wiadomości"
                                 message:@"Dodaj linki do stron, które chcesz obserwować"
@@ -110,7 +111,8 @@
                                  }];
     [self uiSetSpiner:NO];
     [alert addAction:okeyAction];
-    [self presentViewController:alert animated:YES completion:nil];
+    //self.parentViewController to avoid "presenting view controllers on detached view controllers is discouraged"
+    [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)makeRequestAndConnection{
