@@ -145,8 +145,10 @@
                     NSLog(@"There was an error with synchrononous request: %@", error.description);
                     [self connectionDidFailedWithError:error];
                 }
+                else{
+                    [self makeParsing];
+                }
             }
-        [self makeParsing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self endOfLoadingData];
         });
