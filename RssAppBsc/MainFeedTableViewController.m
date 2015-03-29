@@ -51,8 +51,12 @@
     [self fetchDataFromDatabase];
     [self makeRequestAndConnection];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
+                                               object:nil];
 
 }
 
@@ -154,29 +158,6 @@
         });
                        
     });
-    
-//                [NSURLConnection sendAsynchronousRequest:request
-//                                                   queue:[NSOperationQueue mainQueue] //[[NSOperationQueue alloc] init]
-//                                       completionHandler:^(NSURLResponse *response,
-//                                                           NSData *data,
-//                                                           NSError *connectionError) {
-//                                           // handle response
-//                                           _responseData = [[NSMutableData alloc] init];
-//                                           NSLog(@"didReceiveResponse");
-//                                           [_responseData appendData:data];
-//                                           
-//                                           if(connectionError!=nil){
-//                                               NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
-//                                               [self connectionDidFailedWithError:connectionError];
-//                                           }
-//                                           [self makeParsing];
-//                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                               //UI code on the main queue
-//                                               [self endOfLoadingData];
-//                                               
-//                                           });
-//                                           //[self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
-//                                       }];
 }
 
 -(void)makeParsing{
@@ -271,8 +252,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-
+//*****************************************************************************/
 #pragma mark - Table view data source
+//*****************************************************************************/
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -323,65 +305,9 @@
     return cleanedText;
 }
 
-
-#pragma mark - URL Connecting
-//
-//- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-//    _responseData = [[NSMutableData alloc] init];
-//    NSLog(@"didReceiveResponse");
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-//    [_responseData appendData:data];
-//    NSLog(@"didReceiveData");
-//}
-//
-//- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-//                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-//    // Return nil to indicate not necessary to store a cached response for this connection
-//    return nil;
-//}
-//
-//- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
-//    [rssParser setDelegate: self];
-//    [rssParser parse];
-//    NSLog(@"SUCCESS: connectionDidFinishLoading");
-//    [self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
-//}
-//
-//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-//    connection = nil;
-//    _responseData = nil;
-//    NSLog(@"Connection failed! Errooooooor - %@ %@",
-//          [error localizedDescription],
-//          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
-//    
-//    UIAlertController *connectionAlert = [UIAlertController
-//                                          alertControllerWithTitle:@"oś poszło nie tak"
-//                                          message:[error localizedDescription]
-//                                          preferredStyle:UIAlertControllerStyleAlert];
-//    
-//    UIAlertAction *okeyAction = [UIAlertAction
-//                                 actionWithTitle:@"OK."
-//                                 style:UIAlertActionStyleDefault
-//                                 handler: ^(UIAlertAction *action){
-//                                     [self makeRequestAndConnection];
-//                                     NSLog(@"alert - OK clicked");
-//                                 }];
-//    UIAlertAction *cancelAction = [UIAlertAction
-//                                   actionWithTitle:@"Cancel."
-//                                   style:UIAlertActionStyleCancel
-//                                   handler:^(UIAlertAction *action){
-//                                       [self uiUpdateMainFeedTable];
-//                                       NSLog(@"alert - Cancel clicked");
-//                                   }];
-//    
-//    [connectionAlert addAction:cancelAction];
-//    [connectionAlert addAction:okeyAction];
-//    [self presentViewController:connectionAlert animated:YES completion:nil];
-//}
-//
+//*****************************************************************************/
+#pragma mark - internet Connecting
+//*****************************************************************************/
 - (void) connectionDidFailedWithError: error{
         _responseData = nil;
         NSLog(@"Connection failed! Errooooooor - %@ %@",
@@ -413,7 +339,9 @@
         [self presentViewController:connectionAlert animated:YES completion:nil];
 }
 
+//*****************************************************************************/
 #pragma mark - Parsing
+//*****************************************************************************/
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
@@ -437,7 +365,6 @@
         pubDate = [[NSMutableString alloc] init];
         imgLink = [[NSMutableString alloc] init];
     }
-    //NSLog(@"current element: %@", currentElement);
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -463,18 +390,12 @@
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
         [rssItems addObject:currentRssItem];
     } else if ([elementName isEqualToString:@"entry"]) {
-//        NSLog(@"current element.title: %@", title);
-//        NSLog(@"current element.summary: %@", description);
-//        NSLog(@"current element.uoadate: %@", pubDate);
-//        NSLog(@"current element.link: %@", link);
         currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", currentRssItem.title, currentRssItem.link,currentRssItem.descript, currentRssItem.pubDate);
         [rssItems addObject:currentRssItem];
     }
     NSLog(@"PARSING DONE \t%@", currentRssItem.title);
@@ -485,10 +406,10 @@
     isDataLoaded = YES;
 }
 
-
+//*****************************************************************************/
 #pragma mark - Navigation
+//*****************************************************************************/
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
         NSLog(@"CALL prepareForSegue if");
