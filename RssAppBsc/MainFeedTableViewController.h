@@ -16,6 +16,7 @@
 #import "Reachability.h"
 #import "Url.h"
 #import "AppDelegate.h"
+#import <dispatch/dispatch.h>
 
 
 @interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate>

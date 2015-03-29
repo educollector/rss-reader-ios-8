@@ -28,16 +28,19 @@
     FeedItem *currentRssItem;
     UIActivityIndicatorView *spinner;
     NSMutableArray *linksOfFeeds;
-    dispatch_queue_t postPreparingQueue;
+    dispatch_queue_t backgroundSerialQueue;
+    dispatch_queue_t backgroundGlobalQueue;
 }
 
 - (void)viewDidLoad {
+    
     NSLog(@"Main feed - viewDidLoad");
     [super viewDidLoad];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
     isDataLoaded = NO;
-    postPreparingQueue = dispatch_queue_create("pl.skierbisz.postPreparingQueue", NULL);
+    backgroundSerialQueue = dispatch_queue_create("pl.skierbisz.postPreparingQueue", NULL);
+    backgroundGlobalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
     [self internetConnectionChecking];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
@@ -97,6 +100,7 @@
     }
 }
 
+
 -(void)showPopupNoRssAvailable{
     NSLog(@"showPopupNoRssAvailable");
     UIAlertController *alert = [UIAlertController
@@ -118,52 +122,66 @@
     [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
+
 -(void)makeRequestAndConnection{
     NSLog(@"makeRequestAndConnection");
     _responseData = nil;
+    _responseData = [[NSMutableData alloc] init];
+    NSError __block *error = nil;
+    NSURLResponse __block *response = nil;
     rssItems = [[NSMutableArray alloc] init];
     NSURLRequest __block *request =[[NSURLRequest alloc]init];
     
-    dispatch_async(kBgQueue, ^{
-        for(NSString* linkToFeed in linksOfFeeds){
-            NSLog(@"item in table of links: %@", linkToFeed);
+    dispatch_async(backgroundGlobalQueue,^{
 
-            NSLog(@"postPreparingQueue");
-            request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
-            
-            
-            [NSURLConnection sendAsynchronousRequest:request
-                                               queue:[NSOperationQueue mainQueue]
-                                   completionHandler:^(NSURLResponse *response,
-                                                       NSData *data,
-                                                       NSError *connectionError) {
-                                       // handle response
-                                       _responseData = [[NSMutableData alloc] init];
-                                       NSLog(@"didReceiveResponse");
-                                       [_responseData appendData:data];
-                                       
-                                       if(connectionError!=nil){
-                                           NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
-                                           [self connectionDidFailedWithError:connectionError];
-                                       }
-                                       [self makeParsing];
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           //UI code on the main queue
-                                           [self endOfLoadingData];
-                                           
-                                       });
-                                       //[self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
-                                   }];
-            
-        }
+            for(NSString* linkToFeed in linksOfFeeds){
+                NSLog(@"item in table of links: %@", linkToFeed);
+
+                NSLog(@"making request?");
+                request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
+                
+                [_responseData appendData:[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error]];
+                if(error != nil){
+                    NSLog(@"There was an error with synchrononous request: %@", error.description);
+                    [self connectionDidFailedWithError:error];
+                }
+            }
+        [self makeParsing];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self endOfLoadingData];
+        });
+                       
     });
+    
+//                [NSURLConnection sendAsynchronousRequest:request
+//                                                   queue:[NSOperationQueue mainQueue] //[[NSOperationQueue alloc] init]
+//                                       completionHandler:^(NSURLResponse *response,
+//                                                           NSData *data,
+//                                                           NSError *connectionError) {
+//                                           // handle response
+//                                           _responseData = [[NSMutableData alloc] init];
+//                                           NSLog(@"didReceiveResponse");
+//                                           [_responseData appendData:data];
+//                                           
+//                                           if(connectionError!=nil){
+//                                               NSLog(@"There was error with the asynchronous request: %@", connectionError.description);
+//                                               [self connectionDidFailedWithError:connectionError];
+//                                           }
+//                                           [self makeParsing];
+//                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                               //UI code on the main queue
+//                                               [self endOfLoadingData];
+//                                               
+//                                           });
+//                                           //[self performSelectorOnMainThread:@selector(endOfLoadingData) withObject:Nil waitUntilDone:YES];
+//                                       }];
 }
 
 -(void)makeParsing{
     rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
     [rssParser setDelegate: self];
     [rssParser parse];
-    [self endOfLoadingData];
+    isDataLoaded = YES;
 }
 
 -(void)endOfLoadingData{
@@ -461,6 +479,7 @@
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
+    NSLog(@"parserDidEndDocument");
     isDataLoaded = YES;
 }
 
