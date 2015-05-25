@@ -26,6 +26,8 @@
 		239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */; };
 		239D4E771A8A374400C797C2 /* InternetConnectionMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E761A8A374400C797C2 /* InternetConnectionMonitor.m */; };
 		239D4E7A1A8A37E200C797C2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E791A8A37E200C797C2 /* Reachability.m */; };
+		7D25BF9C1B1326E90085AC5F /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9A1B1326E90085AC5F /* NSString+HTML.m */; };
+		7D25BF9D1B1326E90085AC5F /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9B1B1326E90085AC5F /* README.mdown */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,9 @@
 		239D4E761A8A374400C797C2 /* InternetConnectionMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetConnectionMonitor.m; sourceTree = "<group>"; };
 		239D4E781A8A37E200C797C2 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		239D4E791A8A37E200C797C2 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		7D25BF991B1326E90085AC5F /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		7D25BF9A1B1326E90085AC5F /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		7D25BF9B1B1326E90085AC5F /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +120,7 @@
 		239D4E201A7A59AD00C797C2 /* RssAppBsc */ = {
 			isa = PBXGroup;
 			children = (
+				7D25BF981B1326E90085AC5F /* Externals */,
 				239D4E251A7A59AD00C797C2 /* AppDelegate.h */,
 				239D4E261A7A59AD00C797C2 /* AppDelegate.m */,
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
@@ -213,6 +219,16 @@
 				239D4E6E1A7BA62300C797C2 /* Url.h */,
 			);
 			name = CoreData;
+			sourceTree = "<group>";
+		};
+		7D25BF981B1326E90085AC5F /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				7D25BF991B1326E90085AC5F /* NSString+HTML.h */,
+				7D25BF9A1B1326E90085AC5F /* NSString+HTML.m */,
+				7D25BF9B1B1326E90085AC5F /* README.mdown */,
+			);
+			path = Externals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,11 +339,13 @@
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
+				7D25BF9C1B1326E90085AC5F /* NSString+HTML.m in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
 				239D4E7A1A8A37E200C797C2 /* Reachability.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
+				7D25BF9D1B1326E90085AC5F /* README.mdown in Sources */,
 				239D4E771A8A374400C797C2 /* InternetConnectionMonitor.m in Sources */,
 				239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */,
 			);

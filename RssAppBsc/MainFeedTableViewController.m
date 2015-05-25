@@ -7,6 +7,7 @@
 //
 
 #import "MainFeedTableViewController.h"
+#import "NSString+HTML.h"
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 @interface MainFeedTableViewController (){
@@ -306,7 +307,12 @@
 }
 
 - (NSString *)cleanFromTagsWithScanner:(NSString *)text{
-    NSMutableString *cleanedText = [NSMutableString stringWithCapacity:[text length]];
+    
+    //wstawianie znakow specjalnych zamiast ich kodow
+    NSString *tmpString = [text kv_decodeHTMLCharacterEntities];
+    
+    //czyszczenie z <TAGOW>
+    NSMutableString *cleanedText = [NSMutableString stringWithCapacity:[tmpString length]];
     
     NSScanner *scanner = [NSScanner scannerWithString:text];
     scanner.charactersToBeSkipped = NULL;
