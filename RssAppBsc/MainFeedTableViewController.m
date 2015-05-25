@@ -273,12 +273,12 @@
     FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
-    NSString *cleanDescription = [self cleanFromTags: tmpItem.descript];
+    NSString *cleanDescription = [self cleanFromTagsWithScanner: tmpItem.descript];
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
 }
 
-- (NSString *) cleanFromTags:(NSString *)text{
+- (NSString *) cleanFromTagsWithRegexp:(NSString *)text{
     NSString *cleanedText;
     NSCharacterSet *doNotWant;
     NSError *error = nil;
@@ -305,6 +305,31 @@
     return cleanedText;
 }
 
+- (NSString *)cleanFromTagsWithScanner:(NSString *)text{
+    NSMutableString *cleanedText = [NSMutableString stringWithCapacity:[text length]];
+    
+    NSScanner *scanner = [NSScanner scannerWithString:text];
+    scanner.charactersToBeSkipped = NULL;
+    NSString *tempText = nil;
+    
+    while (![scanner isAtEnd])
+    {
+        [scanner scanUpToString:@"<" intoString:&tempText];
+        
+        if (tempText != nil)
+            [cleanedText appendString:tempText];
+        
+        [scanner scanUpToString:@">" intoString:NULL];
+        
+        if (![scanner isAtEnd])
+            [scanner setScanLocation:[scanner scanLocation] + 1];
+        
+        tempText = nil;
+    }
+    
+    return cleanedText;
+}
+
 //*****************************************************************************/
 #pragma mark - internet Connecting
 //*****************************************************************************/
@@ -315,7 +340,7 @@
               [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
     
         UIAlertController *connectionAlert = [UIAlertController
-                                              alertControllerWithTitle:@"oś poszło nie tak"
+                                              alertControllerWithTitle:@"Coś poszło nie tak"
                                               message:[error localizedDescription]
                                               preferredStyle:UIAlertControllerStyleAlert];
     
