@@ -50,7 +50,7 @@
     [self uiSetSpiner:YES];
     linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
     [self fetchDataFromDatabase];
-    [self makeRequestAndConnectionWithNSSessionWithNSSession];
+    [self makeRequestAndConnectionWithNSSession];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
@@ -129,8 +129,8 @@
     [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
--(void)makeRequestAndConnectionWithNSSessionWithNSSession{
-    NSLog(@"makeRequestAndConnectionWithNSSessionWithNSSession");
+-(void)makeRequestAndConnectionWithNSSession{
+    NSLog(@"makeRequestAndConnectionWithNSSession");
     _responseData = nil;
     rssItems = [[NSMutableArray alloc] init];
     for(NSString* linkToFeed in linksOfFeeds){

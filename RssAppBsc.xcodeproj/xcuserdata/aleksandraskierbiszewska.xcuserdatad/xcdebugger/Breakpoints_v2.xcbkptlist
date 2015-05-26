@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454325806.891625"
+            timestampString = "454326405.575077"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "321"
-            endingLineNumber = "321"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
             landmarkName = "-cleanFromTagsWithRegexp:"
             landmarkType = "5">
          </BreakpointContent>
