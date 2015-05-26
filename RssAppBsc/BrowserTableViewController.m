@@ -26,7 +26,7 @@
     [super viewDidLoad];
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    searchController.searchBar.delegate = self; //potrzebna jest delegata, żeby wywołac searchBarSearchButtonClicked:
+    searchController.searchBar.delegate = self;
     [searchController.searchBar sizeToFit];
     self.tableView.tableHeaderView = searchController.searchBar;
     self.definesPresentationContext = YES;

@@ -10,6 +10,6 @@
 #import <CoreData/CoreData.h>
 #import "Url.h"
 
-@interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating, NSFetchedResultsControllerDelegate>
+@interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating, NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 
 @end

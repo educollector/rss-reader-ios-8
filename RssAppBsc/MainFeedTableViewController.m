@@ -48,9 +48,8 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
-    linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
-    [self fetchDataFromDatabase];
-    [self makeRequestAndConnectionWithNSSession];
+    //linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
+    [self getActualDataFromConnection];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
@@ -67,6 +66,7 @@
     NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
     [self fetchDataFromDatabase];
     [self makeRequestAndConnectionWithNSSession];
+    //[self makeRequestAndConnection];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -131,27 +131,59 @@
 
 -(void)makeRequestAndConnectionWithNSSession{
     NSLog(@"makeRequestAndConnectionWithNSSession");
-    _responseData = nil;
+    _responseData = [[NSMutableData alloc] init];
     rssItems = [[NSMutableArray alloc] init];
-    for(NSString* linkToFeed in linksOfFeeds){
-        NSURLSession *session = [NSURLSession sharedSession];
-        [[session dataTaskWithURL:[NSURL URLWithString: linkToFeed]
-                completionHandler:^(NSData *data,
-                                    NSURLResponse *response,
-                                    NSError *error) {
-                    //Handling the response
-                    [_responseData appendData:(NSData*)response];
-                    if(error != nil){
-                        NSLog(@"There was an error with synchrononous request: %@", error.description);
-                        [self connectionDidFailedWithError:error];
-                    }
-                    else{
-                        [self makeParsing];
-                    }
-                    [self endOfLoadingData];
-                    
-                }] resume];
-    }
+    NSUInteger __block counter = (NSUInteger)0;
+        for(NSString* linkToFeed in linksOfFeeds){            NSURLSession *session = [NSURLSession sharedSession];
+            [[session dataTaskWithURL:[NSURL URLWithString: linkToFeed]
+                    completionHandler:^(NSData *data,
+                                        NSURLResponse *response,
+                                        NSError *error) {
+                        //Handling the response
+                        [_responseData appendData:data];
+                        if(error != nil){
+                            NSLog(@"There was an error with synchrononous request: %@", error.description);
+                            [self connectionDidFailedWithError:error];
+                        }
+                        ++counter;
+                        if(counter  == linksOfFeeds.count){
+                            [self makeParsing];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                [self endOfLoadingData];
+                            });
+                        }
+                    }] resume];
+        }
+}
+
+-(void)makeRequestAndConnection{
+    NSLog(@"makeRequestAndConnection");
+    _responseData = [[NSMutableData alloc] init];
+    NSError __block *error = nil;
+    NSURLResponse __block *response = nil;
+    rssItems = [[NSMutableArray alloc] init];
+    NSURLRequest __block *request =[[NSURLRequest alloc]init];
+    
+    dispatch_async(backgroundGlobalQueue,^{
+        
+        for(NSString* linkToFeed in linksOfFeeds){
+            NSLog(@"item in table of links: %@", linkToFeed);
+            
+            NSLog(@"making request");
+            request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
+            
+            NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+            [_responseData appendData:datatToAppend];
+            if(error != nil){
+                NSLog(@"There was an error with synchrononous request: %@", error.description);
+                [self connectionDidFailedWithError:error];
+            }
+        }
+        [self makeParsing];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self endOfLoadingData];
+        });
+    });
 }
 
 -(void)makeParsing{
