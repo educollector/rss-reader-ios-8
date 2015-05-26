@@ -14,14 +14,21 @@
 @end
 
 @implementation DetailViewController{
-    NSURL *urlRequest;
+    NSURL *urlToLoad;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self uiMakeContent];
     [self uiNavigationBarStyling];
-    _webView.scalesPageToFit = YES;
+    //_webView.scalesPageToFit = YES;
+}
+-(void)uiMakeContent{
+    self.webView.delegate = self;
+    //[self.webView sizeToFit];
+    urlToLoad = [[NSURL alloc] initWithString: self.link];
+    NSURLRequest *request = [NSURLRequest requestWithURL:urlToLoad];
+    [self.webView loadRequest:request];
 }
 
 -(void)uiNavigationBarStyling{
@@ -40,16 +47,8 @@
     [self.navigationItem setRightBarButtonItems:barItemArray];
 }
 
--(void)uiMakeContent{
-    self.webView.delegate = self;
-    [self.webView sizeToFit];
-    urlRequest = [[NSURL alloc] initWithString: self.link];
-    NSURLRequest *request = [NSURLRequest requestWithURL:urlRequest];
-    [self.webView loadRequest:request];
-}
-
 -(void)testMethod{
-    NSLog(@"I am a test method!");
+    NSLog(@"I am a test method! I test nav bar buttons clicking!");
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,33 +58,36 @@
 
 #pragma mark UIWebView delegate methods
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    NSLog(@"could not load the website caused by error: %@", error);
-    
-    NSLog(@"Connection failed! Errooooooor - %@ %@",
-          [error localizedDescription],
-          [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
-    
-    UIAlertController *connectionAlert = [UIAlertController
-                                          alertControllerWithTitle:@"Coś poszło nie tak"
-                                          message:[error localizedDescription]
-                                          preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *okeyAction = [UIAlertAction
-                                 actionWithTitle:@"Try again"
-                                 style:UIAlertActionStyleDefault
-                                 handler: ^(UIAlertAction *action){
-                                     [self uiMakeContent];
-                                 }];
-    UIAlertAction *cancelAction = [UIAlertAction
-                                   actionWithTitle:@"Cancel"
-                                   style:UIAlertActionStyleCancel
-                                   handler:^(UIAlertAction *action){
-                                       [self.navigationController popViewControllerAnimated:YES];
-                                   }];
-    
-    [connectionAlert addAction:cancelAction];
-    [connectionAlert addAction:okeyAction];
-    [self presentViewController:connectionAlert animated:YES completion:nil];
+    //if statemet lets to load all links on the website
+    if(!([error code] == NSURLErrorCancelled)){
+        NSLog(@"could not load the website caused by error: %@", error);
+
+        NSLog(@"Connection failed! Errooooooor - %@ %@",
+              [error localizedDescription],
+              [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+
+        UIAlertController *connectionAlert = [UIAlertController
+                                              alertControllerWithTitle:@"Coś poszło nie tak"
+                                              message:[error localizedDescription]
+                                              preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction *okeyAction = [UIAlertAction
+                                     actionWithTitle:@"Try again"
+                                     style:UIAlertActionStyleDefault
+                                     handler: ^(UIAlertAction *action){
+                                         [self uiMakeContent];
+                                     }];
+        UIAlertAction *cancelAction = [UIAlertAction
+                                       actionWithTitle:@"Cancel"
+                                       style:UIAlertActionStyleCancel
+                                       handler:^(UIAlertAction *action){
+                                           [self.navigationController popViewControllerAnimated:YES];
+                                       }];
+
+        [connectionAlert addAction:cancelAction];
+        [connectionAlert addAction:okeyAction];
+        [self presentViewController:connectionAlert animated:YES completion:nil];
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -98,6 +100,13 @@
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     NSLog(@"webViewDidFinishLoad");
+    if (webView.isLoading){
+        NSLog(@"webview.isLoading");
+    }
+    else{
+        NSLog(@"webview NOT isLoading");
+    }
+    return;
 }
 
 /*
