@@ -128,6 +128,7 @@
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
 				239D4E711A7BA63200C797C2 /* CoreData */,
 				239D4E5F1A7A840700C797C2 /* MainFeed */,
+				7D3332B01B14A312008371FE /* DetailView */,
 				239D4E601A7A843800C797C2 /* Browser */,
 				239D4E611A7A844900C797C2 /* Favourites */,
 				239D4E621A7A845A00C797C2 /* Menu */,
@@ -177,8 +178,6 @@
 				239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */,
 				239D4E501A7A651C00C797C2 /* FeedTableViewCell.h */,
 				239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */,
-				239D4E531A7A761500C797C2 /* DetailViewController.h */,
-				239D4E541A7A761500C797C2 /* DetailViewController.m */,
 				239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */,
 				239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */,
 			);
@@ -232,6 +231,15 @@
 				7D25BF9B1B1326E90085AC5F /* README.mdown */,
 			);
 			path = Externals;
+			sourceTree = "<group>";
+		};
+		7D3332B01B14A312008371FE /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				239D4E541A7A761500C797C2 /* DetailViewController.m */,
+				239D4E531A7A761500C797C2 /* DetailViewController.h */,
+			);
+			name = DetailView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
