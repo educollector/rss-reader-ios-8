@@ -83,7 +83,6 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if (managedObjectContext != nil) {
-        NSLog(@"managedObjectContext != nil");
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
                                  sectionNameKeyPath:nil cacheName:nil];
@@ -91,15 +90,13 @@
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
             NSArray *tmpUrlsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
+            linksOfFeeds = [[NSMutableArray alloc]init];
             if([tmpUrlsArray count] <= 0){
                 [self showPopupNoRssAvailable];
             }
-            else{
-            linksOfFeeds = [[NSMutableArray alloc]init];
-                for(Url* el in tmpUrlsArray){
-                    [linksOfFeeds addObject:el.url];
-                    NSLog(@"%@\n----> %@",el, el.url);
-                }
+            //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
+            for(Url* el in tmpUrlsArray){
+                [linksOfFeeds addObject:el.url];
             }
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);

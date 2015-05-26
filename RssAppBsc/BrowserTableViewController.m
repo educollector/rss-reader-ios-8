@@ -98,6 +98,7 @@
     url.url = searchController.searchBar.text;
     NSLog(@"url.url : %@", url.url);
     NSError *error;
+    //saving url to the Core Data
     if (![managedObjectContext save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
@@ -105,7 +106,6 @@
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
-    NSLog(@"Browse screen Notification pl.skierbisz.browserscreen.linkadded CREATED");
 }
 
 -(void)deletingFeedUrlFormDatabase{
@@ -184,7 +184,6 @@
                                                              localizedDescription]);
         }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
-    NSLog(@"Browse screen Notification pl.skierbisz.browserscreen.linkdeletedDELETED");
     }
     
 }
