@@ -20,7 +20,7 @@
     NSFetchedResultsController *fetchResultController;
     Url *urlToMakeRequest;
     BOOL makeRefresh;
-    BOOL isDataLoaded;
+    BOOL __block isDataLoaded;
     InternetConnectionMonitor *monitor;
     NSXMLParser *rssParser;
     NSMutableArray *rssItems;
@@ -36,7 +36,7 @@
 - (void)viewDidLoad {
     
     NSLog(@"Main feed - viewDidLoad");
-    [super viewDidLoad];
+    _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
     isDataLoaded = NO;
@@ -48,9 +48,9 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
-    //linksOfFeeds = [[NSMutableArray alloc] initWithObjects:  @"http://bit.ly/16LQ3NG", @"http://segritta.pl/feed/",  nil];
+    linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
     [self fetchDataFromDatabase];
-    [self makeRequestAndConnection];
+    [self makeRequestAndConnectionWithNSSessionWithNSSession];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
@@ -58,13 +58,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
+    
+    [super viewDidLoad];
 
 }
 
 -(void)getActualDataFromConnection{
     NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
     [self fetchDataFromDatabase];
-    [self makeRequestAndConnection];
+    [self makeRequestAndConnectionWithNSSession];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -127,38 +129,29 @@
     [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
-
--(void)makeRequestAndConnection{
-    NSLog(@"makeRequestAndConnection");
+-(void)makeRequestAndConnectionWithNSSessionWithNSSession{
+    NSLog(@"makeRequestAndConnectionWithNSSessionWithNSSession");
     _responseData = nil;
-    _responseData = [[NSMutableData alloc] init];
-    NSError __block *error = nil;
-    NSURLResponse __block *response = nil;
     rssItems = [[NSMutableArray alloc] init];
-    NSURLRequest __block *request =[[NSURLRequest alloc]init];
-    
-    dispatch_async(backgroundGlobalQueue,^{
-
-            for(NSString* linkToFeed in linksOfFeeds){
-                NSLog(@"item in table of links: %@", linkToFeed);
-
-                NSLog(@"making request?");
-                request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
-                
-                [_responseData appendData:[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error]];
-                if(error != nil){
-                    NSLog(@"There was an error with synchrononous request: %@", error.description);
-                    [self connectionDidFailedWithError:error];
-                }
-                else{
-                    [self makeParsing];
-                }
-            }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self endOfLoadingData];
-        });
-                       
-    });
+    for(NSString* linkToFeed in linksOfFeeds){
+        NSURLSession *session = [NSURLSession sharedSession];
+        [[session dataTaskWithURL:[NSURL URLWithString: linkToFeed]
+                completionHandler:^(NSData *data,
+                                    NSURLResponse *response,
+                                    NSError *error) {
+                    //Handling the response
+                    [_responseData appendData:(NSData*)response];
+                    if(error != nil){
+                        NSLog(@"There was an error with synchrononous request: %@", error.description);
+                        [self connectionDidFailedWithError:error];
+                    }
+                    else{
+                        [self makeParsing];
+                    }
+                    [self endOfLoadingData];
+                    
+                }] resume];
+    }
 }
 
 -(void)makeParsing{
@@ -217,7 +210,7 @@
     else{
         NSLog(@"Internet connection: TRUE");
         if(makeRefresh){
-            [self makeRequestAndConnection];
+            [self makeRequestAndConnectionWithNSSession];
             makeRefresh = NO;
         }
     }
@@ -274,14 +267,13 @@
     FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
-    NSString *cleanDescription = [self cleanFromTagsWithScanner: tmpItem.descript];
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
+    NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.descript];
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
     return cell;
 }
 
 - (NSString *) cleanFromTagsWithRegexp:(NSString *)text{
     NSString *cleanedText;
-    NSCharacterSet *doNotWant;
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:@"<img.*\/>"
@@ -301,8 +293,6 @@
                                                   options:0
                                                     range:NSMakeRange(0, [cleanedText length])
                                              withTemplate:@""];
-    //doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-=+[]{}:/?.><;,!@#$%^&*\n()\r'"];
-    //cleanedText = [[text componentsSeparatedByCharactersInSet: doNotWant] componentsJoinedByString: @""];
     return cleanedText;
 }
 
@@ -311,7 +301,7 @@
     //wstawianie znakow specjalnych zamiast ich kodow
     NSString *tmpString = [text kv_decodeHTMLCharacterEntities];
     
-    //czyszczenie z <TAGOW>
+    //czyszczenie z <TAGOW HTML>
     NSMutableString *cleanedText = [NSMutableString stringWithCapacity:[tmpString length]];
     
     NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -354,7 +344,7 @@
                                      actionWithTitle:@"OK."
                                      style:UIAlertActionStyleDefault
                                      handler: ^(UIAlertAction *action){
-                                         [self makeRequestAndConnection];
+                                         [self makeRequestAndConnectionWithNSSession];
                                          NSLog(@"alert - OK clicked");
                                      }];
         UIAlertAction *cancelAction = [UIAlertAction

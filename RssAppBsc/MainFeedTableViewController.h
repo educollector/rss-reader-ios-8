@@ -19,7 +19,7 @@
 #import <dispatch/dispatch.h>
 
 
-@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate>
+@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>
 {
     NSMutableData *_responseData;
 }

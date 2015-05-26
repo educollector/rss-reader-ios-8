@@ -28,6 +28,7 @@
 		239D4E7A1A8A37E200C797C2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E791A8A37E200C797C2 /* Reachability.m */; };
 		7D25BF9C1B1326E90085AC5F /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9A1B1326E90085AC5F /* NSString+HTML.m */; };
 		7D25BF9D1B1326E90085AC5F /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9B1B1326E90085AC5F /* README.mdown */; };
+		7D25BF9F1B132B050085AC5F /* MainFeedTableViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9E1B132B050085AC5F /* MainFeedTableViewControllerTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		7D25BF991B1326E90085AC5F /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
 		7D25BF9A1B1326E90085AC5F /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
 		7D25BF9B1B1326E90085AC5F /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
+		7D25BF9E1B132B050085AC5F /* MainFeedTableViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainFeedTableViewControllerTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				239D4E401A7A59AD00C797C2 /* RssAppBscTests.m */,
+				7D25BF9E1B132B050085AC5F /* MainFeedTableViewControllerTest.m */,
 				239D4E3E1A7A59AD00C797C2 /* Supporting Files */,
 			);
 			path = RssAppBscTests;
@@ -355,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D25BF9F1B132B050085AC5F /* MainFeedTableViewControllerTest.m in Sources */,
 				239D4E411A7A59AD00C797C2 /* RssAppBscTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
