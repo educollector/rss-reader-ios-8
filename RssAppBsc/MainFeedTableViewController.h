@@ -17,6 +17,8 @@
 #import "Url.h"
 #import "AppDelegate.h"
 #import <dispatch/dispatch.h>
+#import "Url.h"
+#import "Post.h"
 
 
 @interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>

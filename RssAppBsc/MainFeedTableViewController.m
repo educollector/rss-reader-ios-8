@@ -1,4 +1,4 @@
-//
+
 //  MainFeedTableViewController.m
 //  RssAppBsc
 //
@@ -31,6 +31,7 @@
     NSMutableArray *urlsOfFeeds;
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
+    NSInteger counterOfFeedsParsed;
 }
 
 - (void)viewDidLoad {
@@ -49,7 +50,8 @@
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
     //linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
-    [self getActualDataFromConnection];
+    //[self getActualDataFromConnection];
+    [self fetchPostsFromDtabase];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
@@ -62,19 +64,59 @@
 
 }
 
--(void)getActualDataFromConnection{
-    NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
-    [self fetchDataFromDatabase];
-    [self makeRequestAndConnectionWithNSSession];
-    //[self makeRequestAndConnection];
-}
-
 -(void)viewWillAppear:(BOOL)animated{
     NSLog(@"Main feed - viewWillAppear");
     [super viewWillAppear:animated];
 }
 
--(void)fetchDataFromDatabase{
+-(void)getActualDataFromConnection{
+    NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
+    [self fetchUrlsFromDatabase];
+    [self makeRequestAndConnectionWithNSSession];
+    //[self makeRequestAndConnection];
+}
+
+-(void)fetchPostsFromDtabase{
+    NSLog(@"Main feed - fetchPostsFromDtabase");
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:nil];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    if(managedObjectContext != nil){
+        fetchResultController = [[NSFetchedResultsController alloc]
+                                 initWithFetchRequest:fetchRequest
+                                 managedObjectContext:managedObjectContext
+                                 sectionNameKeyPath:nil
+                                 cacheName:nil];
+        fetchResultController.delegate = self;
+        
+        NSError *error;
+        if ([fetchResultController performFetch:&error]) {
+            NSArray *tmpPostsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
+            urlsOfFeeds = [[NSMutableArray alloc]init];
+            if([tmpPostsArray count] <= 0){
+                [self showPopupNoRssAvailable];
+            }
+            //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
+            postsToDisplay = [[NSMutableArray alloc] init];
+            for(Post *el in tmpPostsArray){
+                FeedItem *item = [[FeedItem alloc]init];
+                item.title = el.title;
+                item.pubDate = el.pubDate;
+                item.shortText = el.pubDate;
+                [postsToDisplay addObject: item];
+            }
+            [self uiUpdateMainFeedTable];
+        } else {
+            NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+        }
+    }
+}
+
+
+
+-(void)fetchUrlsFromDatabase{
     NSLog(@"Main feed - fetchDataFromDatabase");
     //fetchnig data from database
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
@@ -84,8 +126,10 @@
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if (managedObjectContext != nil) {
         fetchResultController = [[NSFetchedResultsController alloc]
-                                 initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
-                                 sectionNameKeyPath:nil cacheName:nil];
+                                 initWithFetchRequest:fetchRequest
+                                 managedObjectContext:managedObjectContext
+                                 sectionNameKeyPath:nil
+                                 cacheName:nil];
         fetchResultController.delegate = self;
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
@@ -127,6 +171,7 @@
 }
 
 -(void)makeRequestAndConnectionWithNSSession{
+    counterOfFeedsParsed = 0;
     NSLog(@"makeRequestAndConnectionWithNSSession");
     _responseData = [[NSMutableData alloc] init];
     postsToDisplay = [[NSMutableArray alloc] init];
@@ -157,6 +202,27 @@
     else{
         [self makeParsing];
         [self endOfLoadingData];
+    }
+}
+
+-(void) savePostsToCoreData{
+    NSLog(@"savePostsToCoreData");
+    if(isDataLoaded){
+        //Url *url;
+        Post *postToSave;
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        for(FeedItem *post in postsToDisplay){
+            NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
+            postToSave.title = post.title;
+            postToSave.shortText = post.shortText;
+            postToSave.pubDate = post.pubDate;
+            
+            NSError *error;
+            if (![managedObjectContext save:&error]) {
+                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+            }
+        }
     }
 }
 
@@ -200,12 +266,14 @@
 
 -(void)endOfLoadingData{
     NSLog(@"endOfLoadingData");
-    for(FeedItem* el in postsToDisplay){
-        NSLog(@"-Element: %@", el.title);
-    }
+    for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
     NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
     
     if(isDataLoaded){
+        dispatch_async(backgroundGlobalQueue, ^{
+            [self savePostsToCoreData];
+        });
+
         [self uiUpdateMainFeedTable];
     }
 }
@@ -404,27 +472,28 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
-(NSDictionary *)attributeDict {
-    currentElement = elementName;
-    if ([currentElement isEqualToString:@"item"]) {
-        FeedItem *rssItem = [[FeedItem alloc] init];
-        currentRssItem = rssItem;
-        title = [[NSMutableString alloc] init];
-        link = [[NSMutableString alloc] init];
-        description = [[NSMutableString alloc] init];
-        pubDate = [[NSMutableString alloc] init];
-        imgLink = [[NSMutableString alloc] init];
-    }
-    else if ([currentElement isEqualToString:@"entry"]) {
-        FeedItem *rssItem = [[FeedItem alloc] init];
-        currentRssItem = rssItem;
-        title = [[NSMutableString alloc] init];
-        link = [[NSMutableString alloc] init];
-        description = [[NSMutableString alloc] init];
-        pubDate = [[NSMutableString alloc] init];
-        imgLink = [[NSMutableString alloc] init];
-    }
+    (NSDictionary *)attributeDict {
+        currentElement = elementName;
+        if ([currentElement isEqualToString:@"item"]) {
+            FeedItem *rssItem = [[FeedItem alloc] init];
+            currentRssItem = rssItem;
+            title = [[NSMutableString alloc] init];
+            link = [[NSMutableString alloc] init];
+            description = [[NSMutableString alloc] init];
+            pubDate = [[NSMutableString alloc] init];
+            imgLink = [[NSMutableString alloc] init];
+        }
+        else if ([currentElement isEqualToString:@"entry"]) {
+            FeedItem *rssItem = [[FeedItem alloc] init];
+            currentRssItem = rssItem;
+            title = [[NSMutableString alloc] init];
+            link = [[NSMutableString alloc] init];
+            description = [[NSMutableString alloc] init];
+            pubDate = [[NSMutableString alloc] init];
+            imgLink = [[NSMutableString alloc] init];
+        }
 }
+
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     if ([currentElement isEqualToString:@"title"]) {
