@@ -23,12 +23,12 @@
     BOOL __block isDataLoaded;
     InternetConnectionMonitor *monitor;
     NSXMLParser *rssParser;
-    NSMutableArray *rssItems;
+    NSMutableArray *postsToDisplay;
     NSMutableString *title, *link, *description,*pubDate, *imgLink;
     NSString *currentElement;
     FeedItem *currentRssItem;
     UIActivityIndicatorView *spinner;
-    NSMutableArray *linksOfFeeds;
+    NSMutableArray *urlsOfFeeds;
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
 }
@@ -90,13 +90,13 @@
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
             NSArray *tmpUrlsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
-            linksOfFeeds = [[NSMutableArray alloc]init];
+            urlsOfFeeds = [[NSMutableArray alloc]init];
             if([tmpUrlsArray count] <= 0){
                 [self showPopupNoRssAvailable];
             }
             //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
             for(Url* el in tmpUrlsArray){
-                [linksOfFeeds addObject:el.url];
+                [urlsOfFeeds addObject:el.url];
             }
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
@@ -129,12 +129,12 @@
 -(void)makeRequestAndConnectionWithNSSession{
     NSLog(@"makeRequestAndConnectionWithNSSession");
     _responseData = [[NSMutableData alloc] init];
-    rssItems = [[NSMutableArray alloc] init];
+    postsToDisplay = [[NSMutableArray alloc] init];
     NSUInteger __block counter = (NSUInteger)0;
-    if(linksOfFeeds.count != 0){
-        for(NSString* linkToFeed in linksOfFeeds){
+    if(urlsOfFeeds.count != 0){
+        for(NSString* feedUrl in urlsOfFeeds){
             NSURLSession *session = [NSURLSession sharedSession];
-            [[session dataTaskWithURL:[NSURL URLWithString: linkToFeed]
+            [[session dataTaskWithURL:[NSURL URLWithString: feedUrl]
                     completionHandler:^(NSData *data,
                                         NSURLResponse *response,
                                         NSError *error) {
@@ -145,7 +145,7 @@
                             [self connectionDidFailedWithError:error];
                         }
                         ++counter;
-                        if(counter  == linksOfFeeds.count){
+                        if(counter  == urlsOfFeeds.count){
                             [self makeParsing];
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                 [self endOfLoadingData];
@@ -165,22 +165,23 @@
     _responseData = [[NSMutableData alloc] init];
     NSError __block *error = nil;
     NSURLResponse __block *response = nil;
-    rssItems = [[NSMutableArray alloc] init];
+    postsToDisplay = [[NSMutableArray alloc] init];
     NSURLRequest __block *request =[[NSURLRequest alloc]init];
     
     dispatch_async(backgroundGlobalQueue,^{
-        
-        for(NSString* linkToFeed in linksOfFeeds){
-            NSLog(@"item in table of links: %@", linkToFeed);
-            
-            NSLog(@"making request");
-            request= [NSURLRequest requestWithURL:[NSURL URLWithString: linkToFeed]];
-            
-            NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-            [_responseData appendData:datatToAppend];
-            if(error != nil){
-                NSLog(@"There was an error with synchrononous request: %@", error.description);
-                [self connectionDidFailedWithError:error];
+        if(urlsOfFeeds.count != 0){
+            for(NSString* feedUrl in urlsOfFeeds){
+                NSLog(@"item in table of links: %@", feedUrl);
+                
+                NSLog(@"making request");
+                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
+                
+                NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+                [_responseData appendData:datatToAppend];
+                if(error != nil){
+                    NSLog(@"There was an error with synchrononous request: %@", error.description);
+                    [self connectionDidFailedWithError:error];
+                }
             }
         }
         [self makeParsing];
@@ -199,10 +200,10 @@
 
 -(void)endOfLoadingData{
     NSLog(@"endOfLoadingData");
-    for(FeedItem* el in rssItems){
+    for(FeedItem* el in postsToDisplay){
         NSLog(@"-Element: %@", el.title);
     }
-    NSLog(@"rssItems count %d", (int)[rssItems count]);
+    NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
     if(isDataLoaded){
         [self uiUpdateMainFeedTable];
     }
@@ -291,7 +292,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return rssItems.count;
+    return postsToDisplay.count;
 }
 
 
@@ -300,7 +301,7 @@
     static NSString * cellIdentifier = @"FeedCell";
     FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
-    FeedItem *tmpItem = [rssItems objectAtIndex:indexPath.row];
+    FeedItem *tmpItem = [postsToDisplay objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
     NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.descript];
@@ -447,13 +448,13 @@
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        [rssItems addObject:currentRssItem];
+        [postsToDisplay addObject:currentRssItem];
     } else if ([elementName isEqualToString:@"entry"]) {
         currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        [rssItems addObject:currentRssItem];
+        [postsToDisplay addObject:currentRssItem];
     }
     NSLog(@"PARSING DONE \t%@", currentRssItem.title);
 }
@@ -472,7 +473,7 @@
         NSLog(@"CALL prepareForSegue if");
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;
-        FeedItem *item = rssItems[indexPath.row];
+        FeedItem *item = postsToDisplay[indexPath.row];
         destinationViewController.link = item.link;
     }
 }
