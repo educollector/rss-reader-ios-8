@@ -33,6 +33,9 @@
     dispatch_queue_t backgroundGlobalQueue;
     NSInteger counterOfFeedsParsed;
 }
+//*****************************************************************************/
+#pragma mark - View methods
+//*****************************************************************************/
 
 - (void)viewDidLoad {
     
@@ -68,6 +71,19 @@
     NSLog(@"Main feed - viewWillAppear");
     [super viewWillAppear:animated];
 }
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+//*****************************************************************************/
+#pragma mark - Data
+//*****************************************************************************/
 
 -(void)getActualDataFromConnection{
     NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
@@ -149,26 +165,7 @@
 }
 
 
--(void)showPopupNoRssAvailable{
-    NSLog(@"showPopupNoRssAvailable");
-    UIAlertController *alert = [UIAlertController
-                                alertControllerWithTitle:@"Brak wiadomości"
-                                message:@"Dodaj linki do stron, które chcesz obserwować"
-                                preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *okeyAction = [UIAlertAction
-                                 actionWithTitle:@"OK"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction *acton){
-                                     NSLog(@"ok action");
-                                     [self uiSetSpiner:NO];
-                                     self.tabBarController.selectedIndex = 1;
-                                 }];
-    [self uiSetSpiner:NO];
-    [alert addAction:okeyAction];
-    //self.parentViewController to avoid "presenting view controllers on detached view controllers is discouraged"
-    [self.parentViewController presentViewController:alert animated:YES completion:nil];
-}
+
 
 -(void)makeRequestAndConnectionWithNSSession{
     counterOfFeedsParsed = 0;
@@ -226,37 +223,6 @@
     }
 }
 
--(void)makeRequestAndConnection{
-    NSLog(@"makeRequestAndConnection");
-    _responseData = [[NSMutableData alloc] init];
-    NSError __block *error = nil;
-    NSURLResponse __block *response = nil;
-    postsToDisplay = [[NSMutableArray alloc] init];
-    NSURLRequest __block *request =[[NSURLRequest alloc]init];
-    
-    dispatch_async(backgroundGlobalQueue,^{
-        if(urlsOfFeeds.count != 0){
-            for(NSString* feedUrl in urlsOfFeeds){
-                NSLog(@"item in table of links: %@", feedUrl);
-                
-                NSLog(@"making request");
-                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
-                
-                NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-                [_responseData appendData:datatToAppend];
-                if(error != nil){
-                    NSLog(@"There was an error with synchrononous request: %@", error.description);
-                    [self connectionDidFailedWithError:error];
-                }
-            }
-        }
-        [self makeParsing];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self endOfLoadingData];
-        });
-    });
-}
-
 -(void)makeParsing{
     rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
     [rssParser setDelegate: self];
@@ -278,52 +244,11 @@
     }
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
--(void)internetConnectionChecking{
-    NSLog(@"internetConnectionChecking");
-    monitor = [[InternetConnectionMonitor alloc]init];
-
-    if(!monitor.canAccessInternet){
-        makeRefresh = YES;
-        UIAlertController *alert = [UIAlertController
-                                     alertControllerWithTitle:@"Brak połączenia z internetem"
-                                     message:@"Sprawdź połacznie w Ustawieniach telefonu i spróbuj ponownie"
-                                    preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *okeyAction = [UIAlertAction
-                                     actionWithTitle:@"OK"
-                                     style:UIAlertActionStyleDefault
-                                     handler:^(UIAlertAction *acton){
-                                         NSLog(@"ok action");
-                                         [self uiSetSpiner:NO];
-                                         self.navigationItem.title = @"-----";
-                                     }];
-        UIAlertAction *retryAction = [UIAlertAction
-                                      actionWithTitle:@"Try again"
-                                      style:UIAlertActionStyleCancel
-                                      handler:^(UIAlertAction *action){
-                                          [self uiSetSpiner:NO];
-                                          [self viewDidLoad];
-                                      }];
-        
-        [alert addAction:retryAction];
-        [alert addAction:okeyAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else{
-        NSLog(@"Internet connection: TRUE");
-        if(makeRefresh){
-            [self makeRequestAndConnectionWithNSSession];
-            makeRefresh = NO;
-        }
-    }
-}
+//*****************************************************************************/
+#pragma mark - UI update
+//*****************************************************************************/
 
 -(void)uiUpdateMainFeedTable{
-    NSLog(@"uiUpdateMainFeedTable");
     [self.tableView reloadData];
     [self uiSetSpiner:NO];
 }
@@ -345,11 +270,6 @@
             [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
         }
     }
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 //*****************************************************************************/
@@ -433,7 +353,7 @@
 }
 
 //*****************************************************************************/
-#pragma mark - internet Connecting
+#pragma mark - Internet Connection
 //*****************************************************************************/
 - (void) connectionDidFailedWithError: error{
         _responseData = nil;
@@ -464,6 +384,46 @@
         [connectionAlert addAction:cancelAction];
         [connectionAlert addAction:okeyAction];
         [self presentViewController:connectionAlert animated:YES completion:nil];
+}
+
+-(void)internetConnectionChecking{
+    NSLog(@"internetConnectionChecking");
+    monitor = [[InternetConnectionMonitor alloc]init];
+    
+    if(!monitor.canAccessInternet){
+        makeRefresh = YES;
+        UIAlertController *alert = [UIAlertController
+                                    alertControllerWithTitle:@"Brak połączenia z internetem"
+                                    message:@"Sprawdź połacznie w Ustawieniach telefonu i spróbuj ponownie"
+                                    preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *okeyAction = [UIAlertAction
+                                     actionWithTitle:@"OK"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction *acton){
+                                         NSLog(@"ok action");
+                                         [self uiSetSpiner:NO];
+                                         self.navigationItem.title = @"-----";
+                                     }];
+        UIAlertAction *retryAction = [UIAlertAction
+                                      actionWithTitle:@"Try again"
+                                      style:UIAlertActionStyleCancel
+                                      handler:^(UIAlertAction *action){
+                                          [self uiSetSpiner:NO];
+                                          [self viewDidLoad];
+                                      }];
+        
+        [alert addAction:retryAction];
+        [alert addAction:okeyAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else{
+        NSLog(@"Internet connection: TRUE");
+        if(makeRefresh){
+            [self makeRequestAndConnectionWithNSSession];
+            makeRefresh = NO;
+        }
+    }
 }
 
 //*****************************************************************************/
@@ -587,5 +547,65 @@
 }
 */
 
+//*****************************************************************************/
+#pragma mark - Popups
+//*****************************************************************************/
+
+-(void)showPopupNoRssAvailable{
+    NSLog(@"showPopupNoRssAvailable");
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:@"Brak wiadomości"
+                                message:@"Dodaj linki do stron, które chcesz obserwować"
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okeyAction = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction *acton){
+                                     NSLog(@"ok action");
+                                     [self uiSetSpiner:NO];
+                                     self.tabBarController.selectedIndex = 1;
+                                 }];
+    [self uiSetSpiner:NO];
+    [alert addAction:okeyAction];
+    //self.parentViewController to avoid "presenting view controllers on detached view controllers is discouraged"
+    [self.parentViewController presentViewController:alert animated:YES completion:nil];
+}
+
+//*****************************************************************************/
+#pragma mark - Helper methods
+//*****************************************************************************/
+//
+//
+//-(void)makeRequestAndConnection{
+//    NSLog(@"makeRequestAndConnection");
+//    _responseData = [[NSMutableData alloc] init];
+//    NSError __block *error = nil;
+//    NSURLResponse __block *response = nil;
+//    postsToDisplay = [[NSMutableArray alloc] init];
+//    NSURLRequest __block *request =[[NSURLRequest alloc]init];
+//    
+//    dispatch_async(backgroundGlobalQueue,^{
+//        if(urlsOfFeeds.count != 0){
+//            for(NSString* feedUrl in urlsOfFeeds){
+//                NSLog(@"item in table of links: %@", feedUrl);
+//                
+//                NSLog(@"making request");
+//                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
+//                
+//                NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+//                [_responseData appendData:datatToAppend];
+//                if(error != nil){
+//                    NSLog(@"There was an error with synchrononous request: %@", error.description);
+//                    [self connectionDidFailedWithError:error];
+//                }
+//            }
+//        }
+//        [self makeParsing];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self endOfLoadingData];
+//        });
+//    });
+//}
 
 @end
