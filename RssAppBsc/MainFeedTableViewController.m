@@ -204,6 +204,7 @@
         NSLog(@"-Element: %@", el.title);
     }
     NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
+    
     if(isDataLoaded){
         [self uiUpdateMainFeedTable];
     }
@@ -304,8 +305,8 @@
     FeedItem *tmpItem = [postsToDisplay objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
-    NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.descript];
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.descript, tmpItem.pubDate);
+    NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.shortText];
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.shortText, tmpItem.pubDate);
     return cell;
 }
 
@@ -446,13 +447,13 @@
     if ([elementName isEqualToString:@"item"]) {
         currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         [postsToDisplay addObject:currentRssItem];
     } else if ([elementName isEqualToString:@"entry"]) {
         currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.descript = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         [postsToDisplay addObject:currentRssItem];
     }
