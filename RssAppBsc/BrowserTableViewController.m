@@ -86,16 +86,16 @@
 {
     BOOL isTheLinkValid = [self validateUrl:searchController.searchBar.text];
     if(!isTheLinkValid){
-        NSLog(@"String walidation : invalid: %d",isTheLinkValid);
+        NSLog(@"String validation : invalid: %d",isTheLinkValid);
     }
     else{
-        NSLog(@"String walidation : valid");
+        NSLog(@"String validation : valid");
     }
     NSLog(@"searchBarSearchButtonClicked");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
-    url.url = searchController.searchBar.text;
+    url.url = [NSString stringWithFormat:@"http://%@", searchController.searchBar.text];
     NSLog(@"url.url : %@", url.url);
     NSError *error;
     //saving url to the Core Data

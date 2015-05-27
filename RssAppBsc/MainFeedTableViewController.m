@@ -34,13 +34,14 @@
     NSInteger counterOfFeedsParsed;
     AppDelegate *appDelegate;
     NSManagedObjectContext *managedObjectContext;
+    UIRefreshControl *refreshControl;
 }
 //*****************************************************************************/
 #pragma mark - View methods
 //*****************************************************************************/
 
 - (void)viewDidLoad {
-    
+    [super viewDidLoad];
     NSLog(@"Main feed - viewDidLoad");
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
@@ -59,8 +60,8 @@
     managedObjectContext = [appDelegate managedObjectContext];
     
     //linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
-    //[self getActualDataFromConnection];
-    [self fetchPostsFromDtabase];
+    [self getActualDataFromConnection];
+    //[self fetchPostsFromDtabase];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
@@ -68,6 +69,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
+    refreshControl = [[UIRefreshControl alloc]init];
+    [self.tableView addSubview:refreshControl];
+    [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
     
     [super viewDidLoad];
 
@@ -137,7 +141,7 @@
 
 
 -(void)fetchUrlsFromDatabase{
-    NSLog(@"Main feed - fetchDataFromDatabase");
+    NSLog(@"Main feed - fetchUrlsFromDatabase");
     //fetchnig data from database
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
@@ -204,7 +208,7 @@
 -(void) savePostsToCoreData{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
-        //Url *url;
+        [self deleteAllEntities: @"Post"];
         Post *postToSave;
         for(FeedItem *post in postsToDisplay){
             postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
@@ -245,13 +249,13 @@
 
 -(void)endOfLoadingData{
     NSLog(@"endOfLoadingData");
-    for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
+    //for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
     NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
     
     if(isDataLoaded){
-        dispatch_async(backgroundGlobalQueue, ^{
+        //dispatch_async(backgroundGlobalQueue, ^{
             [self savePostsToCoreData];
-        });
+        //});
 
         [self uiUpdateMainFeedTable];
     }
@@ -263,7 +267,8 @@
 
 -(void)uiUpdateMainFeedTable{
     [self.tableView reloadData];
-    [self uiSetSpiner:NO];
+    [self uiSetSpiner:NO];    
+    [refreshControl endRefreshing];
 }
 
 -(void)uiSetSpiner:(BOOL) isLoading{
@@ -294,6 +299,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (postsToDisplay == nil){
+        return 0;
+    }
     return postsToDisplay.count;
 }
 
@@ -499,7 +507,7 @@
         currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         [postsToDisplay addObject:currentRssItem];
     }
-    NSLog(@"PARSING DONE \t%@", currentRssItem.title);
+    if(currentRssItem.title!=nil) {NSLog(@"PARSING DONE \t%@", currentRssItem.title);}
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser{
