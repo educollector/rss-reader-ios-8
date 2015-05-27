@@ -32,6 +32,8 @@
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
     NSInteger counterOfFeedsParsed;
+    AppDelegate *appDelegate;
+    NSManagedObjectContext *managedObjectContext;
 }
 //*****************************************************************************/
 #pragma mark - View methods
@@ -52,6 +54,10 @@
     // Set this in every view controller so that the back button displays back instead of the root view controller name
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
+    
+    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    managedObjectContext = [appDelegate managedObjectContext];
+    
     //linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
     //[self getActualDataFromConnection];
     [self fetchPostsFromDtabase];
@@ -97,8 +103,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:nil];
     fetchRequest.sortDescriptors = @[sortDescriptor];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if(managedObjectContext != nil){
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest
@@ -138,8 +142,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
     fetchRequest.sortDescriptors = @[sortDescriptor];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if (managedObjectContext != nil) {
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest
@@ -163,9 +165,6 @@
         }
     }
 }
-
-
-
 
 -(void)makeRequestAndConnectionWithNSSession{
     counterOfFeedsParsed = 0;
@@ -207,9 +206,7 @@
     if(isDataLoaded){
         //Url *url;
         Post *postToSave;
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         for(FeedItem *post in postsToDisplay){
-            NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
             postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
             postToSave.title = post.title;
             postToSave.shortText = post.shortText;
@@ -221,6 +218,22 @@
             }
         }
     }
+}
+
+- (void)deleteAllEntities:(NSString *)nameEntity
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:nameEntity];
+    [fetchRequest setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError *error;
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    for (NSManagedObject *object in fetchedObjects)
+    {
+        [managedObjectContext deleteObject:object];
+    }
+    
+    error = nil;
+    [managedObjectContext save:&error];
 }
 
 -(void)makeParsing{
