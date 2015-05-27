@@ -23,11 +23,10 @@
     self.webView.backgroundColor = [UIColor clearColor];
     [self uiMakeContent];
     [self uiNavigationBarStyling];
-    //_webView.scalesPageToFit = YES;
+    self.webView.scalesPageToFit = YES;
 }
 -(void)uiMakeContent{
     self.webView.delegate = self;
-    //[self.webView sizeToFit];
     urlToLoad = [[NSURL alloc] initWithString: self.link];
     NSURLRequest *request = [NSURLRequest requestWithURL:urlToLoad];
     [self.webView loadRequest:request];
