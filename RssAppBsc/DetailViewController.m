@@ -19,6 +19,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.webView.opaque = NO;
+    self.webView.backgroundColor = [UIColor clearColor];
     [self uiMakeContent];
     [self uiNavigationBarStyling];
     //_webView.scalesPageToFit = YES;
