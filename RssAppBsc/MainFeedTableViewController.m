@@ -59,9 +59,9 @@
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     managedObjectContext = [appDelegate managedObjectContext];
     
-    //linksOfFeeds = [[NSMutableArray alloc] initWithObjects: @"http://rss.cnn.com/rss/edition.rss",  nil];
-    [self getActualDataFromConnection];
-    //[self fetchPostsFromDtabase];
+    //Choose to have: data loaded at the app start OR to get data from CoreData (than use pull to refresh)
+    //[self getActualDataFromConnection];
+    [self fetchPostsFromDtabase];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"

@@ -15,23 +15,76 @@
 
 @implementation DetailViewController{
     NSURL *urlToLoad;
+    IBOutlet UIBarButtonItem *backButton;
+    IBOutlet UIBarButtonItem *forwardButton;
+    IBOutlet UIBarButtonItem *stopButton;
+    IBOutlet UIToolbar *webViewToolbar;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.webView.opaque = NO;
-    self.webView.backgroundColor = [UIColor clearColor];
+    self.webView.delegate = self;
     [self uiMakeContent];
     [self uiNavigationBarStyling];
-    self.webView.scalesPageToFit = YES;
+    [self uiMakeWebViewToolbar];
 }
 -(void)uiMakeContent{
-    self.webView.delegate = self;
+    self.webView.opaque = NO;
+    self.webView.backgroundColor = [UIColor clearColor];    
+    self.webView.scalesPageToFit = YES;
     urlToLoad = [[NSURL alloc] initWithString: self.link];
     NSURLRequest *request = [NSURLRequest requestWithURL:urlToLoad];
     [self.webView loadRequest:request];
 }
 
+-(void)uiMakeWebViewToolbar{
+    self.navigationController.toolbarHidden = NO;
+    self.tabBarController.tabBar.hidden = YES;
+//    CGRect frame = CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 44-49, [[UIScreen mainScreen] bounds].size.width, 44);
+//    webViewToolbar = [[UIToolbar alloc]initWithFrame:frame];
+//    webViewToolbar.backgroundColor = [UIColor orangeColor];
+//    webViewToolbar.barStyle = UIBarStyleBlackTranslucent;
+//    [webViewToolbar sizeToFit];
+//    [self.view addSubview:webViewToolbar];
+    
+    NSString *backArrowString = @"\U000025C0\U0000FE0E"; //BLACK LEFT-POINTING TRIANGLE PLUS VARIATION SELECTOR
+    
+    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc]
+                                          initWithTitle:backArrowString
+                                          style:UIBarButtonItemStylePlain
+                                          target:self
+                                          action:@selector(webViewGoBack)];
+    UIBarButtonItem *forwardBarButtonItem = [[UIBarButtonItem alloc]
+                                          initWithTitle:backArrowString
+                                          style:UIBarButtonItemStylePlain
+                                          target:self
+                                          action:@selector(webViewGoForward)];
+    
+//
+//    UIBarButtonItem *flexiableItem = [[UIBarButtonItem alloc]
+//                                          initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+//                                          target:self
+//                                          action:nil];
+
+    NSArray *items = [NSArray arrayWithObjects:backBarButtonItem, forwardBarButtonItem, nil];
+    self.toolbarItems = items;
+}
+
+-(void)webViewGoBack{
+    if ([self.webView canGoBack])
+    {
+        [self.webView goBack];
+    }
+}
+
+-(void)webViewGoForward{
+    if ([self.webView canGoForward])
+    {
+        [self.webView canGoForward];
+    }
+}
+                                        
+                                          
 -(void)uiNavigationBarStyling{
     UIImage *shareImage = [[UIImage alloc] init];
     NSString *image = @"share.png";
