@@ -131,7 +131,9 @@
     _responseData = [[NSMutableData alloc] init];
     rssItems = [[NSMutableArray alloc] init];
     NSUInteger __block counter = (NSUInteger)0;
-        for(NSString* linkToFeed in linksOfFeeds){            NSURLSession *session = [NSURLSession sharedSession];
+    if(linksOfFeeds.count != 0){
+        for(NSString* linkToFeed in linksOfFeeds){
+            NSURLSession *session = [NSURLSession sharedSession];
             [[session dataTaskWithURL:[NSURL URLWithString: linkToFeed]
                     completionHandler:^(NSData *data,
                                         NSURLResponse *response,
@@ -151,6 +153,11 @@
                         }
                     }] resume];
         }
+    }
+    else{
+        [self makeParsing];
+        [self endOfLoadingData];
+    }
 }
 
 -(void)makeRequestAndConnection{
