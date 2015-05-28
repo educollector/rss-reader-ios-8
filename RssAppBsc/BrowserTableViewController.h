@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "Post.h"
 #import "Url.h"
+#import "FeedItem.h"
 
 @interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating, NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 

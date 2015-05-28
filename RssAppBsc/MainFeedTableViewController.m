@@ -2,6 +2,7 @@
 #import "NSString+HTML.h"
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
+
 @interface MainFeedTableViewController (){
 }
 
@@ -23,7 +24,6 @@
     NSMutableArray *urlsOfFeeds;
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
-    NSInteger counterOfFeedsParsed;
     AppDelegate *appDelegate;
     NSManagedObjectContext *managedObjectContext;
     UIRefreshControl *refreshControl;
@@ -53,8 +53,8 @@
     //--------------------------------------//
     //Choose how to load data at start      //
     //--------------------------------------//
-    //[self getActualDataFromConnection];   //
-    [self fetchPostsFromDtabase];           //
+    [self getActualDataFromConnection];
+    //[self fetchPostsFromDtabase];
     //--------------------------------------//
 }
 
@@ -75,10 +75,12 @@
 
 -(void)setNotificationCenter{
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
+                                             selector:@selector(getActualDataFromConnection)
+                                                 name:@"pl.skierbisz.browserscreen.linkadded"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
+                                             selector:@selector(getActualDataFromConnection)
+                                                 name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
 }
 -(void)styleTheView{
@@ -123,7 +125,6 @@
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
             NSArray *tmpPostsArray = [[NSArray alloc] initWithArray: fetchResultController.fetchedObjects];
-            urlsOfFeeds = [[NSMutableArray alloc]init];
             if([tmpPostsArray count] <= 0){
                 [self showPopupNoRssAvailable];
             }
@@ -174,40 +175,70 @@
     }
 }
 
+//-(void)makeRequestAndConnectionWithNSSession{
+//    NSLog(@"makeRequestAndConnectionWithNSSession");
+//    _responseData = [[NSMutableData alloc] init];
+//    postsToDisplay = [[NSMutableArray alloc] init];
+//    NSUInteger __block counter = (NSUInteger)0;
+//    if(urlsOfFeeds.count != 0){
+//        for(NSString* feedUrl in urlsOfFeeds){
+//            NSURLSession *session = [NSURLSession sharedSession];
+//            [[session dataTaskWithURL:[NSURL URLWithString: feedUrl]
+//                    completionHandler:^(NSData *data,
+//                                        NSURLResponse *response,
+//                                        NSError *error) {
+//                        //Handling the response
+//                        [_responseData appendData:data];
+//                        if(error != nil){
+//                            NSLog(@"There was an error with synchrononous request: %@", error.description);
+//                            [self connectionDidFailedWithError:error];
+//                        }
+//                        ++counter;
+//                        if(counter  == urlsOfFeeds.count){
+//                            [self makeParsing];
+//                                dispatch_async(dispatch_get_main_queue(), ^{
+//                                [self endOfLoadingData];
+//                            });
+//                        }
+//                    }] resume];
+//        }
+//    }
+//    else{
+//        [self makeParsing];
+//        [self endOfLoadingData];
+//    }
+//}
+
 -(void)makeRequestAndConnectionWithNSSession{
-    counterOfFeedsParsed = 0;
-    NSLog(@"makeRequestAndConnectionWithNSSession");
-    _responseData = [[NSMutableData alloc] init];
+    NSError __block *error = nil;
+    NSURLResponse __block *response = nil;
     postsToDisplay = [[NSMutableArray alloc] init];
-    NSUInteger __block counter = (NSUInteger)0;
-    if(urlsOfFeeds.count != 0){
-        for(NSString* feedUrl in urlsOfFeeds){
-            NSURLSession *session = [NSURLSession sharedSession];
-            [[session dataTaskWithURL:[NSURL URLWithString: feedUrl]
-                    completionHandler:^(NSData *data,
-                                        NSURLResponse *response,
-                                        NSError *error) {
-                        //Handling the response
-                        [_responseData appendData:data];
-                        if(error != nil){
-                            NSLog(@"There was an error with synchrononous request: %@", error.description);
-                            [self connectionDidFailedWithError:error];
-                        }
-                        ++counter;
-                        if(counter  == urlsOfFeeds.count){
-                            [self makeParsing];
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                [self endOfLoadingData];
-                            });
-                        }
-                    }] resume];
+    NSURLRequest __block *request =[[NSURLRequest alloc]init];
+
+    dispatch_async(backgroundGlobalQueue,^{
+        if(urlsOfFeeds.count != 0){
+            for(NSString* feedUrl in urlsOfFeeds){
+                
+                _responseData = [[NSMutableData alloc] init];
+                NSURL *url = [NSURL URLWithString: feedUrl];
+                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
+
+                //NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+                NSData *datatToAppend = [NSURLSession sendSynchronousDataTaskWithURL:url returningResponse:&response error:&error];
+                [_responseData appendData:datatToAppend];
+                [self makeParsing];
+                if(error != nil){
+                    NSLog(@"There was an error with synchrononous request: %@", error.description);
+                    [self connectionDidFailedWithError:error];
+                }
+            }
         }
-    }
-    else{
-        [self makeParsing];
-        [self endOfLoadingData];
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self endOfLoadingData];
+        });
+    });
 }
+
 
 -(void) savePostsToCoreData{
     NSLog(@"savePostsToCoreData");

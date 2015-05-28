@@ -1,15 +1,6 @@
-//
-//  BrowserTableViewController.m
-//  RssAppBsc
-//
-//  Created by Ola Skierbiszewska on 29/01/15.
-//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
-//
-
 #import "BrowserTableViewController.h"
 #import "AppDelegate.h"
 #import "CustomTableViewCell.h"
-
 
 @interface BrowserTableViewController ()
 
@@ -102,6 +93,11 @@
     if (![managedObjectContext save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
+    
+//    Post *asdfPost = [[Post alloc]init];
+//    
+//    [url addPostsObject:asdfPost];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
     searchController.searchBar.text = @"";
     [searchBar resignFirstResponder];

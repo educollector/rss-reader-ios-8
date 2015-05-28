@@ -30,6 +30,7 @@
 		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
 		7D3332EC1B15A742008371FE /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332EB1B15A742008371FE /* Post.m */; };
+		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,8 @@
 		7D3332EA1B15A742008371FE /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
 		7D3332EB1B15A742008371FE /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
 		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
+		7D5BDFF11B1753060084A11B /* NSURLSession+SynchronousTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+SynchronousTask.h"; sourceTree = "<group>"; };
+		7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+SynchronousTask.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +240,8 @@
 		7D3332D51B159F78008371FE /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				7D5BDFF11B1753060084A11B /* NSURLSession+SynchronousTask.h */,
+				7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */,
 				7D3332D61B159F78008371FE /* InternetConnectionMonitor.h */,
 				7D3332D71B159F78008371FE /* InternetConnectionMonitor.m */,
 				7D3332D81B159F78008371FE /* NSString+HTML.h */,
@@ -363,6 +368,7 @@
 				7D3332DF1B159F78008371FE /* Reachability.m in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
+				7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
 				239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */,
