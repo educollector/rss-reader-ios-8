@@ -42,7 +42,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"Main feed - viewDidLoad");
+    [self setNotificationCenter];
+    //Core Data
+    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    managedObjectContext = [appDelegate managedObjectContext];
+    
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
@@ -50,30 +54,11 @@
     backgroundSerialQueue = dispatch_queue_create("pl.skierbisz.postPreparingQueue", NULL);
     backgroundGlobalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
     [self internetConnectionChecking];
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
-    // Set this in every view controller so that the back button displays back instead of the root view controller name
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     [self uiSetSpiner:YES];
     
-    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];
-    
-    //Choose to have: data loaded at the app start OR to get data from CoreData (than use pull to refresh)
+    //Choose how to load data at start
     //[self getActualDataFromConnection];
     [self fetchPostsFromDtabase];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
-                                               object:nil];
-    refreshControl = [[UIRefreshControl alloc]init];
-    [self.tableView addSubview:refreshControl];
-    [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
-    
-    [super viewDidLoad];
 
 }
 
@@ -82,13 +67,38 @@
     [super viewWillAppear:animated];
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+//*****************************************************************************/
+#pragma mark - View - helper methods
+//*****************************************************************************/
+
+-(void)setNotificationCenter{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkadded"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(getActualDataFromConnection) name:@"pl.skierbisz.browserscreen.linkdeleted"
+                                               object:nil];
+}
+-(void)styleTheView{
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.tableView.backgroundView.backgroundColor = [UIColor yellowColor];
+    // Set this in every view controller so that the back button displays back instead of the root view controller name
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+}
+-(void)setPullToRefresh{
+    refreshControl = [[UIRefreshControl alloc]init];
+    [self.tableView addSubview:refreshControl];
+    [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
 
 //*****************************************************************************/
