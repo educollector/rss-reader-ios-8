@@ -84,6 +84,7 @@
 		7D3332E81B15A742008371FE /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = CoreData/Url.m; sourceTree = "<group>"; };
 		7D3332EA1B15A742008371FE /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
 		7D3332EB1B15A742008371FE /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
+		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -573,9 +574,10 @@
 		239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */,
 				239D4E291A7A59AD00C797C2 /* RssAppBsc.xcdatamodel */,
 			);
-			currentVersion = 239D4E291A7A59AD00C797C2 /* RssAppBsc.xcdatamodel */;
+			currentVersion = 7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */;
 			path = RssAppBsc.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

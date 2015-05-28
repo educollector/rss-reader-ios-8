@@ -51,7 +51,9 @@
     [self saveContext];
 }
 
+//*****************************************************************************/
 #pragma mark - Core Data stack
+//*****************************************************************************/
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
@@ -81,10 +83,13 @@
     // Create the coordinator and store
     
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @(YES),
+                               NSInferMappingModelAutomaticallyOption : @(YES) };
+    
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"RssAppBsc.sqlite"];
     NSError *error = nil;
     NSString *failureReason = @"There was an error creating or loading the application's saved data.";
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
         // Report any error we got.
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
@@ -111,12 +116,15 @@
     if (!coordinator) {
         return nil;
     }
+    
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     return _managedObjectContext;
 }
 
+//*****************************************************************************/
 #pragma mark - Core Data Saving support
+//*****************************************************************************/
 
 - (void)saveContext {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;

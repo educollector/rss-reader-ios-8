@@ -1,11 +1,3 @@
-
-//  MainFeedTableViewController.m
-//  RssAppBsc
-//
-//  Created by Ola Skierbiszewska on 29/01/15.
-//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
-//
-
 #import "MainFeedTableViewController.h"
 #import "NSString+HTML.h"
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
@@ -43,6 +35,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setNotificationCenter];
+    [self styleTheView];
+    [self setPullToRefresh];
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     managedObjectContext = [appDelegate managedObjectContext];
@@ -59,7 +53,6 @@
     //Choose how to load data at start
     //[self getActualDataFromConnection];
     [self fetchPostsFromDtabase];
-
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -96,7 +89,6 @@
     [self.tableView addSubview:refreshControl];
     [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
 }
-
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
 }

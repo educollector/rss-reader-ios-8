@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "-makeRequestAndConnectionWithNSSession"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,7 +74,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "-makeRequestAndConnectionWithNSSession"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RssAppBsc/MainFeedTableViewController.m"
+            timestampString = "454499478.813854"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "-makeRequestAndConnectionWithNSSession"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RssAppBsc/MainFeedTableViewController.m"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "196"
@@ -90,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
             landmarkName = "-makeRequestAndConnectionWithNSSession"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "-makeRequestAndConnectionWithNSSession"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,43 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421699.543946"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "513"
-            endingLineNumber = "513"
+            startingLineNumber = "515"
+            endingLineNumber = "515"
             landmarkName = "-parserDidEndDocument:"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421699.543946"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "508"
-            endingLineNumber = "508"
+            startingLineNumber = "510"
+            endingLineNumber = "510"
             landmarkName = "-parser:didEndElement:namespaceURI:qualifiedName:"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454421993.609143"
+            timestampString = "454499478.813854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "-makeRequestAndConnectionWithNSSession"
             landmarkType = "5">
          </BreakpointContent>

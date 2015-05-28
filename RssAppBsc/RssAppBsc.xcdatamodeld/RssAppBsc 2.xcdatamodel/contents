@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Post" representedClassName="Post" syncable="YES">
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageLink" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pubDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shortText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="site" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="sourceFeedUrl" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Url" inverseName="posts" inverseEntity="Url" syncable="YES"/>
+    </entity>
+    <entity name="Url" representedClassName="Url" syncable="YES">
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Post" inverseName="sourceFeedUrl" inverseEntity="Post" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Post" positionX="-54" positionY="-81" width="128" height="193"/>
+        <element name="Url" positionX="-308" positionY="-90" width="128" height="73"/>
+    </elements>
+</model>
