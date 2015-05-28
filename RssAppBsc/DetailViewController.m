@@ -40,7 +40,7 @@
 -(void)uiMakeWebViewToolbar{
     self.navigationController.toolbarHidden = NO;
     self.tabBarController.tabBar.hidden = YES;
-//    CGRect frame = CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 44-49, [[UIScreen mainScreen] bounds].size.width, 44);
+   CGRect frame = CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 44-49, [[UIScreen mainScreen] bounds].size.width, 44);
 //    webViewToolbar = [[UIToolbar alloc]initWithFrame:frame];
 //    webViewToolbar.backgroundColor = [UIColor orangeColor];
 //    webViewToolbar.barStyle = UIBarStyleBlackTranslucent;
@@ -48,6 +48,7 @@
 //    [self.view addSubview:webViewToolbar];
     
     NSString *backArrowString = @"\U000025C0\U0000FE0E"; //BLACK LEFT-POINTING TRIANGLE PLUS VARIATION SELECTOR
+    NSString *forwardArrowString = @"\U000025BA\U0000FE0E"; //FORWARD LEFT-POINTING TRIANGLE PLUS VARIATION SELECTOR
     
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc]
                                           initWithTitle:backArrowString
@@ -55,19 +56,22 @@
                                           target:self
                                           action:@selector(webViewGoBack)];
     UIBarButtonItem *forwardBarButtonItem = [[UIBarButtonItem alloc]
-                                          initWithTitle:backArrowString
+                                          initWithTitle:forwardArrowString
                                           style:UIBarButtonItemStylePlain
                                           target:self
                                           action:@selector(webViewGoForward)];
-    
-//
-//    UIBarButtonItem *flexiableItem = [[UIBarButtonItem alloc]
-//                                          initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-//                                          target:self
-//                                          action:nil];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc]
+                                      initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                      target:nil
+                                      action:nil];
 
-    NSArray *items = [NSArray arrayWithObjects:backBarButtonItem, forwardBarButtonItem, nil];
+    NSArray *items = [NSArray arrayWithObjects:backBarButtonItem, flexibleSpace, forwardBarButtonItem, nil];
     self.toolbarItems = items;
+    
+    self.navigationController.toolbar.frame = CGRectMake(0,
+                                [[UIScreen mainScreen] bounds].size.height - self.navigationController.toolbar.frame.size.height,
+                                self.navigationController.toolbar.frame.size.width,
+                                self.navigationController.toolbar.frame.size.height);
 }
 
 -(void)webViewGoBack{
