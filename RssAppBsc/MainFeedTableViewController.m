@@ -50,9 +50,12 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
-    //Choose how to load data at start
-    //[self getActualDataFromConnection];
-    [self fetchPostsFromDtabase];
+    //--------------------------------------//
+    //Choose how to load data at start      //
+    //--------------------------------------//
+    //[self getActualDataFromConnection];   //
+    [self fetchPostsFromDtabase];           //
+    //--------------------------------------//
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -107,7 +110,7 @@
 -(void)fetchPostsFromDtabase{
     NSLog(@"Main feed - fetchPostsFromDtabase");
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:nil];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
     fetchRequest.sortDescriptors = @[sortDescriptor];
     if(managedObjectContext != nil){
         fetchResultController = [[NSFetchedResultsController alloc]
@@ -130,7 +133,8 @@
                 FeedItem *item = [[FeedItem alloc]init];
                 item.title = el.title;
                 item.pubDate = el.pubDate;
-                item.shortText = el.pubDate;
+                item.shortText = el.shortText;
+                item.link = el.link;
                 [postsToDisplay addObject: item];
             }
             [self uiUpdateMainFeedTable];
@@ -139,8 +143,6 @@
         }
     }
 }
-
-
 
 -(void)fetchUrlsFromDatabase{
     NSLog(@"Main feed - fetchUrlsFromDatabase");
@@ -217,6 +219,7 @@
             postToSave.title = post.title;
             postToSave.shortText = post.shortText;
             postToSave.pubDate = post.pubDate;
+            postToSave.link = post.link;
             
             NSError *error;
             if (![managedObjectContext save:&error]) {
