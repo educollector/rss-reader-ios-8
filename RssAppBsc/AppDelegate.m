@@ -75,34 +75,77 @@
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it.
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
-    
-    // Create the coordinator and store
-    
+     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Store.sqlite"]; //RssAppBsc.sqlite
+    NSError *errorAddingStore = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @(YES),
-                               NSInferMappingModelAutomaticallyOption : @(YES) };
+//    Use this to light migration http://code.tutsplus.com/tutorials/core-data-from-scratch-migrations--cms-21844
+//    NSDictionary *options = @{ NSMigratePersistentStoresAutomaticallyOption : @(YES),
+//                               NSInferMappingModelAutomaticallyOption : @(YES) };
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"RssAppBsc.sqlite"];
-    NSError *error = nil;
-    NSString *failureReason = @"There was an error creating or loading the application's saved data.";
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
-        // Report any error we got.
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
-        dict[NSLocalizedFailureReasonErrorKey] = failureReason;
-        dict[NSUnderlyingErrorKey] = error;
-        error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        // Replace this with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&errorAddingStore]) {
+        NSLog(@"Unable to create persistent store after recovery. %@, %@", errorAddingStore, errorAddingStore.localizedDescription);
+        // Show Alert View
+        NSString *title = @"Warning";
+        NSString *applicationName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        NSString *message = [NSString stringWithFormat:@"A serious application error occurred while %@ tried to read your data. Please contact support for help.", applicationName];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        
+        NSFileManager *fm = [NSFileManager defaultManager];
+        // Move Incompatible Store
+        if ([fm fileExistsAtPath:[storeURL path]]) {
+            NSURL *corruptURL = [[self applicationIncompatibleStoresDirectory] URLByAppendingPathComponent:[self nameForIncompatibleStore]];
+            
+            // Move Corrupt Store
+            NSError *errorMoveStore = nil;
+            [fm moveItemAtURL:storeURL toURL:corruptURL error:&errorMoveStore];
+            
+            if (errorMoveStore) {
+                NSLog(@"Unable to move corrupt store.");
+            }
+        }
+        
     }
     
     return _persistentStoreCoordinator;
+}
+
+- (NSURL *)applicationStoresDirectory {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSURL *applicationApplicationSupportDirectory = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
+    NSURL *URL = [applicationApplicationSupportDirectory URLByAppendingPathComponent:@"Stores"];
+    
+    if (![fm fileExistsAtPath:[URL path]]) {
+        NSError *error = nil;
+        [fm createDirectoryAtURL:URL withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if (error) {
+            NSLog(@"Unable to create directory for data stores.");
+            
+            return nil;
+        }
+    }
+    return URL;
+}
+
+- (NSURL *)applicationIncompatibleStoresDirectory {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSURL *URL = [[self applicationStoresDirectory] URLByAppendingPathComponent:@"Incompatible"];
+    
+    if (![fm fileExistsAtPath:[URL path]]) {
+        NSError *error = nil;
+        [fm createDirectoryAtURL:URL withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if (error) {
+            NSLog(@"Unable to create directory for corrupt data stores.");
+            
+            return nil;
+        }
+    }
+    return URL;
 }
 
 
@@ -120,6 +163,17 @@
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     return _managedObjectContext;
+}
+
+- (NSString *)nameForIncompatibleStore {
+    // Initialize Date Formatter
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    // Configure Date Formatter
+    [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
+    
+    return [NSString stringWithFormat:@"%@.sqlite", [dateFormatter stringFromDate:[NSDate date]]];
 }
 
 //*****************************************************************************/

@@ -17,7 +17,7 @@
         <relationship name="posts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Post" inverseName="sourceFeedUrl" inverseEntity="Post" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Post" positionX="-54" positionY="-81" width="128" height="193"/>
+        <element name="Post" positionX="-54" positionY="-81" width="128" height="195"/>
         <element name="Url" positionX="-308" positionY="-90" width="128" height="73"/>
     </elements>
 </model>

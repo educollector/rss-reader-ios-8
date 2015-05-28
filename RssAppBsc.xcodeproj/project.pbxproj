@@ -577,7 +577,7 @@
 				7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */,
 				239D4E291A7A59AD00C797C2 /* RssAppBsc.xcdatamodel */,
 			);
-			currentVersion = 7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */;
+			currentVersion = 239D4E291A7A59AD00C797C2 /* RssAppBsc.xcdatamodel */;
 			path = RssAppBsc.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
