@@ -70,16 +70,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RssAppBsc/MainFeedTableViewController.m"
+            timestampString = "454582968.973688"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "-savePostsToCoreData"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/AppDelegate.m"
-            timestampString = "454502273.937798"
+            timestampString = "454584435.79021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "-persistentStoreCoordinator"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
+            landmarkName = "-managedObjectContext"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,125 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513585.227076"
+            filePath = "RssAppBsc/AppDelegate.m"
+            timestampString = "454583713.212743"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "-fetchPostsFromDtabase"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513585.227076"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "-fetchPostsFromDtabase"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513678.861802"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513934.484892"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513934.484892"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__68-[MainFeedTableViewController makeRequestAndConnectionWithNSSession]_block_invoke"
-                  moduleName = "RssAppBsc"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aleksandraskierbiszewska/Documents/Projects/rss-reader-ios-8/RssAppBsc/MainFeedTableViewController.m"
-                  timestampString = "454513935.021229"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "236"
-                  endingLineNumber = "236"
-                  offsetFromSymbolStart = "1457">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__68-[MainFeedTableViewController makeRequestAndConnectionWithNSSession]_block_invoke_2"
-                  moduleName = "RssAppBsc"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/aleksandraskierbiszewska/Documents/Projects/rss-reader-ios-8/RssAppBsc/MainFeedTableViewController.m"
-                  timestampString = "454513935.021426"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "236"
-                  endingLineNumber = "236"
-                  offsetFromSymbolStart = "12">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "454513934.484892"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
-            landmarkName = "-makeRequestAndConnectionWithNSSession"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "-privateManagedObjectContext"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

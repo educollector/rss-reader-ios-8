@@ -26,6 +26,7 @@
     dispatch_queue_t backgroundGlobalQueue;
     AppDelegate *appDelegate;
     NSManagedObjectContext *managedObjectContext;
+    NSManagedObjectContext *privateManagedObjectContext;
     UIRefreshControl *refreshControl;
 }
 //*****************************************************************************/
@@ -39,8 +40,7 @@
     [self setPullToRefresh];
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];
-    
+    managedObjectContext = [appDelegate managedObjectContext];    
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
@@ -53,8 +53,8 @@
     //--------------------------------------//
     //Choose how to load data at start      //
     //--------------------------------------//
-    [self getActualDataFromConnection];
-    //[self fetchPostsFromDtabase];
+    //[self getActualDataFromConnection];
+    [self fetchPostsFromDtabase];
     //--------------------------------------//
 }
 
@@ -175,6 +175,7 @@
     }
 }
 
+//// Asynchonous request with NSURLSesion
 //-(void)makeRequestAndConnectionWithNSSession{
 //    NSLog(@"makeRequestAndConnectionWithNSSession");
 //    _responseData = [[NSMutableData alloc] init];
@@ -209,6 +210,7 @@
 //    }
 //}
 
+// Synchonous request with NSURLSesion
 -(void)makeRequestAndConnectionWithNSSession{
     NSError __block *error = nil;
     NSURLResponse __block *response = nil;
@@ -240,23 +242,101 @@
 }
 
 
--(void) savePostsToCoreData{
+-(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
+        // Configure Managed Object Context
+        [privateManagedObjectContext setParentContext:managedObjectContext];
+        
         [self deleteAllEntities: @"Post"];
         Post *postToSave;
         for(FeedItem *post in postsToDisplay){
-            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
+            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:privateManagedObjectContext];
             postToSave.title = post.title;
             postToSave.shortText = post.shortText;
             postToSave.pubDate = post.pubDate;
             postToSave.link = post.link;
             
             NSError *error;
-            if (![managedObjectContext save:&error]) {
+            if ([privateManagedObjectContext hasChanges]) {
+                // Save Changes
+                NSError *error = nil;
+                [privateManagedObjectContext save:&error];
+            }
+            
+            if (![privateManagedObjectContext save:&error]) {
                 NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
             }
         }
+    }
+}
+
+
+-(void) savePostsToCoreData{
+    NSLog(@"savePostsToCoreData");
+    if(isDataLoaded){
+        //NSManagedObjectContext *tmpMainContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
+        NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
+
+        
+        [self deleteAllEntities: @"Post"];
+        Post *postToSave;
+        for(FeedItem *post in postsToDisplay){
+            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+            postToSave.title = post.title;
+            postToSave.shortText = post.shortText;
+            postToSave.pubDate = post.pubDate;
+            postToSave.link = post.link;
+            
+            //[self saveContextwithParent: tmpMainContext child:tmpPrivateContext];
+            [self saveContextwithWithChild: tmpPrivateContext];
+        }
+    }
+}
+
+-(void)saveContextwithWithChild:(NSManagedObjectContext *)childContext {
+    if (childContext.parentContext != nil && childContext != nil) {
+        [childContext performBlock:^{
+            NSError *error;
+            if ([childContext save:&error]) {
+                NSLog(@"childContext saved!");
+                [childContext.parentContext performBlock:^{
+                    NSError *error;
+                    if ([childContext.parentContext save:&error]) {
+                        NSLog(@"ParentContext saved!");
+                    }
+                    else{
+                        NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
+                    }
+                }];
+            }
+            else{
+                NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
+            }
+        }];
+    }
+}
+
+-(void)saveContextwithParent:(NSManagedObjectContext *)parentContext child:(NSManagedObjectContext *)childContext {
+    if (parentContext != nil && childContext != nil) {
+        [childContext performBlock:^{
+            NSError *error;
+            if ([childContext save:&error]) {
+                NSLog(@"childContext saved!");
+                [parentContext performBlock:^{
+                    NSError *error;
+                    if ([parentContext save:&error]) {
+                        NSLog(@"ParentContext saved!");
+                    }
+                    else{
+                        NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
+                    }
+                }];
+            }
+            else{
+                NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
+            }
+        }];
     }
 }
 
@@ -290,7 +370,8 @@
     
     if(isDataLoaded){
         //dispatch_async(backgroundGlobalQueue, ^{
-            [self savePostsToCoreData];
+        
+        [self savePostsToCoreData];
         //});
 
         [self uiUpdateMainFeedTable];

@@ -58,6 +58,7 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize privateManagedObjectContext = _privateManagedObjectContext;
 
 - (NSURL *)applicationDocumentsDirectory {
     // The directory the application uses to store the Core Data store file. This code uses a directory named "q.RssAppBsc" in the application's documents directory.
@@ -109,7 +110,6 @@
         }
         
     }
-    
     return _persistentStoreCoordinator;
 }
 
@@ -154,15 +154,24 @@
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
-    
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (!coordinator) {
-        return nil;
+    if (coordinator != nil) {
+        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        return _managedObjectContext;
     }
-    
-    _managedObjectContext = [[NSManagedObjectContext alloc] init];
-    [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    return _managedObjectContext;
+    return nil;
+}
+
+-(NSManagedObjectContext *)privateManagedObjectContext{
+    if (_privateManagedObjectContext != nil) {
+        return _privateManagedObjectContext;
+    }
+    else{
+        _privateManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [_privateManagedObjectContext setParentContext:_managedObjectContext];
+        return _privateManagedObjectContext;
+    }
 }
 
 - (NSString *)nameForIncompatibleStore {
