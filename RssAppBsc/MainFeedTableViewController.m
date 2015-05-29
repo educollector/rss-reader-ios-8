@@ -3,9 +3,7 @@
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 
-@interface MainFeedTableViewController (){
-}
-
+@interface MainFeedTableViewController ()
 @end
 
 @implementation MainFeedTableViewController{
