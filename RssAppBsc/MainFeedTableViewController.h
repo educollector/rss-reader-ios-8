@@ -20,6 +20,7 @@
 #import "Url.h"
 #import "Post.h"
 #import "NSURLSession+SynchronousTask.h"
+#import "CoreDataController.h"
 
 @interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>
 {

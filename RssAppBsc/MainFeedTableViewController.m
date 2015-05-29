@@ -4,6 +4,7 @@
 
 
 @interface MainFeedTableViewController ()
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation MainFeedTableViewController{
@@ -23,10 +24,12 @@
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
     AppDelegate *appDelegate;
-    NSManagedObjectContext *managedObjectContext;
+    //NSManagedObjectContext *managedObjectContext;
     NSManagedObjectContext *privateManagedObjectContext;
     UIRefreshControl *refreshControl;
 }
+
+@synthesize managedObjectContext;
 //*****************************************************************************/
 #pragma mark - View methods
 //*****************************************************************************/
@@ -37,8 +40,9 @@
     [self styleTheView];
     [self setPullToRefresh];
     //Core Data
-    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];    
+    self.managedObjectContext = [[CoreDataController sharedInstance] newManagedObjectContext];
+    //appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //anagedObjectContext = [appDelegate managedObjectContext];
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
@@ -52,7 +56,7 @@
     //Choose how to load data at start      //
     //--------------------------------------//
     //[self getActualDataFromConnection];
-    [self fetchPostsFromDtabase];
+    [self loadPostsFromDtabase];
     //--------------------------------------//
 }
 
@@ -107,7 +111,7 @@
     //[self makeRequestAndConnection];
 }
 
--(void)fetchPostsFromDtabase{
+-(void)loadPostsFromDtabase{
     NSLog(@"Main feed - fetchPostsFromDtabase");
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
