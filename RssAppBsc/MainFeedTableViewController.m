@@ -26,7 +26,6 @@
     dispatch_queue_t backgroundGlobalQueue;
     AppDelegate *appDelegate;
     NSManagedObjectContext *managedObjectContext;
-    NSManagedObjectContext *privateManagedObjectContext;
     UIRefreshControl *refreshControl;
 }
 
@@ -59,7 +58,7 @@
     //Choose how to load data at start      //
     //--------------------------------------//
     //[self getActualDataFromConnection];
-    [self fetchPostsFromDtabase];
+    [self loadPostsFromDtabase];
     //--------------------------------------//
 }
 
@@ -110,11 +109,11 @@
 
 -(void)getActualDataFromConnection{
     NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
-    [self fetchUrlsFromDatabase];
+    [self loadUrlsFromDatabase];
     [self makeRequestAndConnectionWithNSSession];
 }
 
--(void)fetchPostsFromDtabase{
+-(void)loadPostsFromDtabase{
     NSLog(@"Main feed - fetchPostsFromDtabase");
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
@@ -150,7 +149,7 @@
     }
 }
 
--(void)fetchUrlsFromDatabase{
+-(void)loadUrlsFromDatabase{
     NSLog(@"Main feed - fetchUrlsFromDatabase");
     //fetchnig data from database
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
@@ -215,29 +214,11 @@
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
-        // Configure Managed Object Context
-        [privateManagedObjectContext setParentContext:managedObjectContext];
-        
+        NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
         [self deleteAllEntities: @"Post"];
-        Post *postToSave;
-        for(FeedItem *post in postsToDisplay){
-            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:privateManagedObjectContext];
-            postToSave.title = post.title;
-            postToSave.shortText = post.shortText;
-            postToSave.pubDate = post.pubDate;
-            postToSave.link = post.link;
-            
-            NSError *error;
-            if ([privateManagedObjectContext hasChanges]) {
-                // Save Changes
-                NSError *error = nil;
-                [privateManagedObjectContext save:&error];
-            }
-            
-            if (![privateManagedObjectContext save:&error]) {
-                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-            }
-        }
+        /*TODO
+         *
+         */
     }
 }
 
