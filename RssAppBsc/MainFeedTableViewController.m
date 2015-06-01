@@ -245,77 +245,42 @@
 -(void) savePostsToCoreData{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
-        //NSManagedObjectContext *tmpMainContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
         NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
-        //NSManagedObjectContext *tmpPrivateContext = self.managedObjectContext;
-        
-        
         [self deleteAllEntities: @"Post"];
-        for(FeedItem *post in postsToDisplay){
-            Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
-            postToSave.title = post.title;
-            postToSave.shortText = post.shortText;
-            postToSave.pubDate = post.pubDate;
-            postToSave.link = post.link;
-            
-//            [self.managedObjectContext performBlockAndWait:^{
-//                NSError *error = nil;
-//                BOOL saved = [self.managedObjectContext save:&error];
-//                if (!saved) {
-//                    // do some real error handling
-//                    NSLog(@"Could not save Date due to %@", error);
-//                }
-//                [[CoreDataController sharedInstance] saveMasterContext];
-//            }];
-            
-             [self saveContextwithWithChild: tmpPrivateContext];
-        }
+        
+        [tmpPrivateContext performBlock:^{
+            // do something that takes some time asynchronously using the temp context
+            for(FeedItem *post in postsToDisplay){
+                Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+                postToSave.title = post.title;
+                postToSave.shortText = post.shortText;
+                postToSave.pubDate = post.pubDate;
+                postToSave.link = post.link;
+            }
+            //save the context
+            [self saveContextwithWithChild:tmpPrivateContext];
+        }];
     }
 }
 
 -(void)saveContextwithWithChild:(NSManagedObjectContext *)childContext {
     if (childContext.parentContext != nil && childContext != nil) {
-        [childContext performBlockAndWait:^{
-            NSError *error;
-            if ([childContext save:&error]) {
-                NSLog(@"childContext saved!");
-                [childContext.parentContext performBlock:^{
-                    NSError *error;
-                    if ([childContext.parentContext save:&error]) {
-                        NSLog(@"ParentContext saved!");
-                    }
-                    else{
-                        NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
-                    }
-                }];
-            }
-            else{
-                NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
-            }
-        }];
-    }
-}
-
--(void)saveContextwithParent:(NSManagedObjectContext *)parentContext child:(NSManagedObjectContext *)childContext {
-    if (parentContext != nil && childContext != nil) {
-        [childContext performBlock:^{
-            NSError *error;
-            if ([childContext save:&error]) {
-                NSLog(@"childContext saved!");
-                [parentContext performBlock:^{
-                    NSError *error;
-                    if ([parentContext save:&error]) {
-                        NSLog(@"ParentContext saved!");
-                    }
-                    else{
-                        NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
-                    }
-                }];
-            }
-            else{
-                NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
-            }
-        }];
+        // push to parent
+        NSError *error;
+        if ([childContext save:&error]) {
+            NSLog(@"childContext saved!");
+            // save parent to disk asynchronously
+            [childContext.parentContext performBlock:^{
+                NSError *error;
+                if ([childContext.parentContext save:&error]) {
+                    NSLog(@"ParentContext saved!");
+                }else{
+                    NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
+                }
+            }];
+        }else{
+            NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
+        }
     }
 }
 
@@ -385,6 +350,15 @@
         }
     }
 }
+
+//- (void) controllerWillChangeContent:(NSFetchedResultsController *)controller {
+//    [self.tableView beginUpdates];
+//}
+//
+//- (void) controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+//        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+//       newIndexPath:(NSIndexPath *)newIndexPath {
+//}
 
 //*****************************************************************************/
 #pragma mark - Table view data source
