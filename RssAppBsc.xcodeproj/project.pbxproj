@@ -32,6 +32,7 @@
 		7D3332EC1B15A742008371FE /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332EB1B15A742008371FE /* Post.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 		7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF81B1893FE0084A11B /* CoreDataController.m */; };
+		7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,8 @@
 		7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+SynchronousTask.m"; sourceTree = "<group>"; };
 		7D5BDFF71B1893FE0084A11B /* CoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreDataController.h; path = CoreData/CoreDataController.h; sourceTree = "<group>"; };
 		7D5BDFF81B1893FE0084A11B /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreDataController.m; path = CoreData/CoreDataController.m; sourceTree = "<group>"; };
+		7D5BDFFA1B1C94420084A11B /* ASCoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASCoreDataController.h; path = CoreData/ASCoreDataController.h; sourceTree = "<group>"; };
+		7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASCoreDataController.m; path = CoreData/ASCoreDataController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +232,8 @@
 				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
 				7D5BDFF71B1893FE0084A11B /* CoreDataController.h */,
 				7D5BDFF81B1893FE0084A11B /* CoreDataController.m */,
+				7D5BDFFA1B1C94420084A11B /* ASCoreDataController.h */,
+				7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -375,6 +380,7 @@
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */,
+				7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
 				239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */,

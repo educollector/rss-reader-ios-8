@@ -214,7 +214,8 @@
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
-        NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
+        NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
         [self deleteAllEntities: @"Post"];
         /*TODO
          *
@@ -226,7 +227,8 @@
 -(void) savePostsToCoreData{
     NSLog(@"savePostsToCoreData");
     if(isDataLoaded){
-        NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
+        NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
         [self deleteAllEntities: @"Post"];
         
         [tmpPrivateContext performBlock:^{

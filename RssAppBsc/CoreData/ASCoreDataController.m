@@ -1,102 +1,136 @@
-#import "CoreDataController.h"
+//
+//  ASCoreDataController.m
+//  RssAppBsc
+//
+//  Created by Aleksandra Skierbiszewska on 01.06.2015.
+//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
+//
 
-@interface CoreDataController ()
+#import "ASCoreDataController.h"
 
-@property (strong, nonatomic) NSManagedObjectContext *masterManagedObjectContext;
-@property (strong, nonatomic) NSManagedObjectContext *backgroundManagedObjectContext;
+@interface ASCoreDataController()
+
+@property (nonatomic, strong) NSManagedObjectContext *writerManagedObjectContext;
+@property (nonatomic, strong) NSManagedObjectContext *mainManagedObjectContext;
+//@property (nonatomic, strong) NSManagedObjectContext *privateBackgroundManagedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
-@implementation CoreDataController
+@implementation ASCoreDataController
 
-@synthesize masterManagedObjectContext = _masterManagedObjectContext;
-@synthesize backgroundManagedObjectContext = _backgroundManagedObjectContext;
+@synthesize writerManagedObjectContext = _writerManagedObjectContext;
+@synthesize mainManagedObjectContext = _mainManagedObjectContext;
+//@synthesize privateBackgroundManagedObjectContext = _privateBackgroundManagedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 + (id)sharedInstance {
     static dispatch_once_t once;
-    static CoreDataController *sharedInstance;
+    static ASCoreDataController *sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
     });
     
     return sharedInstance;
 }
-
+/***********************************************************/
 #pragma mark - Core Data stack
+/***********************************************************/
 
-// Used to propegate saves to the persistent store (disk) without blocking the UI
-- (NSManagedObjectContext *)masterManagedObjectContext {
-    if (_masterManagedObjectContext != nil) {
-        return _masterManagedObjectContext;
+//Writing to the persistant store without blocking UI
+- (NSManagedObjectContext *)writerManagedObjectContext{
+    if (_writerManagedObjectContext != nil) {
+        return _writerManagedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
-        _masterManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_masterManagedObjectContext performBlockAndWait:^{
-            [_masterManagedObjectContext setPersistentStoreCoordinator:coordinator];
+        _writerManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [_writerManagedObjectContext performBlockAndWait:^{
+            [_writerManagedObjectContext setPersistentStoreCoordinator:coordinator];
         }];
     }
-    return _masterManagedObjectContext;
+    return _writerManagedObjectContext;
 }
 
-// Return the NSManagedObjectContext to be used in the background during sync
-- (NSManagedObjectContext *)backgroundManagedObjectContext {
-    if (_backgroundManagedObjectContext != nil) {
-        return _backgroundManagedObjectContext;
+//Working with NSFetchedResultController
+- (NSManagedObjectContext *)mainManagedObjectContext{
+    if (_mainManagedObjectContext != nil) {
+        return _mainManagedObjectContext;
     }
-    
-    NSManagedObjectContext *masterContext = [self masterManagedObjectContext];
-    if (masterContext != nil) {
-        _backgroundManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_backgroundManagedObjectContext performBlockAndWait:^{
-            [_backgroundManagedObjectContext setParentContext:masterContext];
+    NSManagedObjectContext *parentContext = [self writerManagedObjectContext];
+    if (parentContext != nil) {
+        _mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_mainManagedObjectContext performBlockAndWait:^{
+            [_mainManagedObjectContext setParentContext:parentContext];
         }];
     }
+    return _mainManagedObjectContext;
     
-    return _backgroundManagedObjectContext;
 }
 
-
-// Return the NSManagedObjectContext to be used in the background during sync
-- (NSManagedObjectContext *)newManagedObjectContext {
-    NSManagedObjectContext *newContext = nil;
-    NSManagedObjectContext *masterContext = [self masterManagedObjectContext];
-    if (masterContext != nil) {
-        newContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        [newContext performBlockAndWait:^{
-            [newContext setParentContext:masterContext];
-        }];
-    }
-    
-    return newContext;
-}
-
-- (void)saveMasterContext {
-    [self.masterManagedObjectContext performBlockAndWait:^{
+- (void)saveWriterContext{
+    [self.writerManagedObjectContext performBlockAndWait:^{
         NSError *error = nil;
-        BOOL saved = [self.masterManagedObjectContext save:&error];
-        if (!saved) {
-            // do some real error handling
+        if ([self.writerManagedObjectContext save:&error]) {
+            NSLog(@"writerManagedObjectContext SAVED");
+        }else{
             NSLog(@"Could not save master context due to %@", error);
         }
     }];
 }
-
-- (void)saveBackgroundContext {
-    [self.backgroundManagedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
-        BOOL saved = [self.backgroundManagedObjectContext save:&error];
-        if (!saved) {
-            // do some real error handling
-            NSLog(@"Could not save background context due to %@", error);
+- (void)saveMainContext{
+    if (self.mainManagedObjectContext.parentContext != nil && self.mainManagedObjectContext != nil) {
+        // push to parent
+        NSError *error;
+        if ([self.mainManagedObjectContext  save:&error]) {
+            NSLog(@"mainManagedObjectContext  saved!");
+            // save parent to disk asynchronously
+            [self.mainManagedObjectContext.parentContext performBlock:^{
+                [self saveWriterContext];
+//                NSError *error;
+//                if ([self.mainManagedObjectContext.parentContext save:&error]) {
+//                    NSLog(@"Parent (Writer) Context saved!");
+//                }else{
+//                    NSLog(@"Can't Save parent (writer) context! %@ %@", error, [error localizedDescription]);
+//                }
+            }];
+        }else{
+            NSLog(@"Can't Save mainManagedObjectContext ! %@ %@", error, [error localizedDescription]);
         }
-    }];
+    }
 }
+- (void)saveBackgroundContext:(NSManagedObjectContext*)backgroundContext{
+    // push to parent
+    NSError *error;
+    if ([backgroundContext  save:&error]) {
+        NSLog(@"backgroundContext  saved!");
+        // save parent to disk asynchronously
+        [backgroundContext.parentContext performBlock:^{
+            [self saveMainContext];
+//            NSError *error;
+//            if ([self.mainManagedObjectContext.parentContext save:&error]) {
+//                NSLog(@"Parent (Writer) Context saved!");
+//            }else{
+//                NSLog(@"Can't Save parent (writer) context! %@ %@", error, [error localizedDescription]);
+//            }
+        }];
+    }else{
+        NSLog(@"Can't Save mainManagedObjectContext ! %@ %@", error, [error localizedDescription]);
+    }
+}
+
+- (NSManagedObjectContext*)generateBackgroundManagedContext{
+    NSManagedObjectContext* tmpBackgroundCOntext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    tmpBackgroundCOntext.parentContext = [self mainManagedObjectContext];
+    return tmpBackgroundCOntext;
+    
+}
+/***********************************************************/
+#pragma mark - 
+/***********************************************************/
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
