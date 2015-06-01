@@ -1,20 +1,28 @@
 #import "BrowserTableViewController.h"
 #import "AppDelegate.h"
 #import "CustomTableViewCell.h"
+#import "CoreDataController.h"
 
 @interface BrowserTableViewController ()
+//@property (nonatomic,strong) NSManagedObjectContext *managedObjectContext;
 
 @end
 
 @implementation BrowserTableViewController{
     UISearchController *searchController;
     NSFetchedResultsController *fetchResultController;
+    NSManagedObjectContext *managedObjectContext;
     NSArray *urls;
     Url *url;
 }
 
+//@synthesize managedObjectContext;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    managedObjectContext = [appDelegate managedObjectContext];
+    
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     searchController.searchBar.delegate = self;
@@ -31,8 +39,9 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
     fetchRequest.sortDescriptors = @[sortDescriptor];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    //managedObjectContext = [[CoreDataController sharedInstance]newManagedObjectContext];
     if (managedObjectContext != nil) {
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
@@ -83,8 +92,8 @@
         NSLog(@"String validation : valid");
     }
     NSLog(@"searchBarSearchButtonClicked");
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
     url.url = [NSString stringWithFormat:@"http://%@", searchController.searchBar.text];
     NSLog(@"url.url : %@", url.url);
@@ -169,8 +178,8 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //Delete the row from the data source
-    AppDelegate *appDelegate= (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
+    //AppDelegate *appDelegate= (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if(managedObjectContext != nil){
         Url *urlToDelete = (Url*)[fetchResultController objectAtIndexPath:indexPath];
         [managedObjectContext deleteObject:urlToDelete];
@@ -178,6 +187,9 @@
         if(![managedObjectContext save:&error]){
             NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error
                                                              localizedDescription]);
+        }
+        else{
+            NSLog(@"Url delelted");
         }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
     }

@@ -169,7 +169,8 @@
     }
     else{
         _privateManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_privateManagedObjectContext setParentContext:_managedObjectContext];
+        
+        [_privateManagedObjectContext setParentContext:[self managedObjectContext]];
         return _privateManagedObjectContext;
     }
 }

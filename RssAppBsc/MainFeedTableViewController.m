@@ -4,6 +4,8 @@
 
 
 @interface MainFeedTableViewController ()
+//@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSManagedObject *date;
 @end
 
 @implementation MainFeedTableViewController{
@@ -27,6 +29,9 @@
     NSManagedObjectContext *privateManagedObjectContext;
     UIRefreshControl *refreshControl;
 }
+
+//@synthesize managedObjectContext;
+
 //*****************************************************************************/
 #pragma mark - View methods
 //*****************************************************************************/
@@ -36,9 +41,11 @@
     [self setNotificationCenter];
     [self styleTheView];
     [self setPullToRefresh];
+  
+    managedObjectContext = [[CoreDataController sharedInstance] newManagedObjectContext];
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];    
+   managedObjectContext = [appDelegate managedObjectContext];
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
@@ -59,6 +66,7 @@
 -(void)viewWillAppear:(BOOL)animated{
     NSLog(@"Main feed - viewWillAppear");
     [super viewWillAppear:animated];
+    [self uiUpdateMainFeedTable];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,7 +112,6 @@
     NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
     [self fetchUrlsFromDatabase];
     [self makeRequestAndConnectionWithNSSession];
-    //[self makeRequestAndConnection];
 }
 
 -(void)fetchPostsFromDtabase{
@@ -173,41 +180,6 @@
     }
 }
 
-//// Asynchonous request with NSURLSesion
-//-(void)makeRequestAndConnectionWithNSSession{
-//    NSLog(@"makeRequestAndConnectionWithNSSession");
-//    _responseData = [[NSMutableData alloc] init];
-//    postsToDisplay = [[NSMutableArray alloc] init];
-//    NSUInteger __block counter = (NSUInteger)0;
-//    if(urlsOfFeeds.count != 0){
-//        for(NSString* feedUrl in urlsOfFeeds){
-//            NSURLSession *session = [NSURLSession sharedSession];
-//            [[session dataTaskWithURL:[NSURL URLWithString: feedUrl]
-//                    completionHandler:^(NSData *data,
-//                                        NSURLResponse *response,
-//                                        NSError *error) {
-//                        //Handling the response
-//                        [_responseData appendData:data];
-//                        if(error != nil){
-//                            NSLog(@"There was an error with synchrononous request: %@", error.description);
-//                            [self connectionDidFailedWithError:error];
-//                        }
-//                        ++counter;
-//                        if(counter  == urlsOfFeeds.count){
-//                            [self makeParsing];
-//                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                [self endOfLoadingData];
-//                            });
-//                        }
-//                    }] resume];
-//        }
-//    }
-//    else{
-//        [self makeParsing];
-//        [self endOfLoadingData];
-//    }
-//}
-
 // Synchonous request with NSURLSesion
 -(void)makeRequestAndConnectionWithNSSession{
     NSError __block *error = nil;
@@ -275,26 +247,35 @@
     if(isDataLoaded){
         //NSManagedObjectContext *tmpMainContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
         NSManagedObjectContext *tmpPrivateContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) privateManagedObjectContext];
-
+        //NSManagedObjectContext *tmpPrivateContext = self.managedObjectContext;
+        
         
         [self deleteAllEntities: @"Post"];
-        Post *postToSave;
         for(FeedItem *post in postsToDisplay){
-            postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+            Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
             postToSave.title = post.title;
             postToSave.shortText = post.shortText;
             postToSave.pubDate = post.pubDate;
             postToSave.link = post.link;
             
-            //[self saveContextwithParent: tmpMainContext child:tmpPrivateContext];
-            [self saveContextwithWithChild: tmpPrivateContext];
+//            [self.managedObjectContext performBlockAndWait:^{
+//                NSError *error = nil;
+//                BOOL saved = [self.managedObjectContext save:&error];
+//                if (!saved) {
+//                    // do some real error handling
+//                    NSLog(@"Could not save Date due to %@", error);
+//                }
+//                [[CoreDataController sharedInstance] saveMasterContext];
+//            }];
+            
+             [self saveContextwithWithChild: tmpPrivateContext];
         }
     }
 }
 
 -(void)saveContextwithWithChild:(NSManagedObjectContext *)childContext {
     if (childContext.parentContext != nil && childContext != nil) {
-        [childContext performBlock:^{
+        [childContext performBlockAndWait:^{
             NSError *error;
             if ([childContext save:&error]) {
                 NSLog(@"childContext saved!");
@@ -742,6 +723,41 @@
 //            [self endOfLoadingData];
 //        });
 //    });
+//}
+
+//// Asynchonous request with NSURLSesion
+//-(void)makeRequestAndConnectionWithNSSession{
+//    NSLog(@"makeRequestAndConnectionWithNSSession");
+//    _responseData = [[NSMutableData alloc] init];
+//    postsToDisplay = [[NSMutableArray alloc] init];
+//    NSUInteger __block counter = (NSUInteger)0;
+//    if(urlsOfFeeds.count != 0){
+//        for(NSString* feedUrl in urlsOfFeeds){
+//            NSURLSession *session = [NSURLSession sharedSession];
+//            [[session dataTaskWithURL:[NSURL URLWithString: feedUrl]
+//                    completionHandler:^(NSData *data,
+//                                        NSURLResponse *response,
+//                                        NSError *error) {
+//                        //Handling the response
+//                        [_responseData appendData:data];
+//                        if(error != nil){
+//                            NSLog(@"There was an error with synchrononous request: %@", error.description);
+//                            [self connectionDidFailedWithError:error];
+//                        }
+//                        ++counter;
+//                        if(counter  == urlsOfFeeds.count){
+//                            [self makeParsing];
+//                                dispatch_async(dispatch_get_main_queue(), ^{
+//                                [self endOfLoadingData];
+//                            });
+//                        }
+//                    }] resume];
+//        }
+//    }
+//    else{
+//        [self makeParsing];
+//        [self endOfLoadingData];
+//    }
 //}
 
 @end
