@@ -4,8 +4,7 @@
 
 
 @interface MainFeedTableViewController ()
-//@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSManagedObject *date;
+@property (nonatomic,strong) ASCoreDataController *dataController;
 @end
 
 @implementation MainFeedTableViewController{
@@ -29,7 +28,7 @@
     UIRefreshControl *refreshControl;
 }
 
-//@synthesize managedObjectContext;
+@synthesize dataController;
 
 //*****************************************************************************/
 #pragma mark - View methods
@@ -44,7 +43,10 @@
     managedObjectContext = [[CoreDataController sharedInstance] newManagedObjectContext];
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-   managedObjectContext = [appDelegate managedObjectContext];
+    managedObjectContext = [appDelegate managedObjectContext];
+    
+    dataController = [ASCoreDataController sharedInstance];
+    
     _responseData = [[NSMutableData alloc] init];
     tabBarController = [self tabBarController];
     makeRefresh = NO;
@@ -223,6 +225,26 @@
     }
 }
 
+-(void) savePostsToCoreData_2{
+    NSLog(@"savePostsToCoreData");
+    if(isDataLoaded){
+        NSManagedObjectContext *tmpPrivateContext = [self.dataController generateBackgroundManagedContext];
+        [self deleteAllEntities: @"Post"];
+        
+        [tmpPrivateContext performBlock:^{
+            // do something that takes some time asynchronously using the temp context
+            for(FeedItem *post in postsToDisplay){
+                Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+                postToSave.title = post.title;
+                postToSave.shortText = post.shortText;
+                postToSave.pubDate = post.pubDate;
+                postToSave.link = post.link;
+            }
+            //save the context
+            [dataController saveBackgroundContext:tmpPrivateContext];
+        }];
+    }
+}
 
 -(void) savePostsToCoreData{
     NSLog(@"savePostsToCoreData");
