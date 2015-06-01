@@ -1,13 +1,6 @@
-//
-//  ASCoreDataController.m
-//  RssAppBsc
-//
-//  Created by Aleksandra Skierbiszewska on 01.06.2015.
-//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
-//
-
 #import "ASCoreDataController.h"
-
+#import "Post.h"
+#import "FeedItem.h"
 @interface ASCoreDataController()
 
 @property (nonatomic, strong) NSManagedObjectContext *writerManagedObjectContext;
@@ -238,6 +231,44 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm-ss"];
     
     return [NSString stringWithFormat:@"%@.sqlite", [dateFormatter stringFromDate:[NSDate date]]];
+}
+
+#pragma mark - Data saving and retrieving
+
+-(void) savePostsToCoreData:(NSMutableArray*)postsToDisplay{
+    NSLog(@"savePostsToCoreData");
+    NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
+    [self deleteAllEntities: @"Post" withContext:_writerManagedObjectContext];
+    
+    [tmpPrivateContext performBlock:^{
+        // do something that takes some time asynchronously using the temp context
+        for(int i; i < postsToDisplay.count; i++){
+            FeedItem *post = (FeedItem*)postsToDisplay[i];
+            Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+            postToSave.title = post.title;
+            postToSave.shortText = post.shortText;
+            postToSave.pubDate = post.pubDate;
+            postToSave.link = post.link;
+        }
+        //save the context
+        [self saveBackgroundContext:tmpPrivateContext];
+    }];
+}
+
+- (void)deleteAllEntities:(NSString *)nameEntity withContext:(NSManagedObjectContext*)context
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:nameEntity];
+    [fetchRequest setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError *error;
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+    for (NSManagedObject *object in fetchedObjects)
+    {
+        [context deleteObject:object];
+    }
+    
+    error = nil;
+    [context save:&error];
 }
 
 
