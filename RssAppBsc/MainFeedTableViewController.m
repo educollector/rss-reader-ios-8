@@ -26,6 +26,8 @@
     AppDelegate *appDelegate;
     NSManagedObjectContext *managedObjectContext;
     UIRefreshControl *refreshControl;
+    NSString *currentChannelUrl;
+    NSMutableArray* postsToAppendToUrl;
 }
 
 @synthesize dataController;
@@ -114,6 +116,22 @@
     [self makeRequestAndConnectionWithNSSession];
 }
 
+
+-(void)endOfLoadingData{
+    NSLog(@"endOfLoadingData");
+    //for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
+    NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
+    
+    if(isDataLoaded){
+        //dispatch_async(backgroundGlobalQueue, ^{
+        
+        //[self savePostsToCoreData];
+        //});
+        
+        [self uiUpdateMainFeedTable];
+    }
+}
+
 -(void)loadPostsFromDtabase{
     NSLog(@"Main feed - fetchPostsFromDtabase");
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
@@ -137,10 +155,10 @@
             postsToDisplay = [[NSMutableArray alloc] init];
             for(Post *el in tmpPostsArray){
                 FeedItem *item = [[FeedItem alloc]init];
-                item.title = el.title;
-                item.pubDate = el.pubDate;
-                item.shortText = el.shortText;
-                item.link = el.link;
+                item.title = [NSMutableString stringWithString:el.title];
+                item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                item.shortText = [NSMutableString stringWithString:el.shortText];
+                item.link = [NSMutableString stringWithString:el.link];
                 [postsToDisplay addObject: item];
             }
             [self uiUpdateMainFeedTable];
@@ -190,15 +208,22 @@
     dispatch_async(backgroundGlobalQueue,^{
         if(urlsOfFeeds.count != 0){
             for(NSString* feedUrl in urlsOfFeeds){
-                
                 _responseData = [[NSMutableData alloc] init];
+                postsToAppendToUrl = [[NSMutableArray alloc]init];
                 NSURL *url = [NSURL URLWithString: feedUrl];
                 request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
-
-                //NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+                
                 NSData *datatToAppend = [NSURLSession sendSynchronousDataTaskWithURL:url returningResponse:&response error:&error];
                 [_responseData appendData:datatToAppend];
                 [self makeParsing];
+                
+                
+                for(FeedItem *item in postsToAppendToUrl){
+                    item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
+                }
+                [self savePostsToCoreDataFromUrl:feedUrl andPosts:(NSMutableArray*)postsToAppendToUrl];
+                [postsToDisplay addObjectsFromArray:postsToAppendToUrl ];
+                
                 if(error != nil){
                     NSLog(@"There was an error with synchrononous request: %@", error.description);
                     [self connectionDidFailedWithError:error];
@@ -212,37 +237,27 @@
 }
 
 
--(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl{
-    NSLog(@"savePostsToCoreData");
-    if(isDataLoaded){
-        NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
-        [self deleteAllEntities: @"Post"];
-        /*TODO
-         *
-         */
-    }
-}
-
--(void) savePostsToCoreData_2{
-    NSLog(@"savePostsToCoreData");
-    if(isDataLoaded){
-        NSManagedObjectContext *tmpPrivateContext = [self.dataController generateBackgroundManagedContext];
-        [self deleteAllEntities: @"Post"];
-        
-        [tmpPrivateContext performBlock:^{
-            // do something that takes some time asynchronously using the temp context
-            for(FeedItem *post in postsToDisplay){
-                Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
-                postToSave.title = post.title;
-                postToSave.shortText = post.shortText;
-                postToSave.pubDate = post.pubDate;
-                postToSave.link = post.link;
-            }
-            //save the context
-            [dataController saveBackgroundContext:tmpPrivateContext];
-        }];
-    }
+-(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPosts:(NSMutableArray*)postsArray{
+    NSLog(@"savePostsToCoreDataFromUrl");
+    NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
+    [self deleteUrl: feedUrl];
+    
+    [tmpPrivateContext performBlock:^{
+        Url *urlToSave = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
+        urlToSave.url = feedUrl;
+        for(FeedItem *post in postsArray){
+            Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
+            postToSave.title = post.title;
+            postToSave.shortText = post.shortText;
+            postToSave.pubDate = post.pubDate;
+            postToSave.link = post.link;
+            postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
+            [urlToSave addPostsObject:postToSave];
+        }        
+        //save the context
+        [self saveContextwithWithChild:tmpPrivateContext];
+    }];
 }
 
 -(void) savePostsToCoreData{
@@ -289,6 +304,10 @@
     }
 }
 
+//*****************************************************************************/
+#pragma mark - Core Data - helper mthods
+//*****************************************************************************/
+
 - (void)deleteAllEntities:(NSString *)nameEntity
 {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:nameEntity];
@@ -305,25 +324,18 @@
     [managedObjectContext save:&error];
 }
 
--(void)makeParsing{
-    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
-    [rssParser setDelegate: self];
-    [rssParser parse];
-    isDataLoaded = YES;
-}
-
--(void)endOfLoadingData{
-    NSLog(@"endOfLoadingData");
-    //for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
-    NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
-    
-    if(isDataLoaded){
-        //dispatch_async(backgroundGlobalQueue, ^{
-        
-        [self savePostsToCoreData];
-        //});
-
-        [self uiUpdateMainFeedTable];
+- (void)deleteUrl:(NSString *)url{
+    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContext];
+    NSFetchRequest *fetch=[[NSFetchRequest alloc] init];
+    [fetch setEntity:productEntity];
+    NSPredicate *p=[NSPredicate predicateWithFormat:@"url == %@", url];
+    [fetch setPredicate:p];
+    // do sorting
+    NSError *fetchError;
+    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetch error:&fetchError];
+    // handle error
+    for (NSManagedObject *product in fetchedProducts) {
+        [managedObjectContext deleteObject:product];
     }
 }
 
@@ -356,15 +368,6 @@
     }
 }
 
-//- (void) controllerWillChangeContent:(NSFetchedResultsController *)controller {
-//    [self.tableView beginUpdates];
-//}
-//
-//- (void) controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-//        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-//       newIndexPath:(NSIndexPath *)newIndexPath {
-//}
-
 //*****************************************************************************/
 #pragma mark - Table view data source
 //*****************************************************************************/
@@ -393,6 +396,10 @@
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.shortText, tmpItem.pubDate);
     return cell;
 }
+
+//*****************************************************************************/
+#pragma mark - Table view - text formatting methods
+//*****************************************************************************/
 
 - (NSString *) cleanFromTagsWithRegexp:(NSString *)text{
     NSString *cleanedText;
@@ -521,9 +528,19 @@
         }
     }
 }
-
 //*****************************************************************************/
 #pragma mark - Parsing
+//*****************************************************************************/
+
+-(void)makeParsing{
+    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)_responseData];
+    [rssParser setDelegate: self];
+    [rssParser parse];
+    isDataLoaded = YES;
+}
+
+//*****************************************************************************/
+#pragma mark - Parsing - delegate methods
 //*****************************************************************************/
 
 - (void)parser:(NSXMLParser *)parser
@@ -532,6 +549,11 @@ didStartElement:(NSString *)elementName
  qualifiedName:(NSString *)qName
     attributes: (NSDictionary *)attributeDict {
         currentElement = elementName;
+        currentChannelUrl = [[NSString alloc]init];
+    
+        if ([currentElement isEqualToString:@"channel"]) {
+            return;
+        }
         if ([currentElement isEqualToString:@"item"]) {
             FeedItem *rssItem = [[FeedItem alloc] init];
             currentRssItem = rssItem;
@@ -564,9 +586,12 @@ didStartElement:(NSString *)elementName
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     if ([elementName isEqualToString:@"item"]) {
-        [postsToDisplay addObject:currentRssItem];
+        //[postsToDisplay addObject:currentRssItem];
+        [postsToAppendToUrl addObject:currentRssItem];
+        
     } else if ([elementName isEqualToString:@"entry"]) {
-        [postsToDisplay addObject:currentRssItem];
+        //[postsToDisplay addObject:currentRssItem];
+        [postsToAppendToUrl addObject:currentRssItem];
     }
     if(currentRssItem.title!=nil) {NSLog(@"PARSING DONE \t%@", currentRssItem.title);}
 }
@@ -654,9 +679,6 @@ didStartElement:(NSString *)elementName
     [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
-//*****************************************************************************/
-#pragma mark - Helper methods
-//*****************************************************************************/
 //
 //
 //-(void)makeRequestAndConnection{

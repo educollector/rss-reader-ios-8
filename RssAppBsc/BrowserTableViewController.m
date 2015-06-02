@@ -87,11 +87,11 @@
     BOOL isTheLinkValid = [self validateUrl:searchController.searchBar.text];
     if(!isTheLinkValid){
         NSLog(@"String validation : invalid: %d",isTheLinkValid);
-    }
-    else{
+    }else{
         NSLog(@"String validation : valid");
     }
-    NSLog(@"searchBarSearchButtonClicked");
+    if(![self isUrlInDatabase: [NSString stringWithFormat:@"http://%@", searchController.searchBar.text]]){
+        NSLog(@"Can save an url");
     //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
@@ -99,17 +99,34 @@
     NSLog(@"url.url : %@", url.url);
     NSError *error;
     //saving url to the Core Data
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    
+        if (![managedObjectContext save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
+        searchController.searchBar.text = @"";
+        [searchBar resignFirstResponder];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
     }
-    
-//    Post *asdfPost = [[Post alloc]init];
-//    [url addPostsObject:asdfPost];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    searchController.searchBar.text = @"";
-    [searchBar resignFirstResponder];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
+    NSLog(@"Url is in database");
+}
+
+- (BOOL)isUrlInDatabase:(NSString *)urlToCheck{
+    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContext];
+    NSFetchRequest *fetch=[[NSFetchRequest alloc] init];
+    [fetch setEntity:productEntity];
+    NSPredicate *p=[NSPredicate predicateWithFormat:@"url == %@", urlToCheck];
+    [fetch setPredicate:p];
+    // do sorting
+    NSError *fetchError;
+    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetch error:&fetchError];
+    // handle error
+    if(fetchedProducts != nil){
+        return YES;
+    }
+    return NO;
+
 }
 //*******************************************************************/
 
@@ -181,8 +198,7 @@
         [managedObjectContext deleteObject:urlToDelete];
         NSError *error;
         if(![managedObjectContext save:&error]){
-            NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error
-                                                             localizedDescription]);
+            NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error localizedDescription]);
         }
         else{
             NSLog(@"Url delelted");

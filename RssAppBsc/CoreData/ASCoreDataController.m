@@ -261,7 +261,6 @@
 
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPost:(NSMutableArray*)postsArray{
     NSLog(@"savePostsToCoreDataFromUrl");
-    //if(isDataLoaded){
     NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
     [self deleteUrl: feedUrl];
@@ -269,8 +268,6 @@
     urlToSave.url = feedUrl;
     NSSet* setOfPosts = [NSSet setWithArray:[postsArray copy]];
     [urlToSave addPosts:setOfPosts];
-    
-    //}
 }
 
 -(void) savePostsToCoreData_2{
@@ -424,7 +421,7 @@
                 [responseData appendData:datatToAppend];
                 [self makeParsing];
                 for(FeedItem *item in postsToAppendToUrl){
-                    item.sourceFeedUrl = feedUrl;
+                    item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
                 }
                 [self savePostsToCoreDataFromUrl:feedUrl andPost:(NSMutableArray*)postsToAppendToUrl];
                 [postsToDisplay addObjectsFromArray:postsToAppendToUrl ];
