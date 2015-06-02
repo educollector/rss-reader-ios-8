@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/BrowserTableViewController.m"
-            timestampString = "454947779.268402"
+            timestampString = "454948189.994166"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
             landmarkName = "-isUrlInDatabase:"
             landmarkType = "5">
          </BreakpointContent>

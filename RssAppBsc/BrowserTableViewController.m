@@ -108,6 +108,8 @@
         searchController.searchBar.text = @"";
         [searchBar resignFirstResponder];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
+    }else{
+        [self showPopupUrlIsInDatabase];
     }
     NSLog(@"Url is in database");
 }
@@ -206,6 +208,27 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
     }
     
+}
+
+//*****************************************************************************/
+#pragma mark - Popups
+//*****************************************************************************/
+
+-(void)showPopupUrlIsInDatabase{
+    NSLog(@"showPopupNoRssAvailable");
+    UIAlertController *alert = [UIAlertController
+                                alertControllerWithTitle:@"Ooops"
+                                message:@"Kanał już jest obserwowany"
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okeyAction = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction *acton){
+                                 }];
+    [alert addAction:okeyAction];
+    //self.parentViewController to avoid "presenting view controllers on detached view controllers is discouraged"
+    [self.parentViewController presentViewController:alert animated:YES completion:nil];
 }
 
 /*
