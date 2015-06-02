@@ -21,5 +21,21 @@
     }
     return self;
 }
+-(FeedItem*)init{
+    self = [super init];
+    if(self){
+        _title = [[NSMutableString alloc]init];
+        _link = [[NSMutableString alloc]init];
+        _shortText = [[NSMutableString alloc]init];
+        _pubDate = [[NSMutableString alloc]init];
+        _imageLink = [[NSMutableString alloc]init];
+        _content = [[NSMutableString alloc]init];
+        _site = [[NSMutableString alloc]init];
+        _time = [[NSMutableString alloc]init];
+        _sourceFeedUrl = [[NSMutableString alloc]init];
+    }
+    return self;
+}
 
 @end
+

@@ -260,6 +260,7 @@
                 postToSave.shortText = post.shortText;
                 postToSave.pubDate = post.pubDate;
                 postToSave.link = post.link;
+                postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
             }
             //save the context
             [self saveContextwithWithChild:tmpPrivateContext];
@@ -525,60 +526,46 @@
 #pragma mark - Parsing
 //*****************************************************************************/
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
-    (NSDictionary *)attributeDict {
+- (void)parser:(NSXMLParser *)parser
+didStartElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI
+ qualifiedName:(NSString *)qName
+    attributes: (NSDictionary *)attributeDict {
         currentElement = elementName;
         if ([currentElement isEqualToString:@"item"]) {
             FeedItem *rssItem = [[FeedItem alloc] init];
             currentRssItem = rssItem;
-            title = [[NSMutableString alloc] init];
-            link = [[NSMutableString alloc] init];
-            description = [[NSMutableString alloc] init];
-            pubDate = [[NSMutableString alloc] init];
-            imgLink = [[NSMutableString alloc] init];
+            return;
         }
         else if ([currentElement isEqualToString:@"entry"]) {
             FeedItem *rssItem = [[FeedItem alloc] init];
             currentRssItem = rssItem;
-            title = [[NSMutableString alloc] init];
-            link = [[NSMutableString alloc] init];
-            description = [[NSMutableString alloc] init];
-            pubDate = [[NSMutableString alloc] init];
-            imgLink = [[NSMutableString alloc] init];
+            return;
         }
 }
 
-
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     if ([currentElement isEqualToString:@"title"]) {
+        [currentRssItem.title appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
         [title appendString:string];
     } else if ([currentElement isEqualToString:@"link"]) {
-        [link appendString:string];
+         [currentRssItem.link appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     } else if ([currentElement isEqualToString:@"description"]) {
-        [description appendString:string];
+         [currentRssItem.shortText appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     } else if ([currentElement isEqualToString:@"summary"]) {// Atom
-        [description appendString:string];
+         [currentRssItem.shortText appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     } else if ([currentElement isEqualToString:@"pubDate"]) {
-        [pubDate appendString:string];
+         [currentRssItem.pubDate appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     } else if ([currentElement isEqualToString:@"updated"]) { // Atom
-        [pubDate appendString:string];
+         [currentRssItem.pubDate appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     }
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:
-(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     if ([elementName isEqualToString:@"item"]) {
-        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         [postsToDisplay addObject:currentRssItem];
     } else if ([elementName isEqualToString:@"entry"]) {
-        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
         [postsToDisplay addObject:currentRssItem];
     }
     if(currentRssItem.title!=nil) {NSLog(@"PARSING DONE \t%@", currentRssItem.title);}

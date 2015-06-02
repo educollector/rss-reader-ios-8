@@ -308,6 +308,7 @@
                 postToSave.shortText = post.shortText;
                 postToSave.pubDate = post.pubDate;
                 postToSave.link = post.link;
+                postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
             }
             //save the context
             [self saveContextwithWithChild:tmpPrivateContext];
