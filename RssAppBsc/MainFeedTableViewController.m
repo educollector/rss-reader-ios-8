@@ -15,7 +15,7 @@
     BOOL __block isDataLoaded;
     InternetConnectionMonitor *monitor;
     NSXMLParser *rssParser;
-    NSMutableArray *postsToDisplay;
+    NSMutableArray __block *postsToDisplay;
     NSMutableString *title, *link, *description,*pubDate, *imgLink;
     NSString *currentElement;
     FeedItem *currentRssItem;
@@ -40,7 +40,6 @@
     [self styleTheView];
     [self setPullToRefresh];
   
-    managedObjectContext = [[CoreDataController sharedInstance] newManagedObjectContext];
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     managedObjectContext = [appDelegate managedObjectContext];

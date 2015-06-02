@@ -81,7 +81,7 @@
 }
 
 // addling feed URL to the list
-
+//*******************************************************************/
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     BOOL isTheLinkValid = [self validateUrl:searchController.searchBar.text];
@@ -104,7 +104,6 @@
     }
     
 //    Post *asdfPost = [[Post alloc]init];
-//    
 //    [url addPostsObject:asdfPost];
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -112,10 +111,7 @@
     [searchBar resignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
 }
-
--(void)deletingFeedUrlFormDatabase{
-}
-
+//*******************************************************************/
 
 - (BOOL) validateUrl: (NSString *) candidate {
     NSString *urlRegEx =

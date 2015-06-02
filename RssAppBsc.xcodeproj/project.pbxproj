@@ -30,6 +30,7 @@
 		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
 		7D3332EC1B15A742008371FE /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332EB1B15A742008371FE /* Post.m */; };
+		7D4CE76B1B1D8DEA0040DBA3 /* PostsOfUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 		7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF81B1893FE0084A11B /* CoreDataController.m */; };
 		7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */; };
@@ -87,6 +88,8 @@
 		7D3332E81B15A742008371FE /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = CoreData/Url.m; sourceTree = "<group>"; };
 		7D3332EA1B15A742008371FE /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
 		7D3332EB1B15A742008371FE /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
+		7D4CE7691B1D8DEA0040DBA3 /* PostsOfUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostsOfUrls.h; sourceTree = "<group>"; };
+		7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostsOfUrls.m; sourceTree = "<group>"; };
 		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
 		7D5BDFF11B1753060084A11B /* NSURLSession+SynchronousTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+SynchronousTask.h"; sourceTree = "<group>"; };
 		7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+SynchronousTask.m"; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 				239D4E611A7A844900C797C2 /* Favourites */,
 				239D4E621A7A845A00C797C2 /* Menu */,
 				239D4E211A7A59AD00C797C2 /* Supporting Files */,
+				7D4CE7691B1D8DEA0040DBA3 /* PostsOfUrls.h */,
+				7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */,
 			);
 			path = RssAppBsc;
 			sourceTree = "<group>";
@@ -369,6 +374,7 @@
 				239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				7D3332E91B15A742008371FE /* Url.m in Sources */,
+				7D4CE76B1B1D8DEA0040DBA3 /* PostsOfUrls.m in Sources */,
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
