@@ -90,6 +90,11 @@
                                              selector:@selector(getActualDataFromConnection)
                                                  name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
+    //TODO uncomment to work with Like notification
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(markPostAsLiked:)
+//                                                 name:@"pl.skierbisz.webviewscreen.postliked"
+//                                               object:nil];
 }
 -(void)styleTheView{
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -459,7 +464,7 @@
 }
 
 //*****************************************************************************/
-#pragma mark - Table view - text formatting methods
+#pragma mark - Table view - text formatting and helper methods
 //*****************************************************************************/
 
 - (NSString *) cleanFromTagsWithRegexp:(NSString *)text{
@@ -514,6 +519,19 @@
     }
     
     return cleanedText;
+}
+
+-(void) markPostAsLiked:(NSNotification *)notification {
+    NSString *guid = [[[notification userInfo] valueForKey:@"guid"] stringValue];
+    NSString *title = [[[notification userInfo] valueForKey:@"title"] stringValue];
+
+//    NSMutableArray *matchingObjects = [NSMutableArray array];
+//    for (NSString *item in postsToDisplay) {
+//        if ([string isEqualToString:@"New"]) {
+//            [matchingObjects addObject:string];
+//        }
+//    }
+    
 }
 
 //*****************************************************************************/
@@ -678,6 +696,7 @@ didStartElement:(NSString *)elementName
         DetailViewController *destinationViewController = segue.destinationViewController;
         FeedItem *item = postsToDisplay[indexPath.row];
         destinationViewController.link = item.link;
+        destinationViewController.feedItem = item;
     }
 }
 

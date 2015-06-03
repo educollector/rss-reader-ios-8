@@ -18,6 +18,8 @@
     IBOutlet UIBarButtonItem *backBarButtonItem;
     IBOutlet UIBarButtonItem *forwardBarButtonItem;
     IBOutlet UIToolbar *webViewToolbar;
+    UIBarButtonItem *shareButton;
+    UIBarButtonItem *addToFavourButton;
 }
 
 //*****************************************************************************/
@@ -115,7 +117,17 @@
 }
 
 -(void)testMethod{
-    NSLog(@"I am a test method! I test nav bar buttons clicking!");
+    NSLog(@"I am a test method! I test nav bar buttons 'share' clicking!");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked" object:self];
+}
+
+-(void)postAddedToFavourite{
+    NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
+                                                     forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked"
+                                                        object:nil
+                                                      userInfo:dict];
 }
 
 //*****************************************************************************/
@@ -130,11 +142,9 @@
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@", cache, image];
     shareImage = [UIImage imageWithContentsOfFile:fullPath];
     
-    UIBarButtonItem *btn =[[UIBarButtonItem alloc] initWithImage:shareImage landscapeImagePhone:shareImage style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
-    
-    UIBarButtonItem *addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
-    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle: @"Share" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
-    NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton,btn, nil];
+    addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(postAddedToFavourite)];
+    shareButton = [[UIBarButtonItem alloc] initWithTitle: @"Share" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
+    NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton, nil];
     [self.navigationItem setRightBarButtonItems:barItemArray];
 }
 
