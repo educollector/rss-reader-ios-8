@@ -154,13 +154,17 @@
             //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
             postsToDisplay = [[NSMutableArray alloc] init];
             for(Post *el in tmpPostsArray){
+                //NSLog(@"title %@\n pubDate %@\n shortText %@\n link %@\n guid %@\n",el.title, el.pubDate, el.shortText, el.link, el.guid);
                 FeedItem *item = [[FeedItem alloc]init];
-                item.title = [NSMutableString stringWithString:el.title];
-                item.pubDate = [NSMutableString stringWithString:el.pubDate];
-                item.shortText = [NSMutableString stringWithString:el.shortText];
-                item.link = [NSMutableString stringWithString:el.link];
+                if(el.title!=nil){item.title = [NSMutableString stringWithString:el.title];}
+                if(el.pubDate!=nil){item.pubDate = [NSMutableString stringWithString:el.pubDate];}
+                if(el.shortText!=nil){item.shortText = [NSMutableString stringWithString:el.shortText];}
+                if(el.link!=nil){item.link = [NSMutableString stringWithString:el.link];}
+                if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
+                item.isRead = el.isRead;
                 [postsToDisplay addObject: item];
             }
+            
             [self uiUpdateMainFeedTable];
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
@@ -304,6 +308,36 @@
     }
 }
 
+- (void)savePostAsIsRead:(FeedItem *)item{
+    //fetch one post     //TODO: move to backround
+    NSPredicate *p;
+//        if(item.guid != nil){
+//            if(item.title !=nil){
+//                p=[NSPredicate predicateWithFormat:@"(guid == %@) AND (title == %@)", item.guid, item.title];
+//            }
+//        }else{
+    p=[NSPredicate predicateWithFormat:@"title == %@", item.title];
+    //}
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    // handle error
+    
+    //modify and save to database
+    if(fetchedProducts.count != 0){
+        Post* post = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
+        post = (Post*)fetchedProducts[0];
+        post.isRead = [NSNumber numberWithBool:YES];
+        
+        if (![managedObjectContext save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+    }
+}
+
+
+
 //*****************************************************************************/
 #pragma mark - Core Data - helper mthods
 //*****************************************************************************/
@@ -404,8 +438,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSInteger index = [indexPath row];
-    [[postsToDisplay objectAtIndex:index] setIsRead:[[NSNumber alloc] initWithInteger:1]];
+    [[postsToDisplay objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
+    //[self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
 }
 
 //*****************************************************************************/
