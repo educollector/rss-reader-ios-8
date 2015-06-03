@@ -33,6 +33,8 @@
         _site = [[NSMutableString alloc]init];
         _time = [[NSMutableString alloc]init];
         _sourceFeedUrl = [[NSMutableString alloc]init];
+        _isRead = [[NSNumber alloc]initWithBool:NO];
+        _guid = [[NSMutableString alloc]init];
     }
     return self;
 }

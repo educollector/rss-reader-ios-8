@@ -580,7 +580,12 @@ didStartElement:(NSString *)elementName
          [currentRssItem.pubDate appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     } else if ([currentElement isEqualToString:@"updated"]) { // Atom
          [currentRssItem.pubDate appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
+    } else if ([currentElement isEqualToString:@"guid"]) {
+        [currentRssItem.guid appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
+    } else if ([currentElement isEqualToString:@"id"]) { //Atom
+        [currentRssItem.guid appendString:[string stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet]];
     }
+    
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName

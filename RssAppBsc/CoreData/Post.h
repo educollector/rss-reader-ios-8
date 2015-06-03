@@ -1,3 +1,11 @@
+//
+//  Post.h
+//  
+//
+//  Created by Aleksandra Skierbiszewska on 03.06.2015.
+//
+//
+
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
@@ -14,6 +22,8 @@
 @property (nonatomic, retain) NSString * time;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSNumber * isRead;
+@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) Url *sourceFeedUrl;
 
 @end

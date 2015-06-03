@@ -19,6 +19,8 @@
 @property (nonatomic, strong) NSMutableString *site;
 @property (nonatomic, strong) NSMutableString *time;
 @property (nonatomic, strong) NSMutableString *sourceFeedUrl;
+@property (nonatomic, strong) NSMutableString *guid;
+@property (nonatomic, strong) NSNumber *isRead;
 
 -(FeedItem*)initWithDefaultValues;
 -(FeedItem*)init;

@@ -124,7 +124,7 @@
     NSError *fetchError;
     NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetch error:&fetchError];
     // handle error
-    if(fetchedProducts != nil){
+    if(fetchedProducts.count != 0){
         return YES;
     }
     return NO;
