@@ -449,6 +449,7 @@
         cell.postTitle.textColor = [UIColor grayColor];
         cell.postAdditionalInfo.textColor = [UIColor grayColor];
     }
+    cell.likeImage.image = [UIImage imageNamed:@"star_inactive"];
     return cell;
 }
 

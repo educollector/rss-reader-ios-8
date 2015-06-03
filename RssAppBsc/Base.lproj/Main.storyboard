@@ -34,9 +34,13 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Qj-tu-pgC">
+                                            <rect key="frame" x="38" y="16" width="31" height="28"/>
+                                        </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="likeImage" destination="6Qj-tu-pgC" id="hxz-A1-HiD"/>
                                     <outlet property="postAdditionalInfo" destination="Dlo-Qa-vBt" id="bPx-HQ-RCT"/>
                                     <outlet property="postImage" destination="MpB-xd-icE" id="2D8-M1-fTo"/>
                                     <outlet property="postTitle" destination="Z8v-SU-EF5" id="BEz-dc-lKk"/>

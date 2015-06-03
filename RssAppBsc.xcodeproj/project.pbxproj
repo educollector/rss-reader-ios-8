@@ -29,11 +29,12 @@
 		7D3332DF1B159F78008371FE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DB1B159F78008371FE /* Reachability.m */; };
 		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
-		7D4CE76B1B1D8DEA0040DBA3 /* PostsOfUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */; };
 		7D4CE76E1B1EE2D50040DBA3 /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4CE76D1B1EE2D50040DBA3 /* Post.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 		7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF81B1893FE0084A11B /* CoreDataController.m */; };
 		7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */; };
+		7D7408E11B1F2F250042FB5A /* star_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408DF1B1F2F250042FB5A /* star_active.png */; };
+		7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408E01B1F2F250042FB5A /* star_inactive.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,8 +87,6 @@
 		7D3332DC1B159F78008371FE /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
 		7D3332E71B15A742008371FE /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Url.h; path = CoreData/Url.h; sourceTree = "<group>"; };
 		7D3332E81B15A742008371FE /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = CoreData/Url.m; sourceTree = "<group>"; };
-		7D4CE7691B1D8DEA0040DBA3 /* PostsOfUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostsOfUrls.h; sourceTree = "<group>"; };
-		7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostsOfUrls.m; sourceTree = "<group>"; };
 		7D4CE76C1B1EE2D50040DBA3 /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
 		7D4CE76D1B1EE2D50040DBA3 /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
 		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -97,6 +96,8 @@
 		7D5BDFF81B1893FE0084A11B /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreDataController.m; path = CoreData/CoreDataController.m; sourceTree = "<group>"; };
 		7D5BDFFA1B1C94420084A11B /* ASCoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASCoreDataController.h; path = CoreData/ASCoreDataController.h; sourceTree = "<group>"; };
 		7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASCoreDataController.m; path = CoreData/ASCoreDataController.m; sourceTree = "<group>"; };
+		7D7408DF1B1F2F250042FB5A /* star_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_active.png; sourceTree = "<group>"; };
+		7D7408E01B1F2F250042FB5A /* star_inactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_inactive.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +139,7 @@
 		239D4E201A7A59AD00C797C2 /* RssAppBsc */ = {
 			isa = PBXGroup;
 			children = (
+				7D7408DA1B1F2EBF0042FB5A /* Assets */,
 				239D4E251A7A59AD00C797C2 /* AppDelegate.h */,
 				239D4E261A7A59AD00C797C2 /* AppDelegate.m */,
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
@@ -156,8 +158,6 @@
 		239D4E211A7A59AD00C797C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				7D4CE7691B1D8DEA0040DBA3 /* PostsOfUrls.h */,
-				7D4CE76A1B1D8DEA0040DBA3 /* PostsOfUrls.m */,
 				239D4E311A7A59AD00C797C2 /* Images.xcassets */,
 				239D4E631A7A919500C797C2 /* share.png */,
 				239D4E331A7A59AD00C797C2 /* LaunchScreen.xib */,
@@ -268,6 +268,15 @@
 			path = Externals;
 			sourceTree = "<group>";
 		};
+		7D7408DA1B1F2EBF0042FB5A /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				7D7408DF1B1F2F250042FB5A /* star_active.png */,
+				7D7408E01B1F2F250042FB5A /* star_inactive.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -349,8 +358,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				239D4E301A7A59AD00C797C2 /* Main.storyboard in Resources */,
+				7D7408E11B1F2F250042FB5A /* star_active.png in Resources */,
 				239D4E351A7A59AD00C797C2 /* LaunchScreen.xib in Resources */,
 				239D4E321A7A59AD00C797C2 /* Images.xcassets in Resources */,
+				7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */,
 				239D4E641A7A919500C797C2 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,7 +385,6 @@
 				239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				7D3332E91B15A742008371FE /* Url.m in Sources */,
-				7D4CE76B1B1D8DEA0040DBA3 /* PostsOfUrls.m in Sources */,
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
