@@ -392,9 +392,20 @@
     FeedItem *tmpItem = [postsToDisplay objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
+    cell.postTitle.textColor = [UIColor blackColor];
+    cell.postAdditionalInfo.textColor = [UIColor blackColor];
     NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.shortText];
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];    //NSLog(@"INFO title: %@ ; link: %@ ; descr: %@ ; pubDate: %@", tmpItem.title, tmpItem.link,tmpItem.shortText, tmpItem.pubDate);
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];
+    if([tmpItem.isRead isEqualToNumber:[NSNumber numberWithInteger:1]]){
+        cell.postTitle.textColor = [UIColor grayColor];
+        cell.postAdditionalInfo.textColor = [UIColor grayColor];
+    }
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger index = [indexPath row];
+    [[postsToDisplay objectAtIndex:index] setIsRead:[[NSNumber alloc] initWithInteger:1]];
 }
 
 //*****************************************************************************/
