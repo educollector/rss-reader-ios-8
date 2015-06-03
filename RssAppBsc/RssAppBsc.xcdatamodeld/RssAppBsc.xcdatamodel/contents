@@ -12,7 +12,7 @@
         <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="sourceFeedUrl" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Url" inverseName="posts" inverseEntity="Url" syncable="YES"/>
+        <relationship name="sourceFeedUrl" optional="YES" maxCount="1" deletionRule="Deny" destinationEntity="Url" inverseName="posts" inverseEntity="Url" syncable="YES"/>
     </entity>
     <entity name="Url" representedClassName="Url" syncable="YES">
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>

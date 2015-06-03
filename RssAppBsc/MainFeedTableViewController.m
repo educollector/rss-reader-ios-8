@@ -156,13 +156,28 @@
             for(Post *el in tmpPostsArray){
                 //NSLog(@"title %@\n pubDate %@\n shortText %@\n link %@\n guid %@\n",el.title, el.pubDate, el.shortText, el.link, el.guid);
                 FeedItem *item = [[FeedItem alloc]init];
-                if(el.title!=nil){item.title = [NSMutableString stringWithString:el.title];}
-                if(el.pubDate!=nil){item.pubDate = [NSMutableString stringWithString:el.pubDate];}
-                if(el.shortText!=nil){item.shortText = [NSMutableString stringWithString:el.shortText];}
-                if(el.link!=nil){item.link = [NSMutableString stringWithString:el.link];}
-                if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
-                item.isRead = el.isRead;
-                [postsToDisplay addObject: item];
+                
+                if(el.link!=nil){
+                    item.link = [NSMutableString stringWithString:el.link];
+                    if(el.title!=nil){
+                        item.title = [NSMutableString stringWithString:el.title];
+                    }else {
+                        item.title = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.pubDate!=nil){
+                        item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                    }else{
+                        item.pubDate = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.shortText!=nil){
+                        item.shortText = [NSMutableString stringWithString:el.shortText];
+                    }else{
+                        item.shortText = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
+                    item.isRead = el.isRead;
+                    [postsToDisplay addObject: item];
+                }
             }
             
             [self uiUpdateMainFeedTable];
@@ -429,7 +444,7 @@
     cell.postTitle.textColor = [UIColor blackColor];
     cell.postAdditionalInfo.textColor = [UIColor blackColor];
     NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.shortText];
-    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@ ago", tmpItem.pubDate, cleanedDescription];
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@", tmpItem.pubDate, cleanedDescription];
     if([tmpItem.isRead isEqualToNumber:[NSNumber numberWithInteger:1]]){
         cell.postTitle.textColor = [UIColor grayColor];
         cell.postAdditionalInfo.textColor = [UIColor grayColor];
@@ -439,7 +454,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [[postsToDisplay objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
-    //[self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
+    [self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
 }
 
 //*****************************************************************************/
