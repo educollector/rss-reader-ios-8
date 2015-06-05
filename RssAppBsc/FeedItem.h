@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSMutableString *sourceFeedUrl;
 @property (nonatomic, strong) NSMutableString *guid;
 @property (nonatomic, strong) NSNumber *isRead;
-
+@property (nonatomic, strong) NSNumber *isLiked;
 -(FeedItem*)initWithDefaultValues;
 -(FeedItem*)init;
 

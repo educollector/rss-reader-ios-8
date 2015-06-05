@@ -35,6 +35,7 @@
         _sourceFeedUrl = [[NSMutableString alloc]init];
         _isRead = [[NSNumber alloc]initWithBool:NO];
         _guid = [[NSMutableString alloc]init];
+        _isLiked = [[NSNumber alloc]initWithBool:NO];
     }
     return self;
 }

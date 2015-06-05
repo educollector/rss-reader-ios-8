@@ -90,11 +90,11 @@
                                              selector:@selector(getActualDataFromConnection)
                                                  name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
-    //TODO uncomment to work with Like notification
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(markPostAsLiked:)
-//                                                 name:@"pl.skierbisz.webviewscreen.postliked"
-//                                               object:nil];
+   // TODO uncomment to work with Like notification
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(markPostAsLiked:)
+                                                 name:@"pl.skierbisz.webviewscreen.postliked"
+                                               object:nil];
 }
 -(void)styleTheView{
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -356,6 +356,34 @@
     }
 }
 
+- (void)savePostAsIsLiked:(FeedItem *)item{
+    //fetch one post     //TODO: move to backround
+    NSPredicate *p;
+    //        if(item.guid != nil){
+    //            if(item.title !=nil){
+    //                p=[NSPredicate predicateWithFormat:@"(guid == %@) AND (title == %@)", item.guid, item.title];
+    //            }
+    //        }else{
+    p=[NSPredicate predicateWithFormat:@"title == %@", item.title];
+    //}
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    // handle error
+    
+    //modify and save to database
+    if(fetchedProducts.count != 0){
+        Post* post = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
+        post = (Post*)fetchedProducts[0];
+        post.isLiked = [NSNumber numberWithBool:YES];
+        
+        if (![managedObjectContext save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+    }
+}
+
 
 
 //*****************************************************************************/
@@ -454,7 +482,12 @@
         cell.postTitle.textColor = [UIColor grayColor];
         cell.postAdditionalInfo.textColor = [UIColor grayColor];
     }
-    cell.likeImage.image = [UIImage imageNamed:@"star_inactive"];
+    if([tmpItem.isLiked isEqualToNumber:[NSNumber numberWithInteger:1]]){
+        cell.likeImage.image = [UIImage imageNamed:@"star_active"];
+    }else{
+        cell.likeImage.image = [UIImage imageNamed:@"star_inactive"];
+    }
+    
     return cell;
 }
 
@@ -522,15 +555,21 @@
 }
 
 -(void) markPostAsLiked:(NSNotification *)notification {
-    NSString *guid = [[[notification userInfo] valueForKey:@"guid"] stringValue];
-    NSString *title = [[[notification userInfo] valueForKey:@"title"] stringValue];
-
-//    NSMutableArray *matchingObjects = [NSMutableArray array];
-//    for (NSString *item in postsToDisplay) {
-//        if ([string isEqualToString:@"New"]) {
-//            [matchingObjects addObject:string];
-//        }
-//    }
+    NSDictionary *dict = [notification userInfo];
+    NSLog(@"-----Dict: %@", dict);
+    FeedItem *itemToCompare = [[FeedItem alloc]init];
+    itemToCompare.guid = [dict valueForKey:@"guid"];
+    itemToCompare.title = [dict valueForKey:@"title"];
+    
+    
+    for (FeedItem *item in postsToDisplay) {
+        if ([itemToCompare.title isEqualToString:itemToCompare.title]) {
+            [self savePostAsIsLiked:itemToCompare];
+            item.isLiked = [NSNumber numberWithBool:YES]; //modify table view data source -> postsToDisplay
+            [self.tableView reloadData];
+            break;
+        }
+    }
     
 }
 

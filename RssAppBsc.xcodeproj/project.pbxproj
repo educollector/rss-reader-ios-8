@@ -29,12 +29,12 @@
 		7D3332DF1B159F78008371FE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DB1B159F78008371FE /* Reachability.m */; };
 		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
-		7D4CE76E1B1EE2D50040DBA3 /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4CE76D1B1EE2D50040DBA3 /* Post.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 		7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF81B1893FE0084A11B /* CoreDataController.m */; };
 		7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */; };
 		7D7408E11B1F2F250042FB5A /* star_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408DF1B1F2F250042FB5A /* star_active.png */; };
 		7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408E01B1F2F250042FB5A /* star_inactive.png */; };
+		7D7408E51B21E5270042FB5A /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408E41B21E5270042FB5A /* Post.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,8 +87,6 @@
 		7D3332DC1B159F78008371FE /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
 		7D3332E71B15A742008371FE /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Url.h; path = CoreData/Url.h; sourceTree = "<group>"; };
 		7D3332E81B15A742008371FE /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = CoreData/Url.m; sourceTree = "<group>"; };
-		7D4CE76C1B1EE2D50040DBA3 /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
-		7D4CE76D1B1EE2D50040DBA3 /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
 		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
 		7D5BDFF11B1753060084A11B /* NSURLSession+SynchronousTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+SynchronousTask.h"; sourceTree = "<group>"; };
 		7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+SynchronousTask.m"; sourceTree = "<group>"; };
@@ -98,6 +96,8 @@
 		7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASCoreDataController.m; path = CoreData/ASCoreDataController.m; sourceTree = "<group>"; };
 		7D7408DF1B1F2F250042FB5A /* star_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_active.png; sourceTree = "<group>"; };
 		7D7408E01B1F2F250042FB5A /* star_inactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_inactive.png; sourceTree = "<group>"; };
+		7D7408E31B21E5270042FB5A /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
+		7D7408E41B21E5270042FB5A /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,8 +230,8 @@
 		239D4E711A7BA63200C797C2 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				7D4CE76C1B1EE2D50040DBA3 /* Post.h */,
-				7D4CE76D1B1EE2D50040DBA3 /* Post.m */,
+				7D7408E31B21E5270042FB5A /* Post.h */,
+				7D7408E41B21E5270042FB5A /* Post.m */,
 				7D3332E71B15A742008371FE /* Url.h */,
 				7D3332E81B15A742008371FE /* Url.m */,
 				239D4E281A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld */,
@@ -392,10 +392,10 @@
 				7D3332E01B159F78008371FE /* README.mdown in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
 				7D3332DF1B159F78008371FE /* Reachability.m in Sources */,
-				7D4CE76E1B1EE2D50040DBA3 /* Post.m in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */,
+				7D7408E51B21E5270042FB5A /* Post.m in Sources */,
 				7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */,
 				239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */,
 				239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */,
