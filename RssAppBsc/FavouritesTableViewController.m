@@ -17,6 +17,7 @@
 @implementation FavouritesTableViewController{
     NSManagedObjectContext *managedObjectContext;
     NSMutableArray *favouritePosts;
+    UIRefreshControl *refreshControl;
 }
 @synthesize dataController;
 
@@ -50,9 +51,9 @@
 }
 
 -(void)setPullToRefresh{
-//    refreshControl = [[UIRefreshControl alloc]init];
-//    [self.tableView addSubview:refreshControl];
-//    [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
+    refreshControl = [[UIRefreshControl alloc]init];
+    [self.tableView addSubview:refreshControl];
+    [refreshControl addTarget:self action:@selector(loadFavouritPostFromDatabase) forControlEvents:UIControlEventValueChanged];
 }
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
@@ -83,6 +84,9 @@
     }else {
         NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
     }
+    
+    [self.tableView reloadData];
+    [refreshControl endRefreshing];
 }
 
 //*****************************************************************************/
