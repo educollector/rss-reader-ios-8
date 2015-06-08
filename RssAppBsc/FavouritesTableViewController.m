@@ -134,14 +134,27 @@
 //*****************************************************************************/
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    DetailViewController *destinationViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
-    //DetailViewController *destinationViewController = [[DetailViewController alloc]init];
-    FeedItem *tmpItem = [favouritePosts objectAtIndex:[indexPath row]];
-    destinationViewController.link = tmpItem.link;
-    destinationViewController.feedItem = tmpItem;
-    [self presentViewController:destinationViewController animated:YES completion:nil];
+//    DetailViewController *destinationViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+//    //DetailViewController *destinationViewController = [[DetailViewController alloc]init];
+//    FeedItem *tmpItem = [favouritePosts objectAtIndex:[indexPath row]];
+//    destinationViewController.link = tmpItem.link;
+//    destinationViewController.feedItem = tmpItem;
+//    
+//    [self presentViewController:destinationViewController animated:YES completion:nil];
+    FeedItemTableViewCell *cell = (FeedItemTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    [self performSegueWithIdentifier:@"showPostDetailViewFromFavourites" sender:cell];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([segue.identifier isEqualToString:@"showPostDetailViewFromFavourites"]){
+        NSLog(@"CALL prepareForSegue if");
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        DetailViewController *destinationViewController = segue.destinationViewController;
+        FeedItem *item = favouritePosts[indexPath.row];
+        destinationViewController.link = item.link;
+        destinationViewController.feedItem = item;
+    }
+}
 
 /*
 // Override to support conditional editing of the table view.
