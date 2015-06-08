@@ -25,6 +25,9 @@
 //*****************************************************************************/
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self styleTheView];
+    [self setPullToRefresh];
+    [self preferredStatusBarStyle];
     // register custom nib
     [self.tableView registerNib:[UINib nibWithNibName:@"FeedItemTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"FeedItemTableViewCell"];
     dataController = [ASCoreDataController sharedInstance];
@@ -35,6 +38,26 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+//*****************************************************************************/
+#pragma mark - View - helper methods
+//*****************************************************************************/
+
+-(void)styleTheView{
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    // Set this in every view controller so that the back button displays back instead of the root view controller name
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+}
+
+-(void)setPullToRefresh{
+//    refreshControl = [[UIRefreshControl alloc]init];
+//    [self.tableView addSubview:refreshControl];
+//    [refreshControl addTarget:self action:@selector(getActualDataFromConnection) forControlEvents:UIControlEventValueChanged];
+}
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
 
 //*****************************************************************************/
 #pragma mark - Data
