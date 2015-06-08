@@ -47,7 +47,7 @@
                                     <outlet property="postAdditionalInfo" destination="Dlo-Qa-vBt" id="bPx-HQ-RCT"/>
                                     <outlet property="postImage" destination="MpB-xd-icE" id="2D8-M1-fTo"/>
                                     <outlet property="postTitle" destination="Z8v-SU-EF5" id="BEz-dc-lKk"/>
-                                    <segue destination="Vxb-UY-t5L" kind="push" identifier="showPostDetailsFromMain" id="HND-3Q-7Kr"/>
+                                    <segue destination="Vxb-UY-t5L" kind="push" identifier="showPostDetailView" id="HND-3Q-7Kr"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

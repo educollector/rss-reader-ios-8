@@ -676,7 +676,7 @@ didStartElement:(NSString *)elementName
 //*****************************************************************************/
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"showPostDetailsFromMain"]){
+    if([segue.identifier isEqualToString:@"showPostDetailView"]){
         NSLog(@"CALL prepareForSegue if");
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;

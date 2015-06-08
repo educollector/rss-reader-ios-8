@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455451051.846426"
+            timestampString = "455451930.421136"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "692"
-            endingLineNumber = "692"
+            startingLineNumber = "691"
+            endingLineNumber = "691"
             landmarkName = "-tabBarController:didSelectViewController:"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455451051.846426"
+            timestampString = "455451930.421136"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "706"
-            endingLineNumber = "706"
+            startingLineNumber = "705"
+            endingLineNumber = "705"
             landmarkName = "@implementation MainFeedTableViewController"
             landmarkType = "3">
          </BreakpointContent>
