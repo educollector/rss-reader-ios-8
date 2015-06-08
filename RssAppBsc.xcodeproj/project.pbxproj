@@ -29,6 +29,7 @@
 		7D3332DF1B159F78008371FE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DB1B159F78008371FE /* Reachability.m */; };
 		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
+		7D4EC1371B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
 		7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF81B1893FE0084A11B /* CoreDataController.m */; };
 		7D5BDFFC1B1C94420084A11B /* ASCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFFB1B1C94420084A11B /* ASCoreDataController.m */; };
@@ -90,6 +91,8 @@
 		7D3332DC1B159F78008371FE /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
 		7D3332E71B15A742008371FE /* Url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Url.h; path = CoreData/Url.h; sourceTree = "<group>"; };
 		7D3332E81B15A742008371FE /* Url.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Url.m; path = CoreData/Url.m; sourceTree = "<group>"; };
+		7D4EC1351B25CC5C000D9709 /* UIBarButtonItem+ButtonState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+ButtonState.h"; sourceTree = "<group>"; };
+		7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+ButtonState.m"; sourceTree = "<group>"; };
 		7D5BDFE31B171A5E0084A11B /* RssAppBsc 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RssAppBsc 2.xcdatamodel"; sourceTree = "<group>"; };
 		7D5BDFF11B1753060084A11B /* NSURLSession+SynchronousTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+SynchronousTask.h"; sourceTree = "<group>"; };
 		7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+SynchronousTask.m"; sourceTree = "<group>"; };
@@ -164,6 +167,8 @@
 				7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */,
 				7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */,
 				7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */,
+				7D4EC1351B25CC5C000D9709 /* UIBarButtonItem+ButtonState.h */,
+				7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */,
 			);
 			path = RssAppBsc;
 			sourceTree = "<group>";
@@ -399,6 +404,7 @@
 				239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
 				7D7408E81B25886F0042FB5A /* ASTextCleaner.m in Sources */,
+				7D4EC1371B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m in Sources */,
 				7D3332E91B15A742008371FE /* Url.m in Sources */,
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,

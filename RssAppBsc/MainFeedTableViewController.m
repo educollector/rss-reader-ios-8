@@ -93,10 +93,13 @@
                                              selector:@selector(getActualDataFromConnection)
                                                  name:@"pl.skierbisz.browserscreen.linkdeleted"
                                                object:nil];
-   // TODO uncomment to work with Like notification
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(markPostAsLiked:)
-                                                 name:@"pl.skierbisz.webviewscreen.postliked"
+                                                 name:@"pl.skierbisz.webviewscreen.post.liked"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(markPostAsUnLiked:)
+                                                 name:@"pl.skierbisz.webviewscreen.post.unliked"
                                                object:nil];
 }
 -(void)styleTheView{
@@ -358,8 +361,8 @@
         }
     }
 }
-
-- (void)savePostAsIsLiked:(FeedItem *)item{
+//- (void)savePostAsIsLiked:(FeedItem *)item{
+- (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked{
     //fetch one post     //TODO: move to backround
     NSPredicate *p;
     //        if(item.guid != nil){
@@ -379,7 +382,12 @@
     if(fetchedProducts.count != 0){
         Post* post = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:managedObjectContext];
         post = (Post*)fetchedProducts[0];
-        post.isLiked = [NSNumber numberWithBool:YES];
+        if(isLiked){
+            post.isLiked = [NSNumber numberWithBool:YES];
+        }else{
+            post.isLiked = [NSNumber numberWithBool:NO];
+        }
+        
         
         if (![managedObjectContext save:&error]) {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
@@ -512,8 +520,27 @@
     
     for (FeedItem *item in postsToDisplay) {
         if ([item.title isEqualToString:itemToCompare.title]) {
-            [self savePostAsIsLiked:itemToCompare];
+            [self savePost:itemToCompare asFavourite:YES];
             item.isLiked = [NSNumber numberWithBool:YES]; //modify table view data source -> postsToDisplay
+            [self.tableView reloadData];
+            break;
+        }
+    }
+    
+}
+
+-(void) markPostAsUnLiked:(NSNotification *)notification {
+    NSDictionary *dict = [notification userInfo];
+    NSLog(@"-----Dict: %@", dict);
+    FeedItem *itemToCompare = [[FeedItem alloc]init];
+    itemToCompare.guid = [dict valueForKey:@"guid"];
+    itemToCompare.title = [dict valueForKey:@"title"];
+    
+    
+    for (FeedItem *item in postsToDisplay) {
+        if ([item.title isEqualToString:itemToCompare.title]) {
+            [self savePost:itemToCompare asFavourite:NO];
+            item.isLiked = [NSNumber numberWithBool:NO]; //modify table view data source -> postsToDisplay
             [self.tableView reloadData];
             break;
         }

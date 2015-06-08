@@ -111,21 +111,51 @@
 
 -(void)testMethod{
     NSLog(@"I am a test method! I test nav bar buttons 'share' clicking!");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.liked" object:self];
 }
 
--(void)postAddedToFavourite{
+-(void)buttonAddedToFavouriteClicked{
     
-    if([addToFavourButton.title isEqualToString: @"Like"]){
+//    if(addToFavourButton.status == ASBarButtonStatusIsNotFavourite){
+//        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
+//                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
+//        
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.liked"
+//                                                            object:nil
+//                                                          userInfo:dict];
+//        [addToFavourButton setStatus:ASBarButtonStatusIsFavourite];
+//        [addToFavourButton setTitle:@"<3"];
+//    }
+//    else if (addToFavourButton.status == ASBarButtonStatusIsFavourite){
+//        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
+//                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
+//        
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.unliked"
+//                                                            object:nil
+//                                                          userInfo:dict];
+//        [addToFavourButton setStatus:ASBarButtonStatusIsNotFavourite];
+//        [addToFavourButton setTitle:@"Like"];
+//    }
+    
+    if([addToFavourButton.title isEqualToString:@"Like"] ){
         NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
                                                          forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked"
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.liked"
                                                             object:nil
                                                           userInfo:dict];
-            [addToFavourButton setTitle:@"<3"];
-    }else{
-            [addToFavourButton setTitle:@"Like"];
+        //[addToFavourButton setStatus:ASBarButtonStatusIsFavourite];
+        [addToFavourButton setTitle:@"<3"];
+    }
+    else if ([addToFavourButton.title isEqualToString:@"<3"] ){
+        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
+                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.unliked"
+                                                            object:nil
+                                                          userInfo:dict];
+        //[addToFavourButton setStatus:ASBarButtonStatusIsNotFavourite];
+        [addToFavourButton setTitle:@"Like"];
     }
     
 
@@ -143,7 +173,13 @@
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@", cache, image];
     shareImage = [UIImage imageWithContentsOfFile:fullPath];
     
-    addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(postAddedToFavourite)];
+    if(self.feedItem.isLiked == nil || [self.feedItem.isLiked isEqualToNumber:[NSNumber numberWithInt:0]]){
+        addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"Like" style:UIBarButtonItemStyleDone target:self action:@selector(buttonAddedToFavouriteClicked)];
+    }else{
+        addToFavourButton = [[UIBarButtonItem alloc] initWithTitle: @"<3" style:UIBarButtonItemStyleDone target:self action:@selector(buttonAddedToFavouriteClicked)];
+    }
+
+    //addToFavourButton.status = ASBarButtonStatusIsNotFavourite;
     shareButton = [[UIBarButtonItem alloc] initWithTitle: @"Share" style:UIBarButtonItemStyleDone target:self action:@selector(testMethod)];
     NSArray *barItemArray = [[NSArray alloc]initWithObjects: shareButton,addToFavourButton, nil];
     [self.navigationItem setRightBarButtonItems:barItemArray];

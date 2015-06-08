@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "FeedItem.h"
+#import "UIBarButtonItem+ButtonState.h"
 
 @interface DetailViewController : UIViewController <UIWebViewDelegate>
 

@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/DetailViewController.m"
-            timestampString = "455461313.692086"
+            timestampString = "455464216.506817"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "204"
-            endingLineNumber = "204"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,27 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460440.566246"
+            timestampString = "455463015.31807"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "699"
-            endingLineNumber = "699"
-            landmarkName = "-tabBarController:didSelectViewController:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460440.566246"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "713"
-            endingLineNumber = "713"
+            startingLineNumber = "740"
+            endingLineNumber = "740"
             landmarkName = "@implementation MainFeedTableViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -106,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460018.80745"
+            timestampString = "455463015.31807"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "362"
-            endingLineNumber = "362"
-            landmarkName = "-savePostAsIsLiked:"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
+            landmarkName = "-savePost:asFavourite:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -121,45 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460018.80745"
+            filePath = "RssAppBsc/DetailViewController.m"
+            timestampString = "455464375.855605"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "379"
-            endingLineNumber = "379"
-            landmarkName = "-savePostAsIsLiked:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460440.566246"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "686"
-            endingLineNumber = "686"
-            landmarkName = "-prepareForSegue:sender:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455460452.787437"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "679"
-            endingLineNumber = "679"
-            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "-uiNavigationBarStyling"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
