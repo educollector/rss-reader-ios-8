@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../RssAppBsc/CoreData/Post.h">
-   </FileRef>
-   <FileRef
-      location = "group:../RssAppBsc/CoreData/Post.m">
-   </FileRef>
-   <FileRef
       location = "self:RssAppBsc.xcodeproj">
    </FileRef>
 </Workspace>

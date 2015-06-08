@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RssAppBsc/DetailViewController.m"
-            timestampString = "455032853.885917"
+            timestampString = "455456646.443869"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
             landmarkType = "5">
          </BreakpointContent>
@@ -144,6 +144,22 @@
             startingLineNumber = "484"
             endingLineNumber = "484"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RssAppBsc/DetailViewController.m"
+            timestampString = "455456947.786088"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "-uiMakeContent"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

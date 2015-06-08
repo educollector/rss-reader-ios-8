@@ -129,6 +129,20 @@
 }
 
 
+//*****************************************************************************/
+#pragma mark - Navigation
+//*****************************************************************************/
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    DetailViewController *destinationViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    //DetailViewController *destinationViewController = [[DetailViewController alloc]init];
+    FeedItem *tmpItem = [favouritePosts objectAtIndex:[indexPath row]];
+    destinationViewController.link = tmpItem.link;
+    destinationViewController.feedItem = tmpItem;
+    [self presentViewController:destinationViewController animated:YES completion:nil];
+}
+
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

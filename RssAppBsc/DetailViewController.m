@@ -28,6 +28,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //self.webView = [[UIWebView alloc]init];
     self.webView.delegate = self;
     [self uiMakeContent];
     [self uiNavigationBarStyling];

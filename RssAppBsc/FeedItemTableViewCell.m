@@ -23,12 +23,12 @@
     // Configure the view for the selected state
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    NSIndexPath *path = [controller.tableView indexPathForCell:self];
-    [controller.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
-    [controller performSegueWithIdentifier:@"FinishedTask" sender:controller];
-    [super touchesEnded:touches withEvent:event];
-}
+//- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    NSIndexPath *path = [controller.tableView indexPathForCell:self];
+//    [controller.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+//    [controller performSegueWithIdentifier:@"FinishedTask" sender:controller];
+//    [super touchesEnded:touches withEvent:event];
+//}
 
 @end
