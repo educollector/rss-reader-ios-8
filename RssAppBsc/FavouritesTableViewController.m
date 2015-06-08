@@ -105,8 +105,8 @@
     static NSString * cellIdentifier = @"FeedItemTableViewCell";
     //FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     
-    FeedItemTableViewCell *cell = /*(FeedItemTableViewCell *)*/[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
-    cell.controller = self;
+    FeedItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: cellIdentifier];
+    cell.controller = self; //! necessary to use Prototype cell defined in XIB !!!
     
     FeedItem *tmpItem = [favouritePosts objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];

@@ -41,6 +41,9 @@
     [self setNotificationCenter];
     [self styleTheView];
     [self setPullToRefresh];
+    
+    // register custom nib
+    [self.tableView registerNib:[UINib nibWithNibName:@"FeedItemTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"FeedItemTableViewCell"];
   
     //Core Data
     appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -467,9 +470,12 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString * cellIdentifier = @"FeedCell";
-    FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
+    static NSString * cellIdentifier = @"FeedItemTableViewCell";
+    //FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
+    FeedItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: cellIdentifier];
+    cell.controller = self;//! necessary to use Prototype cell defined in XIB !!!
+    
     FeedItem *tmpItem = [postsToDisplay objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
@@ -489,11 +495,6 @@
     }
     
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [[postsToDisplay objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
-    [self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
 }
 
 //*****************************************************************************/
@@ -675,8 +676,15 @@ didStartElement:(NSString *)elementName
 #pragma mark - Navigation
 //*****************************************************************************/
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [[postsToDisplay objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
+    [self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
+    FeedItemTableViewCell *cell = (FeedItemTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+    [self performSegueWithIdentifier:@"showPostDetailViewFromMain" sender:cell];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"showPostDetailView"]){
+    if([segue.identifier isEqualToString:@"showPostDetailViewFromMain"]){
         NSLog(@"CALL prepareForSegue if");
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;

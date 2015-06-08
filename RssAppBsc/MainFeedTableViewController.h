@@ -14,6 +14,7 @@
 #import "CoreDataController.h"
 #import "ASCoreDataController.h"
 #import "ASTextCleaner.h"
+#import "FeedItemTableViewCell.h"
 
 @interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>
 {
