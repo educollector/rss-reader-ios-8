@@ -563,7 +563,7 @@
     
     
     for (FeedItem *item in postsToDisplay) {
-        if ([itemToCompare.title isEqualToString:itemToCompare.title]) {
+        if ([item.title isEqualToString:itemToCompare.title]) {
             [self savePostAsIsLiked:itemToCompare];
             item.isLiked = [NSNumber numberWithBool:YES]; //modify table view data source -> postsToDisplay
             [self.tableView reloadData];
