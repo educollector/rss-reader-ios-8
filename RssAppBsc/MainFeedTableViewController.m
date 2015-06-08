@@ -1,5 +1,5 @@
 #import "MainFeedTableViewController.h"
-#import "NSString+HTML.h"
+
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 
@@ -468,7 +468,6 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cellForRowAtIndexPath");
     static NSString * cellIdentifier = @"FeedCell";
     FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     //(FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[@"FeedCell" forIndexPath:indexPath];
@@ -477,7 +476,7 @@
     cell.postTitle.text = tmpItem.title;
     cell.postTitle.textColor = [UIColor blackColor];
     cell.postAdditionalInfo.textColor = [UIColor blackColor];
-    NSString *cleanedDescription = [self cleanFromTagsWithScanner: tmpItem.shortText];
+    NSString *cleanedDescription = [ASTextCleaner cleanFromTagsWithScanner: tmpItem.shortText];
     cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@", tmpItem.pubDate, cleanedDescription];
     if([tmpItem.isRead isEqualToNumber:[NSNumber numberWithInteger:1]]){
         cell.postTitle.textColor = [UIColor grayColor];
@@ -499,62 +498,9 @@
 }
 
 //*****************************************************************************/
-#pragma mark - Table view - text formatting and helper methods
+#pragma mark - Table view - helper methods
 //*****************************************************************************/
 
-- (NSString *) cleanFromTagsWithRegexp:(NSString *)text{
-    NSString *cleanedText;
-    NSError *error = nil;
-    NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@"<img.*\/>"
-                                  options:NSRegularExpressionCaseInsensitive
-                                  error:&error];
-    
-    cleanedText = [regex stringByReplacingMatchesInString:text
-                            options:0
-                            range:NSMakeRange(0, [text length])
-                            withTemplate:@""];
-    
-    regex = [NSRegularExpression regularExpressionWithPattern:@"<a.*>.*<\/a>"
-                                  options:NSRegularExpressionCaseInsensitive
-                                  error:&error];
-    
-    cleanedText = [regex stringByReplacingMatchesInString:cleanedText
-                                                  options:0
-                                                    range:NSMakeRange(0, [cleanedText length])
-                                             withTemplate:@""];
-    return cleanedText;
-}
-
-- (NSString *)cleanFromTagsWithScanner:(NSString *)text{
-    
-    //wstawianie znakow specjalnych zamiast ich kodow
-    NSString *tmpString = [text kv_decodeHTMLCharacterEntities];
-    
-    //czyszczenie z <TAGOW HTML>
-    NSMutableString *cleanedText = [NSMutableString stringWithCapacity:[tmpString length]];
-    
-    NSScanner *scanner = [NSScanner scannerWithString:text];
-    scanner.charactersToBeSkipped = NULL;
-    NSString *tempText = nil;
-    
-    while (![scanner isAtEnd])
-    {
-        [scanner scanUpToString:@"<" intoString:&tempText];
-        
-        if (tempText != nil)
-            [cleanedText appendString:tempText];
-        
-        [scanner scanUpToString:@">" intoString:NULL];
-        
-        if (![scanner isAtEnd])
-            [scanner setScanLocation:[scanner scanLocation] + 1];
-        
-        tempText = nil;
-    }
-    
-    return cleanedText;
-}
 
 -(void) markPostAsLiked:(NSNotification *)notification {
     NSDictionary *dict = [notification userInfo];

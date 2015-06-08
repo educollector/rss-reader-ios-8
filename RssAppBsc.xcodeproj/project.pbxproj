@@ -35,6 +35,9 @@
 		7D7408E11B1F2F250042FB5A /* star_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408DF1B1F2F250042FB5A /* star_active.png */; };
 		7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408E01B1F2F250042FB5A /* star_inactive.png */; };
 		7D7408E51B21E5270042FB5A /* Post.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408E41B21E5270042FB5A /* Post.m */; };
+		7D7408E81B25886F0042FB5A /* ASTextCleaner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408E71B25886F0042FB5A /* ASTextCleaner.m */; };
+		7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */; };
+		7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +101,11 @@
 		7D7408E01B1F2F250042FB5A /* star_inactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_inactive.png; sourceTree = "<group>"; };
 		7D7408E31B21E5270042FB5A /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Post.h; path = CoreData/Post.h; sourceTree = "<group>"; };
 		7D7408E41B21E5270042FB5A /* Post.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Post.m; path = CoreData/Post.m; sourceTree = "<group>"; };
+		7D7408E61B25886F0042FB5A /* ASTextCleaner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTextCleaner.h; sourceTree = "<group>"; };
+		7D7408E71B25886F0042FB5A /* ASTextCleaner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTextCleaner.m; sourceTree = "<group>"; };
+		7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedItemTableViewCell.h; sourceTree = "<group>"; };
+		7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedItemTableViewCell.m; sourceTree = "<group>"; };
+		7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedItemTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +159,11 @@
 				239D4E611A7A844900C797C2 /* Favourites */,
 				239D4E621A7A845A00C797C2 /* Menu */,
 				239D4E211A7A59AD00C797C2 /* Supporting Files */,
+				7D7408E61B25886F0042FB5A /* ASTextCleaner.h */,
+				7D7408E71B25886F0042FB5A /* ASTextCleaner.m */,
+				7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */,
+				7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */,
+				7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */,
 			);
 			path = RssAppBsc;
 			sourceTree = "<group>";
@@ -359,6 +372,7 @@
 			files = (
 				239D4E301A7A59AD00C797C2 /* Main.storyboard in Resources */,
 				7D7408E11B1F2F250042FB5A /* star_active.png in Resources */,
+				7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */,
 				239D4E351A7A59AD00C797C2 /* LaunchScreen.xib in Resources */,
 				239D4E321A7A59AD00C797C2 /* Images.xcassets in Resources */,
 				7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */,
@@ -384,9 +398,11 @@
 				7D5BDFF91B1893FE0084A11B /* CoreDataController.m in Sources */,
 				239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */,
 				239D4E271A7A59AD00C797C2 /* AppDelegate.m in Sources */,
+				7D7408E81B25886F0042FB5A /* ASTextCleaner.m in Sources */,
 				7D3332E91B15A742008371FE /* Url.m in Sources */,
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
+				7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */,
 				7D3332E01B159F78008371FE /* README.mdown in Sources */,

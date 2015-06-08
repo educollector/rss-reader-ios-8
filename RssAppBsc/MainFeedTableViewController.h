@@ -13,6 +13,7 @@
 #import "NSURLSession+SynchronousTask.h"
 #import "CoreDataController.h"
 #import "ASCoreDataController.h"
+#import "ASTextCleaner.h"
 
 @interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>
 {

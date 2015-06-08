@@ -7,51 +7,104 @@
 //
 
 #import "FavouritesTableViewController.h"
+#import "ASTextCleaner.h"
+#import "FeedItemTableViewCell.h"
 
 @interface FavouritesTableViewController ()
-
+@property (nonatomic,strong) ASCoreDataController *dataController;
 @end
 
-@implementation FavouritesTableViewController
+@implementation FavouritesTableViewController{
+    NSManagedObjectContext *managedObjectContext;
+    NSMutableArray *favouritePosts;
+}
+@synthesize dataController;
 
+//*****************************************************************************/
+#pragma mark - View methods
+//*****************************************************************************/
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // register custom nib
+    [self.tableView registerNib:[UINib nibWithNibName:@"FeedItemTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"FeedItemTableViewCell"];
+    dataController = [ASCoreDataController sharedInstance];
+    managedObjectContext = [dataController generateBackgroundManagedContext];
+    [self loadFavouritPostFromDatabase];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
+//*****************************************************************************/
+#pragma mark - Data
+//*****************************************************************************/
+
+-(void)loadFavouritPostFromDatabase{
+    favouritePosts = [[NSMutableArray alloc]init];
+    NSPredicate *p =[NSPredicate predicateWithFormat:@"isLiked == %@", [NSNumber numberWithBool:YES]];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
+    
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts;
+    if (managedObjectContext != nil){
+        fetchedProducts=[managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        if([fetchedProducts count] <=0){
+            //show popup [self showPopupNoRssAvailable];
+        }else{
+            [favouritePosts addObjectsFromArray:fetchedProducts];
+        }
+    }else {
+        NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+    }
+}
+
+//*****************************************************************************/
 #pragma mark - Table view data source
+//*****************************************************************************/
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    if(favouritePosts == nil){
+        return 0;
+    }
+    return favouritePosts.count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    static NSString * cellIdentifier = @"FeedItemTableViewCell";
+    //FeedTableViewCell *cell = (FeedTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     
-    // Configure the cell...
+    FeedItemTableViewCell *cell = /*(FeedItemTableViewCell *)*/[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
+    cell.controller = self;
     
+    FeedItem *tmpItem = [favouritePosts objectAtIndex:indexPath.row];
+    cell.postImage.image = [UIImage imageNamed:@"postImage"];
+    cell.postTitle.text = tmpItem.title;
+    cell.postTitle.textColor = [UIColor blackColor];
+    cell.postAdditionalInfo.textColor = [UIColor blackColor];
+    NSString *cleanedDescription = [ASTextCleaner cleanFromTagsWithScanner: tmpItem.shortText];
+    cell.postAdditionalInfo.text = [NSString stringWithFormat:@" %@ \n %@", tmpItem.pubDate, cleanedDescription];
+    if([tmpItem.isRead isEqualToNumber:[NSNumber numberWithInteger:1]]){
+        cell.postTitle.textColor = [UIColor grayColor];
+        cell.postAdditionalInfo.textColor = [UIColor grayColor];
+    }
+    if([tmpItem.isLiked isEqualToNumber:[NSNumber numberWithInteger:1]]){
+        [cell.favouriteButton setImage:[UIImage imageNamed:@"star_active"] forState:UIControlStateNormal];
+    }else{
+        
+        [cell.favouriteButton setImage:[UIImage imageNamed:@"star_inactive"] forState:UIControlStateNormal];
+    }
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
