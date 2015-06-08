@@ -115,12 +115,20 @@
 }
 
 -(void)postAddedToFavourite{
-    NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
-                                                     forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked"
-                                                        object:nil
-                                                      userInfo:dict];
+    if([addToFavourButton.title isEqualToString: @"Like"]){
+        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
+                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.postliked"
+                                                            object:nil
+                                                          userInfo:dict];
+            [addToFavourButton setTitle:@"<3"];
+    }else{
+            [addToFavourButton setTitle:@"Like"];
+    }
+    
+
 }
 
 //*****************************************************************************/
