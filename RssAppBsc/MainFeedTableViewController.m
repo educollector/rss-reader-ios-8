@@ -283,6 +283,7 @@
             postToSave.pubDate = post.pubDate;
             postToSave.link = post.link;
             postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
+            postToSave.guid = post.guid;
             [urlToSave addPostsObject:postToSave];
         }        
         //save the context
@@ -305,6 +306,7 @@
                 postToSave.shortText = post.shortText;
                 postToSave.pubDate = post.pubDate;
                 postToSave.link = post.link;
+                postToSave.guid = post.guid;
                 postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
             }
             //save the context

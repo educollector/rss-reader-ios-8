@@ -36,6 +36,10 @@
     [self loadFavouritPostFromDatabase];
 }
 
+- (void) viewWillAppear:(BOOL)animated{
+    [self refreshData];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -53,7 +57,7 @@
 -(void)setPullToRefresh{
     refreshControl = [[UIRefreshControl alloc]init];
     [self.tableView addSubview:refreshControl];
-    [refreshControl addTarget:self action:@selector(loadFavouritPostFromDatabase) forControlEvents:UIControlEventValueChanged];
+    [refreshControl addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventValueChanged];
 }
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
@@ -84,7 +88,11 @@
     }else {
         NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
     }
-    
+}
+
+
+- (void)refreshData{
+    [self loadFavouritPostFromDatabase];
     [self.tableView reloadData];
     [refreshControl endRefreshing];
 }

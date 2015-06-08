@@ -24,17 +24,17 @@
 -(FeedItem*)init{
     self = [super init];
     if(self){
-        _title = [[NSMutableString alloc]init];
-        _link = [[NSMutableString alloc]init];
-        _shortText = [[NSMutableString alloc]init];
-        _pubDate = [[NSMutableString alloc]init];
-        _imageLink = [[NSMutableString alloc]init];
-        _content = [[NSMutableString alloc]init];
-        _site = [[NSMutableString alloc]init];
-        _time = [[NSMutableString alloc]init];
-        _sourceFeedUrl = [[NSMutableString alloc]init];
+        _title = [[NSMutableString alloc]initWithString:@" "];
+        _link = [[NSMutableString alloc]initWithString:@" "];
+        _shortText = [[NSMutableString alloc]initWithString:@" "];
+        _pubDate = [[NSMutableString alloc]initWithString:@" "];
+        _imageLink = [[NSMutableString alloc]initWithString:@" "];
+        _content = [[NSMutableString alloc]initWithString:@" "];
+        _site = [[NSMutableString alloc]initWithString:@" "];
+        _time = [[NSMutableString alloc]initWithString:@" "];
+        _sourceFeedUrl = [[NSMutableString alloc]initWithString:@" "];
         _isRead = [[NSNumber alloc]initWithBool:NO];
-        _guid = [[NSMutableString alloc]init];
+        _guid = [[NSMutableString alloc]initWithString:@" "];
         _isLiked = [[NSNumber alloc]initWithBool:NO];
     }
     return self;
