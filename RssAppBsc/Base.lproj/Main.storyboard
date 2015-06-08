@@ -29,18 +29,21 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="websie name | 2 hours ago" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="none" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-Qa-vBt">
-                                            <rect key="frame" x="92" y="37" width="194" height="41"/>
+                                            <rect key="frame" x="93" y="39" width="194" height="41"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="9"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Qj-tu-pgC">
-                                            <rect key="frame" x="38" y="16" width="31" height="28"/>
-                                        </imageView>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Q5-nI-Ucu">
+                                            <rect key="frame" x="300" y="5" width="41" height="23"/>
+                                            <state key="normal" image="star_inactive.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="likeImage" destination="6Qj-tu-pgC" id="hxz-A1-HiD"/>
+                                    <outlet property="favouriteButton" destination="8Q5-nI-Ucu" id="nlt-P6-xIu"/>
                                     <outlet property="postAdditionalInfo" destination="Dlo-Qa-vBt" id="bPx-HQ-RCT"/>
                                     <outlet property="postImage" destination="MpB-xd-icE" id="2D8-M1-fTo"/>
                                     <outlet property="postTitle" destination="Z8v-SU-EF5" id="BEz-dc-lKk"/>
@@ -337,6 +340,7 @@
     </scenes>
     <resources>
         <image name="postImage" width="150" height="149"/>
+        <image name="star_inactive.png" width="21" height="23"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

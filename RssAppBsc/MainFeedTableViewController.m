@@ -483,9 +483,10 @@
         cell.postAdditionalInfo.textColor = [UIColor grayColor];
     }
     if([tmpItem.isLiked isEqualToNumber:[NSNumber numberWithInteger:1]]){
-        cell.likeImage.image = [UIImage imageNamed:@"star_active"];
+        [cell.favouriteButton setImage:[UIImage imageNamed:@"star_active"] forState:UIControlStateNormal];
     }else{
-        cell.likeImage.image = [UIImage imageNamed:@"star_inactive"];
+        
+        [cell.favouriteButton setImage:[UIImage imageNamed:@"star_inactive"] forState:UIControlStateNormal];
     }
     
     return cell;
