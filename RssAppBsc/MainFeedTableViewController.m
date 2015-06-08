@@ -181,6 +181,7 @@
                     }
                     if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
                     item.isRead = el.isRead;
+                    item.isLiked = el.isLiked;
                     [postsToDisplay addObject: item];
                 }
             }
