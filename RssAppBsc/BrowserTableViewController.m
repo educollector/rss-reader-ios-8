@@ -1,5 +1,4 @@
 #import "BrowserTableViewController.h"
-#import "AppDelegate.h"
 #import "CustomTableViewCell.h"
 #import "CoreDataController.h"
 
@@ -14,14 +13,15 @@
     NSManagedObjectContext *managedObjectContext;
     NSArray *urls;
     Url *url;
+    ASCoreDataController *dataColntroller;
 }
 
 //@synthesize managedObjectContext;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];
+    dataColntroller = [ASCoreDataController sharedInstance];
+    managedObjectContext = [dataColntroller mainContext];
     
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
@@ -39,9 +39,6 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
     fetchRequest.sortDescriptors = @[sortDescriptor];
-    //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    //managedObjectContext = [[CoreDataController sharedInstance]newManagedObjectContext];
     if (managedObjectContext != nil) {
         fetchResultController = [[NSFetchedResultsController alloc]
                                  initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
@@ -92,8 +89,6 @@
     }
     if(![self isUrlInDatabase: [NSString stringWithFormat:@"http://%@", searchController.searchBar.text]]){
         NSLog(@"Can save an url");
-    //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
     url.url = [NSString stringWithFormat:@"http://%@", searchController.searchBar.text];
     NSLog(@"url.url : %@", url.url);
@@ -193,8 +188,6 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //Delete the row from the data source
-    //AppDelegate *appDelegate= (AppDelegate *)[UIApplication sharedApplication].delegate;
-    //NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
     if(managedObjectContext != nil){
         Url *urlToDelete = (Url*)[fetchResultController objectAtIndexPath:indexPath];
         [managedObjectContext deleteObject:urlToDelete];
@@ -204,8 +197,8 @@
         }
         else{
             NSLog(@"Url delelted");
-        }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
+        }    
     }
     
 }

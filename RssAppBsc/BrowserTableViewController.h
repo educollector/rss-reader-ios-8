@@ -11,6 +11,7 @@
 #import "Post.h"
 #import "Url.h"
 #import "FeedItem.h"
+#import "ASCoreDataController.h"
 
 @interface BrowserTableViewController : UITableViewController <UISearchResultsUpdating, NSFetchedResultsControllerDelegate, UISearchBarDelegate>
 

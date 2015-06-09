@@ -24,7 +24,7 @@
     NSMutableArray *urlsOfFeeds;
     dispatch_queue_t backgroundSerialQueue;
     dispatch_queue_t backgroundGlobalQueue;
-    AppDelegate *appDelegate;
+    
     NSManagedObjectContext *managedObjectContext;
     UIRefreshControl *refreshControl;
     NSString *currentChannelUrl;
@@ -45,10 +45,6 @@
     
     // register custom nib for cell
     [self.tableView registerNib:[UINib nibWithNibName:@"FeedItemTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"FeedItemTableViewCell"];
-  
-    //Core Data
-    appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    managedObjectContext = [appDelegate managedObjectContext];
     
     dataController = [ASCoreDataController sharedInstance];
     
@@ -269,7 +265,10 @@
                     [self connectionDidFailedWithError:error];
                 }
             }
+        }else{
+            postsToDisplaySource = nil;
         }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self endOfLoadingData];
         });

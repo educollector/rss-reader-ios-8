@@ -6,7 +6,6 @@
 #import "BrowserTableViewController.h"
 #import "InternetConnectionMonitor.h"
 #import "Reachability.h"
-#import "AppDelegate.h"
 #import <dispatch/dispatch.h>
 #import "NSURLSession+SynchronousTask.h"
 #import "CoreDataController.h"

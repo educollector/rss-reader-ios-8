@@ -7,7 +7,6 @@
 #import "InternetConnectionMonitor.h"
 #import "Reachability.h"
 #import "Url.h"
-#import "AppDelegate.h"
 #import <dispatch/dispatch.h>
 #import "Post.h"
 #import "NSURLSession+SynchronousTask.h"

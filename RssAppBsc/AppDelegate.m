@@ -1,11 +1,3 @@
-//
-//  AppDelegate.m
-//  RssAppBsc
-//
-//  Created by Ola Skierbiszewska on 29/01/15.
-//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
-//
-
 #import "AppDelegate.h"
 //Macro do define custom RGB colors
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
