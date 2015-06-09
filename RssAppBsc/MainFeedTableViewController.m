@@ -15,7 +15,8 @@
     BOOL __block isDataLoaded;
     InternetConnectionMonitor *monitor;
     NSXMLParser *rssParser;
-    NSMutableArray __block *postsToDisplay;
+    NSMutableArray __block *postsToDisplayIntermediate;
+    NSMutableArray __block *postsToDisplaySource;
     NSMutableString *title, *link, *description,*pubDate, *imgLink;
     NSString *currentElement;
     FeedItem *currentRssItem;
@@ -130,13 +131,13 @@
 -(void)endOfLoadingData{
     NSLog(@"endOfLoadingData");
     //for(FeedItem* el in postsToDisplay){ NSLog(@"-Element: %@", el.title); }
-    NSLog(@"postsToDisplay count %d", (int)[postsToDisplay count]);
-    
     if(isDataLoaded){
         //dispatch_async(backgroundGlobalQueue, ^{
         
         //[self savePostsToCoreData];
         //});
+        postsToDisplaySource = [[NSMutableArray alloc]initWithArray:postsToDisplayIntermediate];
+         NSLog(@"postsToDisplay count %d", (int)[postsToDisplaySource count]);
         
         [self uiUpdateMainFeedTable];
     }
@@ -162,7 +163,7 @@
                 [self showPopupNoRssAvailable];
             }
             //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
-            postsToDisplay = [[NSMutableArray alloc] init];
+            postsToDisplayIntermediate = [[NSMutableArray alloc] init];
             for(Post *el in tmpPostsArray){
                 //NSLog(@"title %@\n pubDate %@\n shortText %@\n link %@\n guid %@\n",el.title, el.pubDate, el.shortText, el.link, el.guid);
                 FeedItem *item = [[FeedItem alloc]init];
@@ -187,7 +188,7 @@
                     if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
                     item.isRead = el.isRead;
                     item.isLiked = el.isLiked;
-                    [postsToDisplay addObject: item];
+                    [postsToDisplayIntermediate addObject: item];
                 }
             }
             
@@ -232,7 +233,7 @@
 -(void)makeRequestAndConnectionWithNSSession{
     NSError __block *error = nil;
     NSURLResponse __block *response = nil;
-    postsToDisplay = [[NSMutableArray alloc] init];
+    postsToDisplayIntermediate = [[NSMutableArray alloc] init];
     NSURLRequest __block *request =[[NSURLRequest alloc]init];
 
     dispatch_async(backgroundGlobalQueue,^{
@@ -252,7 +253,7 @@
                     item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
                 }
                 [self savePostsToCoreDataFromUrl:feedUrl andPosts:(NSMutableArray*)postsToAppendToUrl];
-                [postsToDisplay addObjectsFromArray:postsToAppendToUrl ];
+                [postsToDisplayIntermediate addObjectsFromArray:postsToAppendToUrl ];
                 
                 if(error != nil){
                     NSLog(@"There was an error with synchrononous request: %@", error.description);
@@ -300,7 +301,7 @@
         
         [tmpPrivateContext performBlock:^{
             // do something that takes some time asynchronously using the temp context
-            for(FeedItem *post in postsToDisplay){
+            for(FeedItem *post in postsToDisplaySource){
                 Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
                 postToSave.title = post.title;
                 postToSave.shortText = post.shortText;
@@ -439,6 +440,7 @@
 //*****************************************************************************/
 
 -(void)uiUpdateMainFeedTable{
+    postsToDisplaySource = [[NSMutableArray alloc]initWithArray:postsToDisplayIntermediate];
     [self.tableView reloadData];
     [self uiSetSpiner:NO];    
     [refreshControl endRefreshing];
@@ -472,10 +474,10 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (postsToDisplay == nil){
+    if (postsToDisplaySource == nil){
         return 0;
     }
-    return postsToDisplay.count;
+    return postsToDisplaySource.count;
 }
 
 
@@ -486,7 +488,7 @@
     FeedItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: cellIdentifier];
     cell.controller = self;//! necessary to use Prototype cell defined in XIB !!!
     
-    FeedItem *tmpItem = [postsToDisplay objectAtIndex:indexPath.row];
+    FeedItem *tmpItem = [postsToDisplaySource objectAtIndex:indexPath.row];
     cell.postImage.image = [UIImage imageNamed:@"postImage"];
     cell.postTitle.text = tmpItem.title;
     cell.postTitle.textColor = [UIColor blackColor];
@@ -520,7 +522,7 @@
     itemToCompare.title = [dict valueForKey:@"title"];
     
     
-    for (FeedItem *item in postsToDisplay) {
+    for (FeedItem *item in postsToDisplaySource) {
         if ([item.title isEqualToString:itemToCompare.title]) {
             [self savePost:itemToCompare asFavourite:YES];
             item.isLiked = [NSNumber numberWithBool:YES]; //modify table view data source -> postsToDisplay
@@ -539,7 +541,7 @@
     itemToCompare.title = [dict valueForKey:@"title"];
     
     
-    for (FeedItem *item in postsToDisplay) {
+    for (FeedItem *item in postsToDisplaySource) {
         if ([item.title isEqualToString:itemToCompare.title]) {
             [self savePost:itemToCompare asFavourite:NO];
             item.isLiked = [NSNumber numberWithBool:NO]; //modify table view data source -> postsToDisplay
@@ -734,8 +736,8 @@ didStartElement:(NSString *)elementName
 //*****************************************************************************/
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [[postsToDisplay objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
-    [self savePostAsIsRead:[postsToDisplay objectAtIndex:[indexPath row]]];
+    [[postsToDisplaySource objectAtIndex:[indexPath row]] setIsRead:[[NSNumber alloc] initWithInteger:1]];
+    [self savePostAsIsRead:[postsToDisplaySource objectAtIndex:[indexPath row]]];
     FeedItemTableViewCell *cell = (FeedItemTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
     [self performSegueWithIdentifier:@"showPostDetailViewFromMain" sender:cell];
 }
@@ -745,7 +747,7 @@ didStartElement:(NSString *)elementName
         NSLog(@"CALL prepareForSegue if");
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         DetailViewController *destinationViewController = segue.destinationViewController;
-        FeedItem *item = postsToDisplay[indexPath.row];
+        FeedItem *item = postsToDisplaySource[indexPath.row];
         destinationViewController.link = item.link;
         destinationViewController.feedItem = item;
     }
