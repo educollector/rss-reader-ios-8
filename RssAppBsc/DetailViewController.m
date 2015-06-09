@@ -6,7 +6,6 @@
 @end
 
 @implementation DetailViewController{
-    NSURL *urlToLoad;
     IBOutlet UIBarButtonItem *backBarButtonItem;
     IBOutlet UIBarButtonItem *forwardBarButtonItem;
     IBOutlet UIToolbar *webViewToolbar;
@@ -46,7 +45,8 @@
     self.webView.opaque = NO;
     self.webView.backgroundColor = [UIColor clearColor];    
     self.webView.scalesPageToFit = YES;
-    urlToLoad = [[NSURL alloc] initWithString: self.link];
+    NSString *string = [self.link  stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSURL *urlToLoad = [[NSURL alloc] initWithString: string];
     NSURLRequest *request = [NSURLRequest requestWithURL:urlToLoad];
     [self.webView loadRequest:request];
 }
@@ -195,6 +195,7 @@
 //*****************************************************************************/
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+     NSLog(@"req2 : %@", [[webView request] URL]); 
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [self updateButtons];
 }
@@ -244,6 +245,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSLog(@"shouldStartLoadWithRequest: %@", [[request URL] absoluteString]);
+    NSLog(@"req1a : %@", [request URL]);
+    NSLog(@"req1b : %@", [[self.webView request] URL]);
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         NSLog(@"User tapped a link: %@", [[request URL] absoluteString]);
     }
