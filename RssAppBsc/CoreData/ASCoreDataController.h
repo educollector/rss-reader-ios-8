@@ -17,14 +17,30 @@
 
 + (id)sharedInstance;
 
+// setters
+
 - (NSManagedObjectContext *)writerContext;
 - (NSManagedObjectContext *)mainContext;
 //- (NSManagedObjectContext *)privateContext;
+
+//save and generate contexts
+
 - (void)saveWriterContext;
 - (void)saveMainContext;
 - (void)saveBackgroundContext:(NSManagedObjectContext*)backgroundContext;
 - (NSManagedObjectContext*)generateBackgroundManagedContext;
+
+//core data stack
+
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
+
+//playing with data
+
+-(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPost:(NSMutableArray*)postsArray;
+-(NSMutableArray *)loadUrlsFromDatabase;
+-(NSMutableArray *)loadPostsFromDtabase;
+-(NSMutableArray *)loadFavouritPostFromDatabase;
+- (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked;
 
 @end

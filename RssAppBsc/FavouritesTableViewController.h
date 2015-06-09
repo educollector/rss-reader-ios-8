@@ -20,6 +20,8 @@
 #import "NSURLSession+SynchronousTask.h"
 #import "CoreDataController.h"
 #import "ASCoreDataController.h"
+#import "ASTextCleaner.h"
+#import "FeedItemTableViewCell.h"
 
 @interface FavouritesTableViewController : UITableViewController
 

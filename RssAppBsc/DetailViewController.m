@@ -115,28 +115,6 @@
 }
 
 -(void)buttonAddedToFavouriteClicked{
-    
-//    if(addToFavourButton.status == ASBarButtonStatusIsNotFavourite){
-//        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
-//                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
-//        
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.liked"
-//                                                            object:nil
-//                                                          userInfo:dict];
-//        [addToFavourButton setStatus:ASBarButtonStatusIsFavourite];
-//        [addToFavourButton setTitle:@"<3"];
-//    }
-//    else if (addToFavourButton.status == ASBarButtonStatusIsFavourite){
-//        NSDictionary* dict = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:self.feedItem.guid,self.feedItem.title, nil]
-//                                                         forKeys: [NSArray arrayWithObjects:@"guid", @"title", nil]];
-//        
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.webviewscreen.post.unliked"
-//                                                            object:nil
-//                                                          userInfo:dict];
-//        [addToFavourButton setStatus:ASBarButtonStatusIsNotFavourite];
-//        [addToFavourButton setTitle:@"Like"];
-//    }
-    
     NSString *guid;
     //if(self.feedItem.guid == nil){
         guid = @"*";

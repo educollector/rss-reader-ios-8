@@ -242,26 +242,19 @@
     NSLog(@"savePostsToCoreDataFromUrl");
     NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
     [self deleteUrl: feedUrl withContext:tmpPrivateContext];
-    Url *urlToSave = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
-    urlToSave.url = feedUrl;
-    NSSet* setOfPosts = [NSSet setWithArray:[postsArray copy]];
-    [urlToSave addPosts:setOfPosts];
-}
-
--(void) savePostsToCoreData: (NSMutableArray*)postsArray{
-    NSLog(@"savePostsToCoreData");
-    NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
-    [self deleteAllEntities: @"Post" withContext:_writerContext]; //czy tmpPrivateContext??
     
     [tmpPrivateContext performBlock:^{
-        // do something that takes some time asynchronously using the temp context
-        for(int i; i < postsToDisplay.count; i++){
-            FeedItem *post = (FeedItem*)postsToDisplay[i];
+        Url *urlToSave = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
+        urlToSave.url = feedUrl;
+        for(FeedItem *post in postsArray){
             Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
             postToSave.title = post.title;
             postToSave.shortText = post.shortText;
             postToSave.pubDate = post.pubDate;
             postToSave.link = post.link;
+            postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
+            postToSave.guid = post.guid;
+            [urlToSave addPostsObject:postToSave];
         }
         //save the context
         [self saveBackgroundContext:tmpPrivateContext];
@@ -299,31 +292,142 @@
 
 
 -(NSMutableArray*)loadUrlsFromDatabase{
-    NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
+    NSLog(@"ASCoreDataController - loadUrlsFromDatabase");
+    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
     NSMutableArray *urlsOfFeeds = [[NSMutableArray alloc]init];
-    if (tmpPrivateContext != nil){
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
-        [fetchRequest setEntity:entity];
+    
+    if (privateContext != nil){
+        //NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
+        //NSEntityDescription *entity = [NSEntityDescription entityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
+        //[fetchRequest setEntity:entity];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
+        fetchRequest.sortDescriptors = @[sortDescriptor];
         
         NSError *error = nil;
-        NSArray *tmpUrlsArray = [tmpPrivateContext executeFetchRequest:fetchRequest error:&error];
+        NSArray *fetchedUrls = [privateContext executeFetchRequest:fetchRequest error:&error];
         if (error) {
             NSLog(@"Unable to execute fetch request loadUrlsFromDatabase. %@, %@", error, error.localizedDescription);
         } else {
             NSLog(@"SUCCESS loadUrlsFromDatabase");
         }
-        if([tmpUrlsArray count] <= 0){
+        if([fetchedUrls count] <= 0){
             //[self showPopupNoRssAvailable];
              NSLog(@"Add [self showPopupNoRssAvailable");
             return urlsOfFeeds; //zwróci nil ?
         }
         //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
-        for(Url* el in tmpUrlsArray){
+        for(Url* el in fetchedUrls){
             [urlsOfFeeds addObject:el.url];
         }
     }
     return urlsOfFeeds;
 }
+
+-(NSMutableArray *)loadPostsFromDtabase{
+    NSLog(@"ASCoreDataController - loadPostsFromDtabase");
+    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
+    NSMutableArray *posts = [[NSMutableArray alloc]init];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Post"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:YES];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    
+    if(privateContext != nil){
+        NSError *error;
+        NSArray *fetchedPosts = [privateContext executeFetchRequest:fetchRequest error:&error];
+        if([fetchedPosts count] <= 0){
+            //[self showPopupNoRssAvailable];
+            NSLog(@"Add [self showPopupNoRssAvailable");
+        }
+        //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
+        for(Post *el in fetchedPosts){
+            FeedItem *item = [[FeedItem alloc]init];
+            if(el.link!=nil){
+                item.link = [NSMutableString stringWithString:el.link];
+                if(el.title!=nil){
+                    item.title = [NSMutableString stringWithString:el.title];
+                }else {
+                    item.title = [NSMutableString stringWithString:@"trolololo"];
+                }
+                if(el.pubDate!=nil){
+                    item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                }else{
+                    item.pubDate = [NSMutableString stringWithString:@"trolololo"];
+                }
+                if(el.shortText!=nil){
+                    item.shortText = [NSMutableString stringWithString:el.shortText];
+                }else{
+                    item.shortText = [NSMutableString stringWithString:@"trolololo"];
+                }
+                if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
+                item.isRead = el.isRead;
+                item.isLiked = el.isLiked;
+                [posts addObject: item];
+            }
+        }
+    }
+    return posts;
+}
+
+-(NSMutableArray *)loadFavouritPostFromDatabase{
+    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
+    NSMutableArray *favouritePosts = [[NSMutableArray alloc]init];
+    NSPredicate *p =[NSPredicate predicateWithFormat:@"isLiked == %@", [NSNumber numberWithBool:YES]];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:YES];
+    
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts;
+    if (privateContext != nil){
+        fetchedProducts=[privateContext executeFetchRequest:fetchRequest error:&error];
+        if([fetchedProducts count] <=0){
+            //show popup [self showPopupNoRssAvailable];
+            return fetchedProducts;
+        }else{
+            [favouritePosts addObjectsFromArray:fetchedProducts];
+        }
+    }else {
+        NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+    }
+    return favouritePosts;
+}
+
+- (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked{
+    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
+    NSPredicate *p;
+    //        if(item.guid != nil){
+    //            if(item.title !=nil){
+    //                p=[NSPredicate predicateWithFormat:@"(guid == %@) AND (title == %@)", item.guid, item.title];
+    //            }
+    //        }else{
+    p=[NSPredicate predicateWithFormat:@"title == %@", item.title];
+    //}
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts=[privateContext executeFetchRequest:fetchRequest error:&error];
+    // handle error
+    
+    //modify and save to database
+    if(fetchedProducts.count != 0){
+        Post* post = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:privateContext];
+        post = (Post*)fetchedProducts[0];
+        if(isLiked){
+            post.isLiked = [NSNumber numberWithBool:YES];
+        }else{
+            post.isLiked = [NSNumber numberWithBool:NO];
+        }
+        
+        
+        if (![privateContext save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+    }
+}
+
+
 
 @end

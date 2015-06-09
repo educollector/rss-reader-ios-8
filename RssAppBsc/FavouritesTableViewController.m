@@ -7,8 +7,6 @@
 //
 
 #import "FavouritesTableViewController.h"
-#import "ASTextCleaner.h"
-#import "FeedItemTableViewCell.h"
 
 @interface FavouritesTableViewController ()
 @property (nonatomic,strong) ASCoreDataController *dataController;
@@ -33,10 +31,11 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"FeedItemTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"FeedItemTableViewCell"];
     dataController = [ASCoreDataController sharedInstance];
     managedObjectContext = [dataController generateBackgroundManagedContext];
-    [self loadFavouritPostFromDatabase];
+    favouritePosts = [dataController loadFavouritPostFromDatabase];
 }
 
 - (void) viewWillAppear:(BOOL)animated{
+    ///Data is refreshed to show actual state in case of ex. some posts was unliked
     [self refreshData];
 }
 
@@ -68,31 +67,31 @@
 #pragma mark - Data
 //*****************************************************************************/
 
--(void)loadFavouritPostFromDatabase{
-    favouritePosts = [[NSMutableArray alloc]init];
-    NSPredicate *p =[NSPredicate predicateWithFormat:@"isLiked == %@", [NSNumber numberWithBool:YES]];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
-    
-    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
-    fetchRequest.sortDescriptors = @[sortDescriptor];
-    [fetchRequest setPredicate:p];
-    NSError *error;
-    NSArray *fetchedProducts;
-    if (managedObjectContext != nil){
-        fetchedProducts=[managedObjectContext executeFetchRequest:fetchRequest error:&error];
-        if([fetchedProducts count] <=0){
-            //show popup [self showPopupNoRssAvailable];
-        }else{
-            [favouritePosts addObjectsFromArray:fetchedProducts];
-        }
-    }else {
-        NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
-    }
-}
+//-(void)loadFavouritPostFromDatabase{
+//    favouritePosts = [[NSMutableArray alloc]init];
+//    NSPredicate *p =[NSPredicate predicateWithFormat:@"isLiked == %@", [NSNumber numberWithBool:YES]];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:nil];
+//    
+//    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+//    fetchRequest.sortDescriptors = @[sortDescriptor];
+//    [fetchRequest setPredicate:p];
+//    NSError *error;
+//    NSArray *fetchedProducts;
+//    if (managedObjectContext != nil){
+//        fetchedProducts=[managedObjectContext executeFetchRequest:fetchRequest error:&error];
+//        if([fetchedProducts count] <=0){
+//            //show popup [self showPopupNoRssAvailable];
+//        }else{
+//            [favouritePosts addObjectsFromArray:fetchedProducts];
+//        }
+//    }else {
+//        NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+//    }
+//}
 
 
 - (void)refreshData{
-    [self loadFavouritPostFromDatabase];
+    favouritePosts = [dataController loadFavouritPostFromDatabase];
     [self.tableView reloadData];
     [refreshControl endRefreshing];
 }
@@ -106,7 +105,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(favouritePosts == nil){
+    if(favouritePosts.count == nil || favouritePosts.count == 0){
         return 0;
     }
     return favouritePosts.count;
