@@ -17,9 +17,9 @@
 
 + (id)sharedInstance;
 
-- (NSManagedObjectContext *)writerManagedObjectContext;
-- (NSManagedObjectContext *)mainManagedObjectContext;
-//- (NSManagedObjectContext *)privateBackgroundManagedObjectContext;
+- (NSManagedObjectContext *)writerContext;
+- (NSManagedObjectContext *)mainContext;
+//- (NSManagedObjectContext *)privateContext;
 - (void)saveWriterContext;
 - (void)saveMainContext;
 - (void)saveBackgroundContext:(NSManagedObjectContext*)backgroundContext;

@@ -9,9 +9,9 @@
 
 @interface ASCoreDataController()
 
-@property (nonatomic, strong) NSManagedObjectContext *writerManagedObjectContext;
-@property (nonatomic, strong) NSManagedObjectContext *mainManagedObjectContext;
-//@property (nonatomic, strong) NSManagedObjectContext *privateBackgroundManagedObjectContext;
+@property (nonatomic, strong) NSManagedObjectContext *writerContext;
+@property (nonatomic, strong) NSManagedObjectContext *mainContext;
+//@property (nonatomic, strong) NSManagedObjectContext *privateContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
@@ -24,14 +24,13 @@
     NSString *currentElement;
     FeedItem *currentRssItem;
     BOOL isDataLoaded;
-    NSMutableArray *urlsOfFeeds;
     NSMutableData *responseData;
     NSXMLParser *rssParser;
 }
 
-@synthesize writerManagedObjectContext = _writerManagedObjectContext;
-@synthesize mainManagedObjectContext = _mainManagedObjectContext;
-//@synthesize privateBackgroundManagedObjectContext = _privateBackgroundManagedObjectContext;
+@synthesize writerContext = _writerContext;
+@synthesize mainContext = _mainContext;
+//@synthesize privateBackgroundManagedObjectContext = _privateContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
@@ -47,70 +46,68 @@
 /***********************************************************/
 #pragma mark - Core Data stack
 /***********************************************************/
-
+/***********************************************************/
+#pragma mark - Managed Object Contexts
+/***********************************************************/
 //Writing to the persistant store without blocking UI
-- (NSManagedObjectContext *)writerManagedObjectContext{
-    if (_writerManagedObjectContext != nil) {
-        return _writerManagedObjectContext;
+- (NSManagedObjectContext *)writerContext{
+    if (_writerContext != nil) {
+        return _writerContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
-        _writerManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_writerManagedObjectContext performBlockAndWait:^{
-            [_writerManagedObjectContext setPersistentStoreCoordinator:coordinator];
+        _writerContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [_writerContext performBlockAndWait:^{
+            [_writerContext setPersistentStoreCoordinator:coordinator];
         }];
     }
-    return _writerManagedObjectContext;
+    return _writerContext;
 }
 
-//Working with NSFetchedResultController
-- (NSManagedObjectContext *)mainManagedObjectContext{
-    if (_mainManagedObjectContext != nil) {
-        return _mainManagedObjectContext;
+//ex. Working with NSFetchedResultController
+- (NSManagedObjectContext *)mainContext{
+    if (_mainContext != nil) {
+        return _mainContext;
     }
-    NSManagedObjectContext *parentContext = [self writerManagedObjectContext];
+    NSManagedObjectContext *parentContext = [self writerContext];
     if (parentContext != nil) {
-        _mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        [_mainManagedObjectContext performBlockAndWait:^{
-            [_mainManagedObjectContext setParentContext:parentContext];
+        _mainContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_mainContext performBlockAndWait:^{
+            [_mainContext setParentContext:parentContext];
         }];
     }
-    return _mainManagedObjectContext;
-    
+    return _mainContext;
 }
 
 - (void)saveWriterContext{
-    [self.writerManagedObjectContext performBlockAndWait:^{
+    [self.writerContext performBlockAndWait:^{
         NSError *error = nil;
-        if ([self.writerManagedObjectContext save:&error]) {
-            NSLog(@"writerManagedObjectContext SAVED");
+        if ([self.writerContext save:&error]) {
+            NSLog(@"writerContext SAVED");
         }else{
-            NSLog(@"Could not save master context due to %@", error);
+            NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
         }
     }];
 }
+
 - (void)saveMainContext{
-    if (self.mainManagedObjectContext.parentContext != nil && self.mainManagedObjectContext != nil) {
+    if (self.mainContext.parentContext != nil && self.mainContext != nil) {
         // push to parent
         NSError *error;
-        if ([self.mainManagedObjectContext  save:&error]) {
-            NSLog(@"mainManagedObjectContext  saved!");
+        if ([self.mainContext  save:&error]) {
+            NSLog(@"mainContext  saved!");
             // save parent to disk asynchronously
-            [self.mainManagedObjectContext.parentContext performBlock:^{
+            [self.mainContext.parentContext performBlock:^{
                 [self saveWriterContext];
-//                NSError *error;
-//                if ([self.mainManagedObjectContext.parentContext save:&error]) {
-//                    NSLog(@"Parent (Writer) Context saved!");
-//                }else{
-//                    NSLog(@"Can't Save parent (writer) context! %@ %@", error, [error localizedDescription]);
-//                }
             }];
         }else{
-            NSLog(@"Can't Save mainManagedObjectContext ! %@ %@", error, [error localizedDescription]);
+            NSLog(@"Can't Save mainContext ! %@ %@", error, [error localizedDescription]);
         }
     }
 }
+
+
 - (void)saveBackgroundContext:(NSManagedObjectContext*)backgroundContext{
     // push to parent
     NSError *error;
@@ -118,27 +115,21 @@
         NSLog(@"backgroundContext  saved!");
         // save parent to disk asynchronously
         [backgroundContext.parentContext performBlock:^{
-            [self saveMainContext];
-//            NSError *error;
-//            if ([self.mainManagedObjectContext.parentContext save:&error]) {
-//                NSLog(@"Parent (Writer) Context saved!");
-//            }else{
-//                NSLog(@"Can't Save parent (writer) context! %@ %@", error, [error localizedDescription]);
-//            }
+            [self saveMainContext]; //TODO: czy to jest we wlasciwym watku???
         }];
     }else{
-        NSLog(@"Can't Save mainManagedObjectContext ! %@ %@", error, [error localizedDescription]);
+        NSLog(@"Can't Save mainContext ! %@ %@", error, [error localizedDescription]);
     }
 }
 
 - (NSManagedObjectContext*)generateBackgroundManagedContext{
-    NSManagedObjectContext* tmpBackgroundCOntext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    tmpBackgroundCOntext.parentContext = [self mainManagedObjectContext];
-    return tmpBackgroundCOntext;
+    NSManagedObjectContext* tmpBackgroundContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    tmpBackgroundContext.parentContext = [self mainContext];
+    return tmpBackgroundContext;
     
 }
 /***********************************************************/
-#pragma mark - 
+#pragma mark -
 /***********************************************************/
 
 // Returns the managed object model for the application.
@@ -227,15 +218,10 @@
     return URL;
 }
 
-#pragma mark - Application's Documents directory
-
 // Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
-{
+- (NSURL *)applicationDocumentsDirectory{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
-
-#pragma mark - Incompatible Store
 
 - (NSString *)nameForIncompatibleStore {
     // Initialize Date Formatter
@@ -250,30 +236,22 @@
 
 //*****************************************************************************/
 #pragma mark - Data saving and retrieving
-
 //*****************************************************************************/
-
--(void)getActualDataFromConnection{
-    NSLog(@"\n\nMainFeed --- getActualDataFromConnection\n\n");
-    [self loadUrlsFromDatabase];
-    [self makeRequestAndConnectionWithNSSession];
-}
 
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPost:(NSMutableArray*)postsArray{
     NSLog(@"savePostsToCoreDataFromUrl");
-    NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
-    [self deleteUrl: feedUrl];
+    NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
+    [self deleteUrl: feedUrl withContext:tmpPrivateContext];
     Url *urlToSave = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
     urlToSave.url = feedUrl;
     NSSet* setOfPosts = [NSSet setWithArray:[postsArray copy]];
     [urlToSave addPosts:setOfPosts];
 }
 
--(void) savePostsToCoreData_2{
+-(void) savePostsToCoreData: (NSMutableArray*)postsArray{
     NSLog(@"savePostsToCoreData");
     NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
-    [self deleteAllEntities: @"Post" withContext:_writerManagedObjectContext];
+    [self deleteAllEntities: @"Post" withContext:_writerContext]; //czy tmpPrivateContext??
     
     [tmpPrivateContext performBlock:^{
         // do something that takes some time asynchronously using the temp context
@@ -290,160 +268,19 @@
     }];
 }
 
--(void) savePostsToCoreData{
-    NSLog(@"savePostsToCoreData");
-    if(isDataLoaded){
-        NSManagedObjectContext *tmpPrivateContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        tmpPrivateContext.parentContext = [((AppDelegate *)[UIApplication sharedApplication].delegate) managedObjectContext];
-        [self deleteAllEntities: @"Post"];
-        
-        [tmpPrivateContext performBlock:^{
-            // do something that takes some time asynchronously using the temp context
-            for(FeedItem *post in postsToDisplay){
-                Post *postToSave = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:tmpPrivateContext];
-                postToSave.title = post.title;
-                postToSave.shortText = post.shortText;
-                postToSave.pubDate = post.pubDate;
-                postToSave.link = post.link;
-                postToSave.sourceFeedUrl.url = post.sourceFeedUrl;
-            }
-            //save the context
-            [self saveContextwithWithChild:tmpPrivateContext];
-        }];
-    }
-}
-
--(void)saveContextwithWithChild:(NSManagedObjectContext *)childContext {
-    if (childContext.parentContext != nil && childContext != nil) {
-        // push to parent
-        NSError *error;
-        if ([childContext save:&error]) {
-            NSLog(@"childContext saved!");
-            // save parent to disk asynchronously
-            [childContext.parentContext performBlock:^{
-                NSError *error;
-                if ([childContext.parentContext save:&error]) {
-                    NSLog(@"ParentContext saved!");
-                }else{
-                    NSLog(@"Can't Save parentContext! %@ %@", error, [error localizedDescription]);
-                }
-            }];
-        }else{
-            NSLog(@"Can't Save childContext! %@ %@", error, [error localizedDescription]);
-        }
-    }
-}
-
-- (void)deleteAllEntities:(NSString *)nameEntity{
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:nameEntity];
-    [fetchRequest setIncludesPropertyValues:NO]; //only fetch the managedObjectID
-    
-    NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    for (NSManagedObject *object in fetchedObjects)
-    {
-        [managedObjectContext deleteObject:object];
-    }
-    
-    error = nil;
-    [managedObjectContext save:&error];
-}
-
-- (void)deleteUrl:(NSString *)url{
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    NSNumber *soughtPid=[NSNumber numberWithInt:53];
-    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContext];
+- (void)deleteUrl:(NSString *)url withContext:(NSManagedObjectContext *)context{
+    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:context];
     NSFetchRequest *fetch=[[NSFetchRequest alloc] init];
     [fetch setEntity:productEntity];
-    NSPredicate *p=[NSPredicate predicateWithFormat:@"url == %@", soughtPid];
+    NSPredicate *p=[NSPredicate predicateWithFormat:@"url == %@", url];
     [fetch setPredicate:p];
     //... add sorts if you want them
     NSError *fetchError;
-    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetch error:&fetchError];
+    NSArray *fetchedProducts=[context executeFetchRequest:fetch error:&fetchError];
     // handle error
     for (NSManagedObject *product in fetchedProducts) {
-        [managedObjectContext deleteObject:product];
+        [context deleteObject:product];
     }
-}
-
-
--(void)loadUrlsFromDatabase{
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    NSManagedObjectContext *managedObjectContext = [appDelegate managedObjectContext];
-    
-    if (managedObjectContext != nil){
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContext];
-        [fetchRequest setEntity:entity];
-        
-        NSError *error = nil;
-        NSArray *tmpUrlsArray = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-        if (error) {
-            NSLog(@"Unable to execute fetch request loadUrlsFromDatabase. %@, %@", error, error.localizedDescription);
-        } else {
-            NSLog(@"SUCCESS loadUrlsFromDatabase");
-        }
-        urlsOfFeeds = [[NSMutableArray alloc]init];
-        if([tmpUrlsArray count] <= 0){
-            //[self showPopupNoRssAvailable];
-             NSLog(@"Add [self showPopupNoRssAvailable");
-        }
-        //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
-        for(Url* el in tmpUrlsArray){
-            [urlsOfFeeds addObject:el.url];
-        }
-    }
-}
-
-// Synchonous request with NSURLSesion
--(void)makeRequestAndConnectionWithNSSession{
-    NSError __block *error = nil;
-    NSURLResponse __block *response = nil;
-    NSURLRequest __block *request =[[NSURLRequest alloc]init];
-    
-    postsToDisplay = [[NSMutableArray alloc]init];
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-        if(urlsOfFeeds.count != 0){
-            for(NSString* feedUrl in urlsOfFeeds){
-                
-                responseData = [[NSMutableData alloc] init];
-                postsToAppendToUrl = [[NSMutableArray alloc]init];
-                NSURL *url = [NSURL URLWithString: feedUrl];
-                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
-                
-                //NSData *datatToAppend = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-                NSData *datatToAppend = [NSURLSession sendSynchronousDataTaskWithURL:url returningResponse:&response error:&error];
-                [responseData appendData:datatToAppend];
-                [self makeParsing];
-                for(FeedItem *item in postsToAppendToUrl){
-                    item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
-                }
-                [self savePostsToCoreDataFromUrl:feedUrl andPost:(NSMutableArray*)postsToAppendToUrl];
-                [postsToDisplay addObjectsFromArray:postsToAppendToUrl ];
-                
-                if(error != nil){
-                    NSLog(@"There was an error with synchrononous request: %@ Impelment connectionDidFailedWithError", error.description);
-                    //[self connectionDidFailedWithError:error];
-                }
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //[self endOfLoadingData];
-            //TODO send notification???
-        });
-    });
-}
-
--(void)makeParsing{
-    rssParser = [[NSXMLParser alloc] initWithData:(NSData *)responseData];
-    [rssParser setDelegate: self];
-    [rssParser parse];
-    isDataLoaded = YES;
 }
 
 - (void)deleteAllEntities:(NSString *)nameEntity withContext:(NSManagedObjectContext*)context
@@ -453,82 +290,40 @@
     
     NSError *error;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-    for (NSManagedObject *object in fetchedObjects)
-    {
+    for (NSManagedObject *object in fetchedObjects)    {
         [context deleteObject:object];
     }
-    
     error = nil;
     [context save:&error];
 }
 
-//*****************************************************************************/
-#pragma mark - Parsing
-//*****************************************************************************/
 
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:
-(NSDictionary *)attributeDict {
-    currentElement = elementName;
-    if ([currentElement isEqualToString:@"item"]) {
-        FeedItem *rssItem = [[FeedItem alloc] init];
-        currentRssItem = rssItem;
-        title = [[NSMutableString alloc] init];
-        link = [[NSMutableString alloc] init];
-        description = [[NSMutableString alloc] init];
-        pubDate = [[NSMutableString alloc] init];
-        imgLink = [[NSMutableString alloc] init];
+-(NSMutableArray*)loadUrlsFromDatabase{
+    NSManagedObjectContext *tmpPrivateContext = [self generateBackgroundManagedContext];
+    NSMutableArray *urlsOfFeeds = [[NSMutableArray alloc]init];
+    if (tmpPrivateContext != nil){
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Url" inManagedObjectContext:tmpPrivateContext];
+        [fetchRequest setEntity:entity];
+        
+        NSError *error = nil;
+        NSArray *tmpUrlsArray = [tmpPrivateContext executeFetchRequest:fetchRequest error:&error];
+        if (error) {
+            NSLog(@"Unable to execute fetch request loadUrlsFromDatabase. %@, %@", error, error.localizedDescription);
+        } else {
+            NSLog(@"SUCCESS loadUrlsFromDatabase");
+        }
+        if([tmpUrlsArray count] <= 0){
+            //[self showPopupNoRssAvailable];
+             NSLog(@"Add [self showPopupNoRssAvailable");
+            return urlsOfFeeds; //zwróci nil ?
+        }
+        //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
+        for(Url* el in tmpUrlsArray){
+            [urlsOfFeeds addObject:el.url];
+        }
     }
-    else if ([currentElement isEqualToString:@"entry"]) {
-        FeedItem *rssItem = [[FeedItem alloc] init];
-        currentRssItem = rssItem;
-        title = [[NSMutableString alloc] init];
-        link = [[NSMutableString alloc] init];
-        description = [[NSMutableString alloc] init];
-        pubDate = [[NSMutableString alloc] init];
-        imgLink = [[NSMutableString alloc] init];
-    }
+    return urlsOfFeeds;
 }
-
-
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if ([currentElement isEqualToString:@"title"]) {
-        [title appendString:string];
-    } else if ([currentElement isEqualToString:@"link"]) {
-        [link appendString:string];
-    } else if ([currentElement isEqualToString:@"description"]) {
-        [description appendString:string];
-    } else if ([currentElement isEqualToString:@"summary"]) {// Atom
-        [description appendString:string];
-    } else if ([currentElement isEqualToString:@"pubDate"]) {
-        [pubDate appendString:string];
-    } else if ([currentElement isEqualToString:@"updated"]) { // Atom
-        [pubDate appendString:string];
-    }
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:
-(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    if ([elementName isEqualToString:@"item"]) {
-        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        [postsToDisplay addObject:currentRssItem];
-    } else if ([elementName isEqualToString:@"entry"]) {
-        currentRssItem.title = [title stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.link = [link stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.shortText = [description stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        currentRssItem.pubDate = [pubDate stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-        [postsToAppendToUrl addObject:currentRssItem];
-    }
-    if(currentRssItem.title!=nil) {NSLog(@"PARSING DONE \t%@", currentRssItem.title);}
-}
-
-- (void)parserDidEndDocument:(NSXMLParser *)parser{
-    NSLog(@"parserDidEndDocument");
-    isDataLoaded = YES;
-}
-
 
 @end
