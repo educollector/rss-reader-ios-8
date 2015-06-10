@@ -15,10 +15,11 @@
 #import "ASTextCleaner.h"
 #import "FeedItemTableViewCell.h"
 
-@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate>
+@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate, UIPopoverPresentationControllerDelegate>
 {
     NSMutableData *_responseData;
 }
 
+@property (nonatomic, strong) UIPopoverController *popController;
 
 @end

@@ -38,6 +38,9 @@
 		7D7408E81B25886F0042FB5A /* ASTextCleaner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408E71B25886F0042FB5A /* ASTextCleaner.m */; };
 		7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */; };
 		7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */; };
+		7DB40A9D1B28722B007ED522 /* UIPopoverController+iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */; };
+		7DB40AA11B2872C2007ED522 /* ASPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40A9F1B2872C2007ED522 /* ASPopoverViewController.m */; };
+		7DB40AA21B2872C2007ED522 /* ASPopoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DB40AA01B2872C2007ED522 /* ASPopoverViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +111,11 @@
 		7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedItemTableViewCell.h; sourceTree = "<group>"; };
 		7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedItemTableViewCell.m; sourceTree = "<group>"; };
 		7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedItemTableViewCell.xib; sourceTree = "<group>"; };
+		7DB40A9B1B28722B007ED522 /* UIPopoverController+iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIPopoverController+iPhone.h"; path = "RssAppBsc/UIPopoverController+iPhone.h"; sourceTree = "<group>"; };
+		7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIPopoverController+iPhone.m"; path = "RssAppBsc/UIPopoverController+iPhone.m"; sourceTree = "<group>"; };
+		7DB40A9E1B2872C2007ED522 /* ASPopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASPopoverViewController.h; sourceTree = "<group>"; };
+		7DB40A9F1B2872C2007ED522 /* ASPopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASPopoverViewController.m; sourceTree = "<group>"; };
+		7DB40AA01B2872C2007ED522 /* ASPopoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASPopoverViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +139,8 @@
 		239D4E151A7A59AD00C797C2 = {
 			isa = PBXGroup;
 			children = (
+				7DB40A9B1B28722B007ED522 /* UIPopoverController+iPhone.h */,
+				7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */,
 				239D4E201A7A59AD00C797C2 /* RssAppBsc */,
 				239D4E3D1A7A59AD00C797C2 /* RssAppBscTests */,
 				239D4E1F1A7A59AD00C797C2 /* Products */,
@@ -168,6 +178,9 @@
 				7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */,
 				7D4EC1351B25CC5C000D9709 /* UIBarButtonItem+ButtonState.h */,
 				7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */,
+				7DB40A9E1B2872C2007ED522 /* ASPopoverViewController.h */,
+				7DB40A9F1B2872C2007ED522 /* ASPopoverViewController.m */,
+				7DB40AA01B2872C2007ED522 /* ASPopoverViewController.xib */,
 			);
 			path = RssAppBsc;
 			sourceTree = "<group>";
@@ -376,6 +389,7 @@
 			files = (
 				239D4E301A7A59AD00C797C2 /* Main.storyboard in Resources */,
 				7D7408E11B1F2F250042FB5A /* star_active.png in Resources */,
+				7DB40AA21B2872C2007ED522 /* ASPopoverViewController.xib in Resources */,
 				7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */,
 				239D4E351A7A59AD00C797C2 /* LaunchScreen.xib in Resources */,
 				239D4E321A7A59AD00C797C2 /* Images.xcassets in Resources */,
@@ -408,10 +422,12 @@
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */,
+				7DB40AA11B2872C2007ED522 /* ASPopoverViewController.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
 				7D3332DF1B159F78008371FE /* Reachability.m in Sources */,
+				7DB40A9D1B28722B007ED522 /* UIPopoverController+iPhone.m in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,
 				239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */,
 				7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */,

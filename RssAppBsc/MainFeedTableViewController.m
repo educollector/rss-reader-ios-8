@@ -1,10 +1,12 @@
 #import "MainFeedTableViewController.h"
+#import "UIPopoverController+iPhone.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 
 @interface MainFeedTableViewController ()
 @property (nonatomic,strong) ASCoreDataController *dataController;
+- (void)showPopover:(id)sender;
 @end
 
 @implementation MainFeedTableViewController{
@@ -58,6 +60,13 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
+    UIBarButtonItem *popoverButton = [[UIBarButtonItem alloc]
+                                      
+                                      initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                      target:self
+                                      action:@selector(showPopover:)];
+    self.navigationItem.rightBarButtonItem = popoverButton;
+    
     //--------------------------------------//
     // --> Choose how to load data at start //
     //--------------------------------------//
@@ -82,6 +91,22 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)showPopover:(id)sender{
+    if (self.popController.popoverVisible) {
+        [self.popController dismissPopoverAnimated:YES];
+        return;
+    }
+    
+    UIViewController *contentViewController = [[UIViewController alloc] init];
+    contentViewController.view.backgroundColor = [UIColor yellowColor];
+    UIPopoverController *popController = [[UIPopoverController alloc] initWithContentViewController:contentViewController];
+    popController.popoverContentSize = CGSizeMake(300.0f, 600.0f);
+    self.popController = popController;
+    [self.popController presentPopoverFromBarButtonItem:sender
+                               permittedArrowDirections:UIPopoverArrowDirectionUp
+                                               animated:YES];
 }
 
 
