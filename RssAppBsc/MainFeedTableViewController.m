@@ -67,7 +67,7 @@
     //--------------------------------------//
     // -->ASCoreDataController
     //
-    postsToDisplaySource = [dataController loadPostsFromDtabase];
+    postsToDisplaySource = [dataController loadPostsFromDtabaseUsingUrls];
     //[self uiUpdateMainFeedTable] jest w viewWillApppear
     //--------------------------------------//
 }
@@ -235,34 +235,44 @@
     NSError __block *error = nil;
     NSURLResponse __block *response = nil;
     postsToDisplayIntermediate = [[NSMutableArray alloc] init];
-    NSURLRequest __block *request =[[NSURLRequest alloc]init];
+    
+    NSMutableArray __block *tmpArrayOfStringUrl = [[NSMutableArray alloc] init];
+    //TODO czemu w tej atblicy stringów pojawia sie nil skoro w getActualDataFromConnection są poprawne url.url'e????
+    for(Url* feedUrl in urlsOfFeeds){
+        if(feedUrl.url == nil){
+            NSLog(@"nil w tablicy urlsOfFeeds");
+        }else{
+            [tmpArrayOfStringUrl addObject:feedUrl.url];
+        }
+        
+    }
 
     dispatch_async(backgroundGlobalQueue,^{
         if(urlsOfFeeds.count != 0){
-            for(NSString* feedUrl in urlsOfFeeds){
+            
+            for(NSString* feedUrl in tmpArrayOfStringUrl){
                 _responseData = [[NSMutableData alloc] init];
                 postsToAppendToUrl = [[NSMutableArray alloc]init];
                 NSURL *url = [NSURL URLWithString: feedUrl];
-                request= [NSURLRequest requestWithURL:[NSURL URLWithString: feedUrl]];
                 
                 NSData *datatToAppend = [NSURLSession sendSynchronousDataTaskWithURL:url returningResponse:&response error:&error];
-                [_responseData appendData:datatToAppend];
-                [self makeParsing];
-                
-                
-                for(FeedItem *item in postsToAppendToUrl){
-                    item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
-                }
-                
-                //--> ASDCoreDataController
-                [dataController savePostsToCoreDataFromUrl:feedUrl andPost:postsToAppendToUrl];
-                //[self savePostsToCoreDataFromUrl:feedUrl andPosts:(NSMutableArray*)postsToAppendToUrl];
-                
-                [postsToDisplayIntermediate addObjectsFromArray:postsToAppendToUrl ];
-                
                 if(error != nil){
                     NSLog(@"There was an error with synchrononous request: %@", error.description);
-                    [self connectionDidFailedWithError:error];
+                    //[self connectionDidFailedWithError:error];
+                }else{
+                    [_responseData appendData:datatToAppend];
+                    [self makeParsing];
+                    
+                    
+                    for(FeedItem *item in postsToAppendToUrl){
+                        item.sourceFeedUrl = [NSMutableString stringWithString:feedUrl];
+                    }
+                    
+                    //--> ASDCoreDataController
+                    [dataController savePostsToCoreDataFromUrl:feedUrl andPost:postsToAppendToUrl];
+                    //[self savePostsToCoreDataFromUrl:feedUrl andPosts:(NSMutableArray*)postsToAppendToUrl];
+                    
+                    [postsToDisplayIntermediate addObjectsFromArray:postsToAppendToUrl];
                 }
             }
         }else{
@@ -596,8 +606,8 @@
 }
 
 -(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-    
-    UITableView *tableView = self.tableView;
+
+//    UITableView *tableView = self.tableView;
     
     switch (type) {
         case NSFetchedResultsChangeInsert:

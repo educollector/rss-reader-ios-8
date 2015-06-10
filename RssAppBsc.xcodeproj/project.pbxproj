@@ -27,7 +27,6 @@
 		7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332D71B159F78008371FE /* InternetConnectionMonitor.m */; };
 		7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332D91B159F78008371FE /* NSString+HTML.m */; };
 		7D3332DF1B159F78008371FE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DB1B159F78008371FE /* Reachability.m */; };
-		7D3332E01B159F78008371FE /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332DC1B159F78008371FE /* README.mdown */; };
 		7D3332E91B15A742008371FE /* Url.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332E81B15A742008371FE /* Url.m */; };
 		7D4EC1371B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */; };
 		7D5BDFF31B1753060084A11B /* NSURLSession+SynchronousTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D5BDFF21B1753060084A11B /* NSURLSession+SynchronousTask.m */; };
@@ -411,7 +410,6 @@
 				7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */,
-				7D3332E01B159F78008371FE /* README.mdown in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
 				7D3332DF1B159F78008371FE /* Reachability.m in Sources */,
 				239D4E241A7A59AD00C797C2 /* main.m in Sources */,

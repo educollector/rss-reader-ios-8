@@ -318,10 +318,17 @@
         }
         //rewrite the table linksOfFeed to remove feed deleted on BrowseScreen and keep the table up to date
         for(Url* el in fetchedUrls){
-            [urlsOfFeeds addObject:el.url];
+            [urlsOfFeeds addObject:el];
         }
     }
     return urlsOfFeeds;
+}
+
+-(NSFetchRequest *)fetchRequestUrls{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    return  fetchRequest;
 }
 
 -(NSMutableArray *)loadPostsFromDtabase{
@@ -370,7 +377,57 @@
     return posts;
 }
 
--(NSMutableArray *)loadFavouritPostFromDatabase{
+-(NSMutableArray *)loadPostsFromDtabaseUsingUrls{
+    NSLog(@"ASCoreDataController - loadPostsFromDtabaseUsingUrls");
+    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
+    NSMutableArray *posts = [[NSMutableArray alloc]init];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc]initWithEntityName:@"Url"];
+    //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"pubDate" ascending:YES];
+    //fetchRequest.sortDescriptors = @[sortDescriptor];
+    
+    if(privateContext != nil){
+        NSError *error;
+       NSArray *fetchedUrls = [privateContext executeFetchRequest:fetchRequest error:&error];
+        if([fetchedUrls count] <= 0){
+            //[self showPopupNoRssAvailable];
+            NSLog(@"No Urls to display post available");
+        }
+        //make an array of posts retrieved from urls fetched from DB
+        for(Url *urlFromDataBase in fetchedUrls){
+            for(Post *el in urlFromDataBase.posts ){
+                FeedItem *item = [[FeedItem alloc]init];
+                if(el.link!=nil){
+                    item.link = [NSMutableString stringWithString:el.link];
+                    if(el.title!=nil){
+                        item.title = [NSMutableString stringWithString:el.title];
+                    }else {
+                        item.title = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.pubDate!=nil){
+                        item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                    }else{
+                        item.pubDate = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.shortText!=nil){
+                        item.shortText = [NSMutableString stringWithString:el.shortText];
+                    }else{
+                        item.shortText = [NSMutableString stringWithString:@"trolololo"];
+                    }
+                    if(el.guid!=nil){item.guid = [NSMutableString stringWithString:el.guid];}
+                    item.isRead = el.isRead;
+                    item.isLiked = el.isLiked;
+                    [posts addObject: item];
+                }
+            }
+        }
+    }
+    return posts;
+}
+
+
+
+-(NSArray *)loadFavouritPostFromDatabase{
     NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
     NSMutableArray *favouritePosts = [[NSMutableArray alloc]init];
     NSPredicate *p =[NSPredicate predicateWithFormat:@"isLiked == %@", [NSNumber numberWithBool:YES]];

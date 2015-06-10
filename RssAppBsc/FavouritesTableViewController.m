@@ -14,7 +14,7 @@
 
 @implementation FavouritesTableViewController{
     NSManagedObjectContext *managedObjectContext;
-    NSMutableArray *favouritePosts;
+    NSArray *favouritePosts;
     UIRefreshControl *refreshControl;
 }
 @synthesize dataController;
@@ -105,7 +105,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(favouritePosts.count == nil || favouritePosts.count == 0){
+    if(favouritePosts.count == 0){
         return 0;
     }
     return favouritePosts.count;

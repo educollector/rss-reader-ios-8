@@ -7,7 +7,7 @@
     NSString *cleanedText;
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@"<img.*\/>"
+                                  regularExpressionWithPattern:@"<img.*/>"
                                   options:NSRegularExpressionCaseInsensitive
                                   error:&error];
     
@@ -16,7 +16,7 @@
                                                     range:NSMakeRange(0, [text length])
                                              withTemplate:@""];
     
-    regex = [NSRegularExpression regularExpressionWithPattern:@"<a.*>.*<\/a>"
+    regex = [NSRegularExpression regularExpressionWithPattern:@"<a.*>.*</a>"
                                                       options:NSRegularExpressionCaseInsensitive
                                                         error:&error];
     

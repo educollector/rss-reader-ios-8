@@ -3,25 +3,24 @@
 #import "CoreDataController.h"
 
 @interface BrowserTableViewController ()
-//@property (nonatomic,strong) NSManagedObjectContext *managedObjectContext;
 
 @end
 
 @implementation BrowserTableViewController{
     UISearchController *searchController;
     NSFetchedResultsController *fetchResultController;
-    NSManagedObjectContext *managedObjectContext;
+    NSManagedObjectContext *managedObjectContextMain;
+    NSManagedObjectContext *managedObjectContextBg;
     NSArray *urls;
     Url *url;
     ASCoreDataController *dataColntroller;
 }
 
-//@synthesize managedObjectContext;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     dataColntroller = [ASCoreDataController sharedInstance];
-    managedObjectContext = [dataColntroller mainContext];
+    managedObjectContextMain = [dataColntroller mainContext];
+    managedObjectContextBg = [dataColntroller generateBackgroundManagedContext];
     
     
     searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
@@ -31,25 +30,40 @@
     self.definesPresentationContext = YES;
     searchController.searchResultsUpdater = self;
     searchController.dimsBackgroundDuringPresentation = NO;
+    //urls = [dataColntroller loadUrlsFromDatabase];
     [self fetchDataFromDatabase];
-
 }
 
 -(void)fetchDataFromDatabase{
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Url"];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"url" ascending:YES];
-    fetchRequest.sortDescriptors = @[sortDescriptor];
-    if (managedObjectContext != nil) {
+    
+    if (managedObjectContextMain!= nil) {
         fetchResultController = [[NSFetchedResultsController alloc]
-                                 initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext
-                                 sectionNameKeyPath:nil cacheName:nil];
+                                 initWithFetchRequest:[dataColntroller fetchRequestUrls]
+                                 managedObjectContext: managedObjectContextMain
+                                 sectionNameKeyPath:nil
+                                 cacheName:nil];
         fetchResultController.delegate = self;
         NSError *error;
         if ([fetchResultController performFetch:&error]) {
             urls = fetchResultController.fetchedObjects;
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.tableView reloadData];
+            }];
         } else {
             NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
         }
+        
+//        [[fetchResultController managedObjectContext] performBlock:^{
+//            NSError *error;
+//            if ([fetchResultController performFetch:&error]) {
+//                urls = fetchResultController.fetchedObjects;
+//                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//                    [self.tableView reloadData];
+//                }];
+//            } else {
+//                NSLog(@"Can't get the record! %@ %@", error, [error localizedDescription]);
+//            }
+//        }];
     }
 }
 
@@ -89,13 +103,11 @@
     }
     if(![self isUrlInDatabase: [NSString stringWithFormat:@"http://%@", searchController.searchBar.text]]){
         NSLog(@"Can save an url");
-    url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContext];
-    url.url = [NSString stringWithFormat:@"http://%@", searchController.searchBar.text];
-    NSLog(@"url.url : %@", url.url);
-    NSError *error;
-    //saving url to the Core Data
-    
-        if (![managedObjectContext save:&error]) {
+        url = (Url *)[NSEntityDescription insertNewObjectForEntityForName:@"Url" inManagedObjectContext:managedObjectContextMain];
+        url.url = [NSString stringWithFormat:@"http://%@", searchController.searchBar.text];
+        NSError *error;
+        //saving url to the Core Data
+        if (![managedObjectContextMain save:&error]) {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
         
@@ -103,21 +115,23 @@
         searchController.searchBar.text = @"";
         [searchBar resignFirstResponder];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkadded" object:self];
+        NSLog(@"Success - Url added to databese");
     }else{
         [self showPopupUrlIsInDatabase];
+        NSLog(@"Url is in database - no need to add again");
     }
-    NSLog(@"Url is in database");
+    
 }
 
 - (BOOL)isUrlInDatabase:(NSString *)urlToCheck{
-    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContext];
+    NSEntityDescription *productEntity=[NSEntityDescription entityForName:@"Url" inManagedObjectContext:managedObjectContextMain];
     NSFetchRequest *fetch=[[NSFetchRequest alloc] init];
     [fetch setEntity:productEntity];
     NSPredicate *p=[NSPredicate predicateWithFormat:@"url == %@", urlToCheck];
     [fetch setPredicate:p];
     // do sorting
     NSError *fetchError;
-    NSArray *fetchedProducts=[managedObjectContext executeFetchRequest:fetch error:&fetchError];
+    NSArray *fetchedProducts=[managedObjectContextMain executeFetchRequest:fetch error:&fetchError];
     // handle error
     if(fetchedProducts.count != 0){
         return YES;
@@ -141,36 +155,42 @@
 - (void) controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
         atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
        newIndexPath:(NSIndexPath *)newIndexPath {
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        default:
-            [self.tableView reloadData];
-            break;
-    }
-    urls = controller.fetchedObjects;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            switch (type) {
+                case NSFetchedResultsChangeInsert:
+                    [self.tableView insertRowsAtIndexPaths:@[newIndexPath]
+                                          withRowAnimation:UITableViewRowAnimationFade];
+                    break;
+                case NSFetchedResultsChangeDelete:
+                    [self.tableView deleteRowsAtIndexPaths:@[indexPath]
+                                          withRowAnimation:UITableViewRowAnimationFade];
+                    break;
+                case NSFetchedResultsChangeUpdate:
+                    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                                          withRowAnimation:UITableViewRowAnimationFade];
+                    break;
+                default:
+                    [self.tableView reloadData];
+                    break;
+            }
+            urls = controller.fetchedObjects;
+        });
 }
 - (void) controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView endUpdates];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView endUpdates];
+    });
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    Url *urlToDisplay = (Url*) urls[indexPath.row];
-    static NSString *cellIdentifier = @"Cell";
-    CustomTableViewCell *cell = (CustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    cell.label.text = urlToDisplay.url;
-    return cell;
+
+        Url *urlToDisplay = (Url*) urls[indexPath.row];
+        static NSString *cellIdentifier = @"Cell";
+        CustomTableViewCell *cell = (CustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        cell.label.text = urlToDisplay.url;
+        return cell;
 }
 
 
@@ -182,23 +202,31 @@
 }
 */
 
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
 }
 
+// deleting feed URL from the list
+//*******************************************************************/
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //Delete the row from the data source
-    if(managedObjectContext != nil){
+    if([fetchResultController managedObjectContext] != nil){
+        
         Url *urlToDelete = (Url*)[fetchResultController objectAtIndexPath:indexPath];
-        [managedObjectContext deleteObject:urlToDelete];
+        
+        [[fetchResultController managedObjectContext]  deleteObject:urlToDelete];
         NSError *error;
-        if(![managedObjectContext save:&error]){
+        if(![[fetchResultController managedObjectContext]  save:&error]){
             NSLog(@"Can't delete the feed url from the list! %@ %@", error, [error localizedDescription]);
         }
         else{
             NSLog(@"Url delelted");
             [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.browserscreen.linkdeleted" object:self];
-        }    
+        }
     }
     
 }

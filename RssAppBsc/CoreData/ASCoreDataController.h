@@ -38,8 +38,10 @@
 
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPost:(NSMutableArray*)postsArray;
 -(NSMutableArray *)loadUrlsFromDatabase;
+-(NSFetchRequest *)fetchRequestUrls;
 -(NSMutableArray *)loadPostsFromDtabase;
--(NSMutableArray *)loadFavouritPostFromDatabase;
+-(NSMutableArray *)loadPostsFromDtabaseUsingUrls;
+-(NSArray *)loadFavouritPostFromDatabase;
 - (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked;
 
 @end
