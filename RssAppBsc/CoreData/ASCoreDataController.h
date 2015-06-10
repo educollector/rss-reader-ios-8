@@ -38,10 +38,13 @@
 
 -(void) savePostsToCoreDataFromUrl: (NSString*)feedUrl andPost:(NSMutableArray*)postsArray;
 -(NSMutableArray *)loadUrlsFromDatabase;
--(NSFetchRequest *)fetchRequestUrls;
 -(NSMutableArray *)loadPostsFromDtabase;
--(NSMutableArray *)loadPostsFromDtabaseUsingUrls;
+-(NSArray *)loadPostsFromDtabaseUsingUrls;
 -(NSArray *)loadFavouritPostFromDatabase;
 - (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked;
+- (void)savePostAsIsRead:(FeedItem *)item;
 
+-(NSFetchRequest *)fetchRequestUrls;
+
+- (void)deleteAllEntities:(NSString *)nameEntity withContext:(NSManagedObjectContext*)context;
 @end

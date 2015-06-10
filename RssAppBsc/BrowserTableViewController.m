@@ -214,7 +214,7 @@
 //*******************************************************************/
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //Delete the row from the data source
-    if([fetchResultController managedObjectContext] != nil){
+    if([fetchResultController managedObjectContext] != nil & editingStyle == UITableViewCellEditingStyleDelete){
         
         Url *urlToDelete = (Url*)[fetchResultController objectAtIndexPath:indexPath];
         

@@ -377,7 +377,7 @@
     return posts;
 }
 
--(NSMutableArray *)loadPostsFromDtabaseUsingUrls{
+-(NSArray *)loadPostsFromDtabaseUsingUrls{
     NSLog(@"ASCoreDataController - loadPostsFromDtabaseUsingUrls");
     NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
     NSMutableArray *posts = [[NSMutableArray alloc]init];
@@ -422,7 +422,8 @@
             }
         }
     }
-    return posts;
+     NSArray *sortedPosts = [[posts copy] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
+    return sortedPosts;
 }
 
 
@@ -453,7 +454,7 @@
 }
 
 - (void)savePost:(FeedItem *)item asFavourite:(BOOL)isLiked{
-    NSManagedObjectContext *privateContext = [self generateBackgroundManagedContext];
+    NSManagedObjectContext *privateContext = [self writerContext];
     NSPredicate *p;
     //        if(item.guid != nil){
     //            if(item.title !=nil){
@@ -478,6 +479,34 @@
             post.isLiked = [NSNumber numberWithBool:NO];
         }
         
+        
+        if (![privateContext save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+    }
+}
+
+- (void)savePostAsIsRead:(FeedItem *)item{
+    NSManagedObjectContext *privateContext = [self writerContext];
+    NSPredicate *p;
+    //        if(item.guid != nil){
+    //            if(item.title !=nil){
+    //                p=[NSPredicate predicateWithFormat:@"(guid == %@) AND (title == %@)", item.guid, item.title];
+    //            }
+    //        }else{
+    p=[NSPredicate predicateWithFormat:@"title == %@", item.title];
+    //}
+    NSFetchRequest *fetchRequest=[[NSFetchRequest alloc] initWithEntityName:@"Post"];
+    [fetchRequest setPredicate:p];
+    NSError *error;
+    NSArray *fetchedProducts=[privateContext executeFetchRequest:fetchRequest error:&error];
+    // handle error
+    
+    //modify and save to database
+    if(fetchedProducts.count != 0){
+        Post* post = (Post *)[NSEntityDescription insertNewObjectForEntityForName:@"Post" inManagedObjectContext:privateContext];
+        post = (Post*)fetchedProducts[0];
+        post.isRead = [NSNumber numberWithBool:YES];
         
         if (![privateContext save:&error]) {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
