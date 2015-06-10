@@ -422,8 +422,9 @@
             }
         }
     }
-     NSArray *sortedPosts = [[posts copy] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
-    return sortedPosts;
+//     NSArray *sortedPosts = [[posts copy] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES]]];
+//    return sortedPosts;
+    return posts;
 }
 
 

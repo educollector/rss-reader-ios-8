@@ -138,6 +138,7 @@
     NSLog(@"endOfLoadingData");
     if(isDataLoaded){
         //dispatch_async(backgroundGlobalQueue, ^{
+        
         postsToDisplaySource = [[NSMutableArray alloc]initWithArray:postsToDisplayIntermediate];
         NSLog(@"postsToDisplay count %d", (int)[postsToDisplaySource count]);
         //}];
@@ -299,6 +300,7 @@
     if (postsToDisplaySource == nil){
         return 0;
     }
+    [self sortPostsBy:@"title"];
     return postsToDisplaySource.count;
 }
 
@@ -334,7 +336,11 @@
 //*****************************************************************************/
 #pragma mark - Table view - helper methods
 //*****************************************************************************/
-
+-(void)sortPostsBy:(NSString*)sorter{
+    //Sorting posts
+    NSArray *sortedPosts = [[postsToDisplaySource copy]sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:sorter ascending:YES]]];
+    postsToDisplaySource = sortedPosts;
+}
 
 -(void) markPostAsLiked:(NSNotification *)notification {
     NSDictionary *dict = [notification userInfo];
