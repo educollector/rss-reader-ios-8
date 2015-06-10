@@ -1,5 +1,6 @@
 #import "MainFeedTableViewController.h"
 #import "UIPopoverController+iPhone.h"
+#import "ASPopoverViewController.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
@@ -99,10 +100,9 @@
         return;
     }
     
-    UIViewController *contentViewController = [[UIViewController alloc] init];
-    contentViewController.view.backgroundColor = [UIColor yellowColor];
+    ASPopoverViewController *contentViewController = [[ASPopoverViewController alloc] init];
     UIPopoverController *popController = [[UIPopoverController alloc] initWithContentViewController:contentViewController];
-    popController.popoverContentSize = CGSizeMake(300.0f, 600.0f);
+    popController.popoverContentSize = CGSizeMake(200.0f, 200.0f);
     self.popController = popController;
     [self.popController presentPopoverFromBarButtonItem:sender
                                permittedArrowDirections:UIPopoverArrowDirectionUp
