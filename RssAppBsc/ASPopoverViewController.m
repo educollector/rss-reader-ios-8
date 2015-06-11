@@ -156,8 +156,9 @@
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     
+    //prevent changing cell color of the cell contain segemntedControl asc/desc
     if(indexPath.section != 0){
-        cell.userInteractionEnabled = NO;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     
@@ -196,13 +197,15 @@
         checkedIndexPath = nil;
     }
     else{
-        UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        cell.selectedBackgroundView = nil;
-        [cell setBackgroundColor:[UIColor whiteColor]];
-        //cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        checkedIndexPath = indexPath;
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        if(indexPath.section !=1){
+            UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.selectedBackgroundView = nil;
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            //cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            checkedIndexPath = indexPath;
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];            
+        }
     }
     
 }
