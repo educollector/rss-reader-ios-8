@@ -62,10 +62,7 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
-    popoverButton = [[UIBarButtonItem alloc] initWithTitle:@"Sort"
-                                            style:UIBarButtonItemStylePlain
-                                            target:self
-                                            action:@selector(btnSelectDatePressed1)];
+    popoverButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sort"] style:UIBarButtonItemStylePlain target:self action:@selector(btnSelectDatePressed1)];
 //                                      initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
 //                                      target:self
 //                                      action:@selector(btnSelectDatePressed1)];

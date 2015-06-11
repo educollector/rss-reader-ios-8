@@ -23,6 +23,8 @@
 		239D4E5E1A7A83BB00C797C2 /* BrowserTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5D1A7A83BB00C797C2 /* BrowserTableViewController.m */; };
 		239D4E641A7A919500C797C2 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 239D4E631A7A919500C797C2 /* share.png */; };
 		239D4E741A7BB8B100C797C2 /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */; };
+		7D1DF6201B29CD8C00AFE278 /* sort@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D1DF61E1B29CD8C00AFE278 /* sort@2x.png */; };
+		7D1DF6211B29CD8C00AFE278 /* sort@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D1DF61F1B29CD8C00AFE278 /* sort@3x.png */; };
 		7D25BF9F1B132B050085AC5F /* MainFeedTableViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D25BF9E1B132B050085AC5F /* MainFeedTableViewControllerTest.m */; };
 		7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332D71B159F78008371FE /* InternetConnectionMonitor.m */; };
 		7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D3332D91B159F78008371FE /* NSString+HTML.m */; };
@@ -85,6 +87,8 @@
 		239D4E631A7A919500C797C2 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
 		239D4E721A7BB8B100C797C2 /* CustomTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableViewCell.h; sourceTree = "<group>"; };
 		239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableViewCell.m; sourceTree = "<group>"; };
+		7D1DF61E1B29CD8C00AFE278 /* sort@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort@2x.png"; sourceTree = "<group>"; };
+		7D1DF61F1B29CD8C00AFE278 /* sort@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort@3x.png"; sourceTree = "<group>"; };
 		7D25BF9E1B132B050085AC5F /* MainFeedTableViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainFeedTableViewControllerTest.m; sourceTree = "<group>"; };
 		7D3332D61B159F78008371FE /* InternetConnectionMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternetConnectionMonitor.h; sourceTree = "<group>"; };
 		7D3332D71B159F78008371FE /* InternetConnectionMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternetConnectionMonitor.m; sourceTree = "<group>"; };
@@ -303,6 +307,8 @@
 		7D7408DA1B1F2EBF0042FB5A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7D1DF61E1B29CD8C00AFE278 /* sort@2x.png */,
+				7D1DF61F1B29CD8C00AFE278 /* sort@3x.png */,
 				7D7408DF1B1F2F250042FB5A /* star_active.png */,
 				7D7408E01B1F2F250042FB5A /* star_inactive.png */,
 			);
@@ -410,8 +416,10 @@
 				7D7408E11B1F2F250042FB5A /* star_active.png in Resources */,
 				7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */,
 				239D4E351A7A59AD00C797C2 /* LaunchScreen.xib in Resources */,
+				7D1DF6211B29CD8C00AFE278 /* sort@3x.png in Resources */,
 				239D4E321A7A59AD00C797C2 /* Images.xcassets in Resources */,
 				7D7408E21B1F2F250042FB5A /* star_inactive.png in Resources */,
+				7D1DF6201B29CD8C00AFE278 /* sort@2x.png in Resources */,
 				239D4E641A7A919500C797C2 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
