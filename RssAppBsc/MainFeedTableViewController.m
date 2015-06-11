@@ -341,7 +341,7 @@
     if (postsToDisplaySource == nil){
         return 0;
     }
-    [self sortPostsBy:@"title"];
+    [self sortPostsByUserDefaults];
     return postsToDisplaySource.count;
 }
 
@@ -380,6 +380,27 @@
 -(void)sortPostsBy:(NSString*)sorter{
     //Sorting posts
     BOOL isAscending = [[NSUserDefaults standardUserDefaults] boolForKey:@"sortAscending"];
+    NSArray *sortedPosts = [[postsToDisplaySource copy]sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:sorter ascending:isAscending]]];
+    postsToDisplaySource = sortedPosts;
+}
+
+-(void)sortPostsByUserDefaults{
+    //Sorting posts
+    NSString *sorter;
+    BOOL isAscending = [[NSUserDefaults standardUserDefaults] boolForKey:@"sortAscending"];
+    NSInteger sortingSubject = [[NSUserDefaults standardUserDefaults] integerForKey:@"sortingSubject"];
+        
+    switch (sortingSubject) {
+        case 0:
+            sorter = @"title";
+            break;
+        case 1:
+            sorter = @"pubDate";
+            break;
+        default:
+            sorter = @"title";
+            break;
+    }
     NSArray *sortedPosts = [[postsToDisplaySource copy]sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:sorter ascending:isAscending]]];
     postsToDisplaySource = sortedPosts;
 }

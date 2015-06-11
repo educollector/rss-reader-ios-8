@@ -1,8 +1,6 @@
 #import "ASPopoverViewController.h"
 #import "PopoverTableViewCell.h"
 
-//TODO: use NSUserDEfaults to save segmentedControl state and sorting options
-// http://www.accella.net/nsuserdefaults-some-pretty-good-practices/
 @interface ASPopoverViewController ()
 
 @end
@@ -22,7 +20,7 @@
     [super viewDidLoad];
     // register custom nib for cell
     [self.tableView registerNib:[UINib nibWithNibName:@"PopoverTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PopoverTableViewCell"];
-    sortersNames = [[NSArray alloc]initWithObjects:@"By title",@"By pub date", @"By channel", nil];
+    sortersNames = [[NSArray alloc]initWithObjects:@"By title",@"By pub date", nil];
     sorterInfo = @{@"section1" : sortersNames,
                    @"section2" : @[@" "]
                       };
@@ -73,7 +71,14 @@
 
 -(void)saveSortingSubject{
     NSString *sortingSubject = sortersNames[[checkedIndexPath row]]; //By title,By pub date, By channel
-    [[NSUserDefaults standardUserDefaults] setObject:sortingSubject forKey:@"sortingSubject"];
+    if([sortingSubject isEqual:@"By title"]){
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"sortingSubject"];
+    }else if([sortingSubject isEqual:@"By pub date"]){
+        [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"sortingSubject"];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"sortingSubject"];
+    }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"pl.skierbisz.searchpopover.search.subject.changed" object:self];
     
 }
