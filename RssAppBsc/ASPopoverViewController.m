@@ -126,11 +126,12 @@
 //}
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    if (section == 0) {
+ //    if (section == 0) {
         return nil;
-    } else {
-        return [sectionTitles objectAtIndex:section];
-    }
+//    } else {
+//        //Display sections title
+//        return [sectionTitles objectAtIndex:section];
+//    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -151,6 +152,10 @@
     
     if(indexPath.section == 1){
         [cell addSubview: segmentedControl];
+        segmentedControl.frame = CGRectMake(cell.frame.size.width/2 - segmentedControl.frame.size.width/2-10,
+                                            cell.frame.size.height/2 - segmentedControl.frame.size.height/2,
+                                            segmentedControl.frame.size.width,
+                                            segmentedControl.frame.size.height);
     }
     if([indexPath row] == sortingSubjectRowSelected & indexPath.section == 0 & sortingSubjectRowSelected != 999){
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -204,7 +209,7 @@
             [cell setBackgroundColor:[UIColor whiteColor]];
             //cell.selectionStyle = UITableViewCellSelectionStyleNone;
             checkedIndexPath = indexPath;
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];            
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
         }
     }
     

@@ -103,6 +103,7 @@
     _sortPopover = destNav.popoverPresentationController;
     _sortPopover.delegate = self;
     _sortPopover.sourceView = self.view;
+    //TODO: rotation http://stackoverflow.com/questions/9065109/how-to-make-uipopovercontroller-keep-same-position-after-rotating
     _sortPopover.sourceRect = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, 0.0f, 0.0f, 0.0f);
     destNav.modalPresentationStyle = UIModalPresentationPopover;
     destNav.navigationBarHidden = YES;
