@@ -38,6 +38,8 @@
     sortAsc ? (segmentedControl.selectedSegmentIndex = 0) : (segmentedControl.selectedSegmentIndex = 1);
     
     sortingSubjectRowSelected = [[NSUserDefaults standardUserDefaults] integerForKey:@"sortingSubject"];
+    
+    segmentedControl.center = CGPointMake(segmentedControl.frame.size.width / 2, segmentedControl.frame.size.height / 2);
     [self.view addSubview:segmentedControl];
 }
 
@@ -154,6 +156,12 @@
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     
+    if(indexPath.section != 0){
+        cell.userInteractionEnabled = NO;
+    }
+    
+    
+    
     return cell;
 }
 
@@ -195,7 +203,6 @@
         //cell.selectionStyle = UITableViewCellSelectionStyleNone;
         checkedIndexPath = indexPath;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-        
     }
     
 }
