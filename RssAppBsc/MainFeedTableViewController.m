@@ -101,7 +101,7 @@
 - (void)btnSelectDatePressed1{
     ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
     UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
-    dateVC.preferredContentSize = CGSizeMake(280,200);
+    dateVC.preferredContentSize = CGSizeMake(280,150);
     destNav.modalPresentationStyle = UIModalPresentationPopover;
     _sortPopover = destNav.popoverPresentationController;
     _sortPopover.delegate = self;
@@ -276,8 +276,7 @@
     
     NSError *error;
     NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    for (NSManagedObject *object in fetchedObjects)
-    {
+    for (NSManagedObject *object in fetchedObjects)    {
         [managedObjectContext deleteObject:object];
     }
     

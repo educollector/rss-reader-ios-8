@@ -13,6 +13,7 @@
     UIButton *ascButton;
     UIButton *descButton;
     BOOL sortAsc;
+    NSUInteger sortingSubjectRowSelected;
     NSIndexPath* checkedIndexPath;
 }
 
@@ -32,8 +33,11 @@
     segmentedControl = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Ascending", @"Descending", nil]];
     [segmentedControl addTarget:self action:@selector(segmentedControlHasChangedValue:) forControlEvents:UIControlEventValueChanged];
     [segmentedControl center];
+    
     sortAsc = [[[NSUserDefaults standardUserDefaults] objectForKey:@"sortAscending"] boolValue];
     sortAsc ? (segmentedControl.selectedSegmentIndex = 0) : (segmentedControl.selectedSegmentIndex = 1);
+    
+    sortingSubjectRowSelected = [[NSUserDefaults standardUserDefaults] integerForKey:@"sortingSubject"];
     [self.view addSubview:segmentedControl];
 }
 
@@ -146,6 +150,9 @@
     if(indexPath.section == 1){
         [cell addSubview: segmentedControl];
     }
+    if([indexPath row] == sortingSubjectRowSelected & indexPath.section == 0 & sortingSubjectRowSelected != 999){
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
     
     return cell;
 }
@@ -162,6 +169,14 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //unchecking and row checked basing on data from NSUserDefaults
+    NSIndexPath *defaultPath = [[NSIndexPath alloc]init];
+    defaultPath = [NSIndexPath indexPathForRow:sortingSubjectRowSelected inSection:0];
+    UITableViewCell* uncheckCell = [tableView
+                                    cellForRowAtIndexPath:defaultPath];
+    uncheckCell.accessoryType = UITableViewCellAccessoryNone;
+    sortingSubjectRowSelected = 999;
     
     // Uncheck the previous checked row
     if(checkedIndexPath){
