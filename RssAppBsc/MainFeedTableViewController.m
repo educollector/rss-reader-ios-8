@@ -1,13 +1,13 @@
 #import "MainFeedTableViewController.h"
 #import "UIPopoverController+iPhone.h"
 #import "ASPopoverViewController.h"
+#import "PopoverBackgroundView.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 
 @interface MainFeedTableViewController ()
 @property (nonatomic,strong) ASCoreDataController *dataController;
-- (void)showPopover:(id)sender;
 @end
 
 @implementation MainFeedTableViewController{
@@ -32,6 +32,7 @@
     UIRefreshControl *refreshControl;
     NSString *currentChannelUrl;
     NSMutableArray* postsToAppendToUrl;
+    UIBarButtonItem *popoverButton;
 }
 
 @synthesize dataController;
@@ -61,11 +62,14 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
-    UIBarButtonItem *popoverButton = [[UIBarButtonItem alloc]
-                                      
-                                      initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                      target:self
-                                      action:@selector(showPopover:)];
+    popoverButton = [[UIBarButtonItem alloc] initWithTitle:@"Sort"
+                                            style:UIBarButtonItemStylePlain
+                                            target:self
+                                            action:@selector(btnSelectDatePressed1)];
+//                                      initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+//                                      target:self
+//                                      action:@selector(btnSelectDatePressed1)];
+    
     self.navigationItem.rightBarButtonItem = popoverButton;
     
     //--------------------------------------//
@@ -94,20 +98,28 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)showPopover:(id)sender{
-    if (self.popController.popoverVisible) {
-        [self.popController dismissPopoverAnimated:YES];
-        return;
-    }
-    
-    ASPopoverViewController *contentViewController = [[ASPopoverViewController alloc] init];
-    UIPopoverController *popController = [[UIPopoverController alloc] initWithContentViewController:contentViewController];
-    popController.popoverContentSize = CGSizeMake(200.0f, 200.0f);
-    self.popController = popController;
-    [self.popController presentPopoverFromBarButtonItem:sender
-                               permittedArrowDirections:UIPopoverArrowDirectionUp
-                                               animated:YES];
+- (void)btnSelectDatePressed1{
+    ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
+    UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
+    dateVC.preferredContentSize = CGSizeMake(280,200);
+    destNav.modalPresentationStyle = UIModalPresentationPopover;
+    _sortPopover = destNav.popoverPresentationController;
+    _sortPopover.delegate = self;
+    _sortPopover.sourceView = self.view;
+    _sortPopover.sourceRect = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, 0.0f, 0.0f, 0.0f);
+    destNav.modalPresentationStyle = UIModalPresentationPopover;
+    destNav.navigationBarHidden = YES;
+    [self presentViewController:destNav animated:YES completion:nil];
 }
+
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
+    return UIModalPresentationNone;
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+    [self.tableView reloadData];
+}
+
 
 
 //*****************************************************************************/
@@ -130,6 +142,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(markPostAsUnLiked:)
                                                  name:@"pl.skierbisz.webviewscreen.post.unliked"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(uiUpdateMainFeedTable)
+                                                 name:@"pl.skierbisz.searchpopover.search.subject.changed"
                                                object:nil];
 }
 -(void)styleTheView{
@@ -363,7 +379,8 @@
 //*****************************************************************************/
 -(void)sortPostsBy:(NSString*)sorter{
     //Sorting posts
-    NSArray *sortedPosts = [[postsToDisplaySource copy]sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:sorter ascending:YES]]];
+    BOOL isAscending = [[NSUserDefaults standardUserDefaults] boolForKey:@"sortAscending"];
+    NSArray *sortedPosts = [[postsToDisplaySource copy]sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:sorter ascending:isAscending]]];
     postsToDisplaySource = sortedPosts;
 }
 

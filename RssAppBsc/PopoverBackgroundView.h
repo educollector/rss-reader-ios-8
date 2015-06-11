@@ -1,13 +1,13 @@
-//
-//  ASPopoverViewController.h
-//  RssAppBsc
-//
-//  Created by Aleksandra Skierbiszewska on 10.06.2015.
-//  Copyright (c) 2015 Ola Skierbiszewska. All rights reserved.
-//
-
+// MORE INFO: http://code.tutsplus.com/tutorials/ios-sdk-customizing-popovers--mobile-16090
 #import <UIKit/UIKit.h>
 
-@interface PopoverBackgroundView : UIPopoverBackgroundView 
+@interface PopoverBackgroundView : UIPopoverBackgroundView
+
++ (CGFloat)arrowBase;
++ (CGFloat)arrowHeight;
++ (UIEdgeInsets)contentViewInsets;
+
+- (UIImage *)drawArrowImage:(CGSize)size;
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller;
 
 @end

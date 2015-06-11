@@ -21,5 +21,6 @@
 }
 
 @property (nonatomic, strong) UIPopoverController *popController;
+@property (nonatomic, strong) UIPopoverPresentationController *sortPopover;
 
 @end
