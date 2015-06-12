@@ -1,5 +1,4 @@
 #import "MainFeedTableViewController.h"
-#import "UIPopoverController+iPhone.h"
 #import "ASPopoverViewController.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
