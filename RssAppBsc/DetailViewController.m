@@ -15,10 +15,10 @@ typedef enum ScrollDirection {
 @implementation DetailViewController{
     IBOutlet UIBarButtonItem *backBarButtonItem;
     IBOutlet UIBarButtonItem *forwardBarButtonItem;
-    IBOutlet UIToolbar *webViewToolbar;
     UIBarButtonItem *shareButton;
     UIBarButtonItem *addToFavourButton;
     CGFloat lastContentOffset;
+    CGRect toolbarDefaultRect;
 }
 
 //*****************************************************************************/
@@ -95,6 +95,7 @@ typedef enum ScrollDirection {
                                 [[UIScreen mainScreen] bounds].size.height - self.navigationController.toolbar.frame.size.height,
                                 self.navigationController.toolbar.frame.size.width,
                                 self.navigationController.toolbar.frame.size.height);
+    toolbarDefaultRect = self.navigationController.toolbar.frame;
 
 }
 
@@ -252,6 +253,33 @@ typedef enum ScrollDirection {
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     NSLog(@"scrollViewDidEndDecelerating");
     //self.navigationController.toolbarHidden = YES;
+    if(scrollView.contentOffset.y != -64){
+        //        [UIView animateWithDuration:2.0
+        //                         animations:^{
+        //                             [self.navigationController setToolbarHidden:NO animated:YES];
+        //                         }
+        //                         completion:^(BOOL finished){
+        //                             // whatever
+        //                         }];
+        [UIView beginAnimations: nil context:NULL];
+        [UIView setAnimationDuration:1.5];
+        [UIView setAnimationDelegate: self];
+        CGRect rect = self.navigationController.toolbar.frame;
+        
+        rect.origin.y += self.navigationController.toolbar.frame.size.height;
+        self.navigationController.toolbar.frame = rect;
+        [UIView commitAnimations];
+    }
+    else if(scrollView.contentOffset.y == -64){
+        self.navigationController.toolbar.hidden = NO;
+        [UIView beginAnimations: nil context:NULL];
+        [UIView setAnimationDuration:1.5];
+        [UIView setAnimationDelegate: self];
+        CGRect rect = self.navigationController.toolbar.frame;
+        rect.origin.y = toolbarDefaultRect.origin.y;
+        self.navigationController.toolbar.frame = rect;
+        [UIView commitAnimations];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -273,24 +301,7 @@ typedef enum ScrollDirection {
     
     lastContentOffset = scrollView.contentOffset.y;
     
-//    if(scrollView.contentOffset.y == -64){
-//        [UIView animateWithDuration:2.0
-//                         animations:^{
-//                             [self.navigationController setToolbarHidden:NO animated:YES];
-//                         }
-//                         completion:^(BOOL finished){
-//                             // whatever
-//                         }];
-//    }else{
-//        
-//        [UIView animateWithDuration:2.0
-//                         animations:^{
-//                             [self.navigationController setToolbarHidden:YES animated:YES];
-//                         }
-//                         completion:^(BOOL finished){
-//                             // whatever
-//                         }];
-//    }
+
 }
 
 /*
