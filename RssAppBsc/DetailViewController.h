@@ -2,7 +2,7 @@
 #import "FeedItem.h"
 #import "UIBarButtonItem+ButtonState.h"
 
-@interface DetailViewController : UIViewController <UIWebViewDelegate>
+@interface DetailViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) NSString *link;

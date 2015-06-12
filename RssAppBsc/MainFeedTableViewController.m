@@ -51,17 +51,17 @@
     
     dataController = [ASCoreDataController sharedInstance];
     managedObjectContext = [dataController writerContext];
-    
     _responseData = [[NSMutableData alloc] init];
+    
     tabBarController = [self tabBarController];
     makeRefresh = NO;
     isDataLoaded = NO;
     backgroundSerialQueue = dispatch_queue_create("pl.skierbisz.postPreparingQueue", NULL);
     backgroundGlobalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
     [self internetConnectionChecking];
-    [self uiSetSpiner:YES];
-    
+    [self uiSetSpiner:YES];    
     [self makePopoverSortBarButton];
+    
     //At START -> load data from data base (YES) or from network (NO)
     [self loadingDataAtAppStartFromDatabase:YES];
 

@@ -1,5 +1,12 @@
 #import "DetailViewController.h"
-
+typedef enum ScrollDirection {
+    ScrollDirectionNone,
+    ScrollDirectionRight,
+    ScrollDirectionLeft,
+    ScrollDirectionUp,
+    ScrollDirectionDown,
+    ScrollDirectionCrazy,
+} ScrollDirection;
 
 @interface DetailViewController ()
 
@@ -11,6 +18,7 @@
     IBOutlet UIToolbar *webViewToolbar;
     UIBarButtonItem *shareButton;
     UIBarButtonItem *addToFavourButton;
+    CGFloat lastContentOffset;
 }
 
 //*****************************************************************************/
@@ -21,10 +29,15 @@
     [super viewDidLoad];
     //self.webView = [[UIWebView alloc]init];
     self.webView.delegate = self;
+    self.webView.scrollView.delegate = self;
     [self uiMakeContent];
     [self uiNavigationBarStyling];
     [self uiMakeWebViewToolbar];
     [self updateButtons];
+    self.webView.scrollView.frame = CGRectMake(self.webView.frame.origin.x,
+                                                self.webView.frame.origin.y,
+                                                self.webView.frame.size.width,
+                                                [[UIScreen mainScreen] bounds].size.height + 100);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -230,6 +243,54 @@
     }
     [self updateButtons];
     return YES;
+}
+
+//*****************************************************************************/
+#pragma mark - UIScrolView of webView delegate methods
+//*****************************************************************************/
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    NSLog(@"scrollViewDidEndDecelerating");
+    //self.navigationController.toolbarHidden = YES;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    if (!decelerate) {
+        NSLog(@"scrollViewDidEndDragging");
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    ScrollDirection scrollDirection;
+    if (lastContentOffset > scrollView.contentOffset.y){
+        scrollDirection = ScrollDirectionUp;
+        NSLog(@"up \n lastContentOffset %f", scrollView.contentOffset.y);
+    }
+    else if (lastContentOffset < scrollView.contentOffset.y){
+        scrollDirection = ScrollDirectionDown;
+        NSLog(@"down \n lastContentOffset %f", scrollView.contentOffset.y);
+    }
+    
+    lastContentOffset = scrollView.contentOffset.y;
+    
+//    if(scrollView.contentOffset.y == -64){
+//        [UIView animateWithDuration:2.0
+//                         animations:^{
+//                             [self.navigationController setToolbarHidden:NO animated:YES];
+//                         }
+//                         completion:^(BOOL finished){
+//                             // whatever
+//                         }];
+//    }else{
+//        
+//        [UIView animateWithDuration:2.0
+//                         animations:^{
+//                             [self.navigationController setToolbarHidden:YES animated:YES];
+//                         }
+//                         completion:^(BOOL finished){
+//                             // whatever
+//                         }];
+//    }
 }
 
 /*
