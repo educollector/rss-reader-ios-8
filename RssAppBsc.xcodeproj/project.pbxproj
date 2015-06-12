@@ -158,24 +158,21 @@
 		239D4E201A7A59AD00C797C2 /* RssAppBsc */ = {
 			isa = PBXGroup;
 			children = (
-				7D7408DA1B1F2EBF0042FB5A /* Assets */,
 				239D4E251A7A59AD00C797C2 /* AppDelegate.h */,
 				239D4E261A7A59AD00C797C2 /* AppDelegate.m */,
 				239D4E2E1A7A59AD00C797C2 /* Main.storyboard */,
-				7D3332D51B159F78008371FE /* Externals */,
+				239D4E5F1A7A840700C797C2 /* VC_MainFeed */,
+				7D3332B01B14A312008371FE /* VC_DetailView */,
+				239D4E601A7A843800C797C2 /* VC_Browser */,
+				239D4E611A7A844900C797C2 /* VC_Favourites */,
+				239D4E621A7A845A00C797C2 /* VC_Menu */,
+				7D055E2C1B2AF925002A2246 /* ASTextCleaner */,
+				7D7408DA1B1F2EBF0042FB5A /* Assets */,
 				239D4E711A7BA63200C797C2 /* CoreData */,
-				239D4E5F1A7A840700C797C2 /* MainFeed */,
-				7D3332B01B14A312008371FE /* DetailView */,
-				239D4E601A7A843800C797C2 /* Browser */,
-				239D4E611A7A844900C797C2 /* Favourites */,
-				239D4E621A7A845A00C797C2 /* Menu */,
+				7D055E2B1B2AF858002A2246 /* CustomCommonCells */,
+				7D3332D51B159F78008371FE /* Externals */,
 				7DB40AA31B2874BE007ED522 /* PopoverSorter */,
 				239D4E211A7A59AD00C797C2 /* Supporting Files */,
-				7D7408E61B25886F0042FB5A /* ASTextCleaner.h */,
-				7D7408E71B25886F0042FB5A /* ASTextCleaner.m */,
-				7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */,
-				7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */,
-				7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */,
 				7D4EC1351B25CC5C000D9709 /* UIBarButtonItem+ButtonState.h */,
 				7D4EC1361B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m */,
 			);
@@ -212,7 +209,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		239D4E5F1A7A840700C797C2 /* MainFeed */ = {
+		239D4E5F1A7A840700C797C2 /* VC_MainFeed */ = {
 			isa = PBXGroup;
 			children = (
 				239D4E4A1A7A59F800C797C2 /* MainFeedTableViewController.h */,
@@ -220,10 +217,10 @@
 				239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */,
 				239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */,
 			);
-			name = MainFeed;
+			name = VC_MainFeed;
 			sourceTree = "<group>";
 		};
-		239D4E601A7A843800C797C2 /* Browser */ = {
+		239D4E601A7A843800C797C2 /* VC_Browser */ = {
 			isa = PBXGroup;
 			children = (
 				239D4E5C1A7A83BB00C797C2 /* BrowserTableViewController.h */,
@@ -231,25 +228,25 @@
 				239D4E721A7BB8B100C797C2 /* CustomTableViewCell.h */,
 				239D4E731A7BB8B100C797C2 /* CustomTableViewCell.m */,
 			);
-			name = Browser;
+			name = VC_Browser;
 			sourceTree = "<group>";
 		};
-		239D4E611A7A844900C797C2 /* Favourites */ = {
+		239D4E611A7A844900C797C2 /* VC_Favourites */ = {
 			isa = PBXGroup;
 			children = (
 				239D4E591A7A832800C797C2 /* FavouritesTableViewController.h */,
 				239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */,
 			);
-			name = Favourites;
+			name = VC_Favourites;
 			sourceTree = "<group>";
 		};
-		239D4E621A7A845A00C797C2 /* Menu */ = {
+		239D4E621A7A845A00C797C2 /* VC_Menu */ = {
 			isa = PBXGroup;
 			children = (
 				239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */,
 				239D4E561A7A82BB00C797C2 /* MenuTableViewController.h */,
 			);
-			name = Menu;
+			name = VC_Menu;
 			sourceTree = "<group>";
 		};
 		239D4E711A7BA63200C797C2 /* CoreData */ = {
@@ -268,13 +265,32 @@
 			name = CoreData;
 			sourceTree = "<group>";
 		};
-		7D3332B01B14A312008371FE /* DetailView */ = {
+		7D055E2B1B2AF858002A2246 /* CustomCommonCells */ = {
+			isa = PBXGroup;
+			children = (
+				7D7408EC1B25987E0042FB5A /* FeedItemTableViewCell.h */,
+				7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */,
+				7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */,
+			);
+			name = CustomCommonCells;
+			sourceTree = "<group>";
+		};
+		7D055E2C1B2AF925002A2246 /* ASTextCleaner */ = {
+			isa = PBXGroup;
+			children = (
+				7D7408E61B25886F0042FB5A /* ASTextCleaner.h */,
+				7D7408E71B25886F0042FB5A /* ASTextCleaner.m */,
+			);
+			name = ASTextCleaner;
+			sourceTree = "<group>";
+		};
+		7D3332B01B14A312008371FE /* VC_DetailView */ = {
 			isa = PBXGroup;
 			children = (
 				239D4E541A7A761500C797C2 /* DetailViewController.m */,
 				239D4E531A7A761500C797C2 /* DetailViewController.h */,
 			);
-			name = DetailView;
+			name = VC_DetailView;
 			sourceTree = "<group>";
 		};
 		7D3332D51B159F78008371FE /* Externals */ = {
