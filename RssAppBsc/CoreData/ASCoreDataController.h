@@ -1,7 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "FeedItem.h"
-#import "FeedTableViewCell.h"
 #import "DetailViewController.h"
 #import "BrowserTableViewController.h"
 #import "InternetConnectionMonitor.h"

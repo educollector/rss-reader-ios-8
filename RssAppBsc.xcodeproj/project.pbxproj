@@ -16,7 +16,6 @@
 		239D4E411A7A59AD00C797C2 /* RssAppBscTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E401A7A59AD00C797C2 /* RssAppBscTests.m */; };
 		239D4E4C1A7A59F800C797C2 /* MainFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */; };
 		239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */; };
-		239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */; };
 		239D4E551A7A761500C797C2 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E541A7A761500C797C2 /* DetailViewController.m */; };
 		239D4E581A7A82BB00C797C2 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E571A7A82BB00C797C2 /* MenuTableViewController.m */; };
 		239D4E5B1A7A832800C797C2 /* FavouritesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239D4E5A1A7A832800C797C2 /* FavouritesTableViewController.m */; };
@@ -72,8 +71,6 @@
 		239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainFeedTableViewController.m; sourceTree = "<group>"; };
 		239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedItem.h; sourceTree = "<group>"; };
 		239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedItem.m; sourceTree = "<group>"; };
-		239D4E501A7A651C00C797C2 /* FeedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedTableViewCell.h; sourceTree = "<group>"; };
-		239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedTableViewCell.m; sourceTree = "<group>"; };
 		239D4E531A7A761500C797C2 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		239D4E541A7A761500C797C2 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		239D4E561A7A82BB00C797C2 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
@@ -220,8 +217,6 @@
 			children = (
 				239D4E4A1A7A59F800C797C2 /* MainFeedTableViewController.h */,
 				239D4E4B1A7A59F800C797C2 /* MainFeedTableViewController.m */,
-				239D4E501A7A651C00C797C2 /* FeedTableViewCell.h */,
-				239D4E511A7A651C00C797C2 /* FeedTableViewCell.m */,
 				239D4E4D1A7A5E8E00C797C2 /* FeedItem.h */,
 				239D4E4E1A7A5E8E00C797C2 /* FeedItem.m */,
 			);
@@ -438,7 +433,6 @@
 				7D4EC1371B25CC5C000D9709 /* UIBarButtonItem+ButtonState.m in Sources */,
 				7D3332E91B15A742008371FE /* Url.m in Sources */,
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
-				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */,
