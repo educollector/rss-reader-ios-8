@@ -103,9 +103,8 @@
 //*****************************************************************************/
 #pragma mark - Popover
 //*****************************************************************************/
-- (void)presentSearchPopover{ //why does it work?
+- (void)presentSearchPopover{
     isPopoverVisible = YES;
-    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
     UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
     dateVC.preferredContentSize = CGSizeMake(280,150);
@@ -113,7 +112,7 @@
     _sortPopover = destNav.popoverPresentationController;
     _sortPopover.delegate = self;
     _sortPopover.sourceView = self.view;
-    //TODO: rotation http://stackoverflow.com/questions/9065109/how-to-make-uipopovercontroller-keep-same-position-after-rotating
+    _sortPopover.permittedArrowDirections = UIPopoverArrowDirectionAny;
     _sortPopover.sourceRect = [self makeSourceRectWithWidth];
     _sortPopover.barButtonItem = popoverButton;// destNav.modalPresentationStyle = UIModalPresentationPopover;
     destNav.navigationBarHidden = YES;
