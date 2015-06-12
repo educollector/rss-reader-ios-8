@@ -41,7 +41,6 @@
 		7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D7408ED1B25987E0042FB5A /* FeedItemTableViewCell.m */; };
 		7D7408F01B25987E0042FB5A /* FeedItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */; };
 		7DB40A9D1B28722B007ED522 /* UIPopoverController+iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */; };
-		7DB40AA11B2872C2007ED522 /* PopoverBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40A9F1B2872C2007ED522 /* PopoverBackgroundView.m */; };
 		7DB40AA71B287530007ED522 /* PopoverTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40AA51B287530007ED522 /* PopoverTableViewCell.m */; };
 		7DB40AA81B287530007ED522 /* PopoverTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DB40AA61B287530007ED522 /* PopoverTableViewCell.xib */; };
 		7DB40AAB1B28798D007ED522 /* ASPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB40AAA1B28798D007ED522 /* ASPopoverViewController.m */; };
@@ -119,8 +118,6 @@
 		7D7408EE1B25987E0042FB5A /* FeedItemTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedItemTableViewCell.xib; sourceTree = "<group>"; };
 		7DB40A9B1B28722B007ED522 /* UIPopoverController+iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIPopoverController+iPhone.h"; sourceTree = "<group>"; };
 		7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIPopoverController+iPhone.m"; sourceTree = "<group>"; };
-		7DB40A9E1B2872C2007ED522 /* PopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverBackgroundView.h; sourceTree = "<group>"; };
-		7DB40A9F1B2872C2007ED522 /* PopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverBackgroundView.m; sourceTree = "<group>"; };
 		7DB40AA41B287530007ED522 /* PopoverTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverTableViewCell.h; sourceTree = "<group>"; };
 		7DB40AA51B287530007ED522 /* PopoverTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverTableViewCell.m; sourceTree = "<group>"; };
 		7DB40AA61B287530007ED522 /* PopoverTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopoverTableViewCell.xib; sourceTree = "<group>"; };
@@ -320,8 +317,6 @@
 			children = (
 				7DB40A9B1B28722B007ED522 /* UIPopoverController+iPhone.h */,
 				7DB40A9C1B28722B007ED522 /* UIPopoverController+iPhone.m */,
-				7DB40A9E1B2872C2007ED522 /* PopoverBackgroundView.h */,
-				7DB40A9F1B2872C2007ED522 /* PopoverBackgroundView.m */,
 				7DB40AA41B287530007ED522 /* PopoverTableViewCell.h */,
 				7DB40AA51B287530007ED522 /* PopoverTableViewCell.m */,
 				7DB40AA61B287530007ED522 /* PopoverTableViewCell.xib */,
@@ -450,7 +445,6 @@
 				7D3332DD1B159F78008371FE /* InternetConnectionMonitor.m in Sources */,
 				239D4E521A7A651C00C797C2 /* FeedTableViewCell.m in Sources */,
 				7D7408EF1B25987E0042FB5A /* FeedItemTableViewCell.m in Sources */,
-				7DB40AA11B2872C2007ED522 /* PopoverBackgroundView.m in Sources */,
 				239D4E4F1A7A5E8E00C797C2 /* FeedItem.m in Sources */,
 				7D3332DE1B159F78008371FE /* NSString+HTML.m in Sources */,
 				239D4E2A1A7A59AD00C797C2 /* RssAppBsc.xcdatamodeld in Sources */,
