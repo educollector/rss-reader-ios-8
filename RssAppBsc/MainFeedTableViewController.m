@@ -61,29 +61,10 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
-    popoverButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sort"]
-                                                    style:UIBarButtonItemStylePlain
-                                                    target:self
-                                                    action:@selector(presentSearchPopover)];
-//                                      initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-//                                      target:self
-//                                      action:@selector(presentSearchPopover)];
-    
-    self.navigationItem.rightBarButtonItem = popoverButton;
-    
-    //--------------------------------------//
-    // --> Choose how to load data at start //
-    //--------------------------------------//
-    //
-    //[self getActualDataFromConnection];
-    //[self loadPostsFromDtabase];
-    //
-    //--------------------------------------//
-    // -->ASCoreDataController
-    //
-    postsToDisplaySource = [dataController loadPostsFromDtabaseUsingUrls];
-    //[self uiUpdateMainFeedTable] jest w viewWillApppear
-    //--------------------------------------//
+    [self makePopoverSortBarButton];
+    //At START -> load data from data base (YES) or from network (NO)
+    [self loadingDataAtAppStartFromDatabase:YES];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -94,52 +75,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-//*****************************************************************************/
-#pragma mark - Popover
-//*****************************************************************************/
-- (void)presentSearchPopover{
-    isPopoverVisible = YES;
-    ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
-    UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
-    dateVC.preferredContentSize = CGSizeMake(280,150);
-    destNav.modalPresentationStyle = UIModalPresentationPopover;
-    _sortPopover = destNav.popoverPresentationController;
-    _sortPopover.delegate = self;
-    _sortPopover.sourceView = self.view;
-    _sortPopover.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    _sortPopover.sourceRect = [self makeSourceRectWithWidth];
-    _sortPopover.barButtonItem = popoverButton;// destNav.modalPresentationStyle = UIModalPresentationPopover;
-    destNav.navigationBarHidden = YES;
-    [self presentViewController:destNav animated:YES completion:nil];
-}
-
-- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
-    return UIModalPresentationNone;
-}
-
-- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController{
-}
-
-- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
-    NSLog(@" popover dismissed");
-    isPopoverVisible = NO;
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    //TODO: displaying popover when changing location
-    if(isPopoverVisible){
-        _sortPopover.sourceRect = [self makeSourceRectWithWidth];
-    }
-}
-
--(CGRect)makeSourceRectWithWidth{
-    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
-    CGRect rect = CGRectMake(width-10.0f, 0.0f, 0.0f, 0.0f);
-    return rect;
 }
 //*****************************************************************************/
 #pragma mark - View - helper methods
@@ -179,6 +114,68 @@
 }
 -(UIStatusBarStyle)preferredStatusBarStyle{
     return UIStatusBarStyleLightContent;
+}
+
+-(void)loadingDataAtAppStartFromDatabase:(BOOL)loadFromLocalDatabase{
+    if(loadFromLocalDatabase){
+        postsToDisplaySource = [dataController loadPostsFromDtabaseUsingUrls];
+        //[self uiUpdateMainFeedTable] jest w viewWillApppear
+    }
+    else{
+        [self getActualDataFromConnection];
+    }
+}
+
+-(void)makePopoverSortBarButton{
+    popoverButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sort"]
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(presentSearchPopover)];
+    
+    self.navigationItem.rightBarButtonItem = popoverButton;
+}
+
+//*****************************************************************************/
+#pragma mark - Popover
+//*****************************************************************************/
+- (void)presentSearchPopover{
+    isPopoverVisible = YES;
+    ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
+    UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
+    dateVC.preferredContentSize = CGSizeMake(280,150);
+    destNav.modalPresentationStyle = UIModalPresentationPopover;
+    _sortPopover = destNav.popoverPresentationController;
+    _sortPopover.delegate = self;
+    _sortPopover.sourceView = self.view;
+    _sortPopover.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    _sortPopover.sourceRect = [self makeSourceRectWithWidth];
+    _sortPopover.barButtonItem = popoverButton;// destNav.modalPresentationStyle = UIModalPresentationPopover;
+    destNav.navigationBarHidden = YES;
+    [self presentViewController:destNav animated:YES completion:nil];
+}
+
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController: (UIPresentationController * ) controller {
+    return UIModalPresentationNone;
+}
+
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController{
+}
+
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    NSLog(@" popover dismissed");
+    isPopoverVisible = NO;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    if(isPopoverVisible){
+        _sortPopover.sourceRect = [self makeSourceRectWithWidth];
+    }
+}
+
+-(CGRect)makeSourceRectWithWidth{
+    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
+    CGRect rect = CGRectMake(width-10.0f, 0.0f, 0.0f, 0.0f);
+    return rect;
 }
 
 //*****************************************************************************/
