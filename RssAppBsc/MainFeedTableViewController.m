@@ -115,7 +115,7 @@
     _sortPopover.sourceView = self.view;
     //TODO: rotation http://stackoverflow.com/questions/9065109/how-to-make-uipopovercontroller-keep-same-position-after-rotating
     _sortPopover.sourceRect = [self makeSourceRectWithWidth];
-    destNav.modalPresentationStyle = UIModalPresentationPopover;
+    _sortPopover.barButtonItem = popoverButton;// destNav.modalPresentationStyle = UIModalPresentationPopover;
     destNav.navigationBarHidden = YES;
     [self presentViewController:destNav animated:YES completion:nil];
 }
@@ -124,35 +124,7 @@
     return UIModalPresentationNone;
 }
 
-//**UIPopoverController
-- (void)sortBarButtonItemTapped:(UIBarButtonItem *)sender
-{
-    [self prepareSortPopover];
-    [self.popController presentPopoverFromBarButtonItem:sender
-                            permittedArrowDirections:UIPopoverArrowDirectionAny
-                            animated:YES];
-}
-
-- (IBAction)sortButtonTapped:(id)sender {
-    [self prepareSortPopover];
-    [self.popController presentPopoverFromRect:self.sortButton.frame
-                                        inView:self.view
-                                        permittedArrowDirections:UIPopoverArrowDirectionAny
-                                        animated:YES];
-}
-
--(void)prepareSortPopover{
-    if (self.popController == nil) {
-        ASPopoverViewController *internalView = [[ASPopoverViewController alloc] init];
-        UIPopoverController *popover = [[UIPopoverController alloc]initWithContentViewController:internalView];
-        popover.delegate = self;
-        popover.popoverContentSize=CGSizeMake(280.0, 327.0);
-        self.popController = popover;
-    }
-}
-
 - (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController{
-    
 }
 
 - (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{

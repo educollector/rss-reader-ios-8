@@ -30,23 +30,7 @@
                             <outlet property="delegate" destination="pAC-XT-jsG" id="Jse-Cm-7js"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Main Feed" id="nDF-Ib-g97">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="ARI-Le-q6U">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="K0z-zY-uhR">
-                                <rect key="frame" x="-23" y="-15" width="71" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Sort">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="sortButtonTapped:" destination="pAC-XT-jsG" eventType="touchUpInside" id="j1e-Md-9eN"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="sortButton" destination="K0z-zY-uhR" id="RY2-xL-EU4"/>
-                    </connections>
+                    <navigationItem key="navigationItem" title="Main Feed" id="nDF-Ib-g97"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXy-JG-BEb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
