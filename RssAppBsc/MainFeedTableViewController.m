@@ -33,6 +33,7 @@
     NSString *currentChannelUrl;
     NSMutableArray* postsToAppendToUrl;
     UIBarButtonItem *popoverButton;
+    BOOL isPopoverVisible;
 }
 
 @synthesize dataController;
@@ -62,10 +63,13 @@
     [self internetConnectionChecking];
     [self uiSetSpiner:YES];
     
-    popoverButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sort"] style:UIBarButtonItemStylePlain target:self action:@selector(btnSelectDatePressed1)];
+    popoverButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sort"]
+                                                    style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(presentSearchPopover)];
 //                                      initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
 //                                      target:self
-//                                      action:@selector(btnSelectDatePressed1)];
+//                                      action:@selector(presentSearchPopover)];
     
     self.navigationItem.rightBarButtonItem = popoverButton;
     
@@ -95,7 +99,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)btnSelectDatePressed1{
+
+//*****************************************************************************/
+#pragma mark - Popover
+//*****************************************************************************/
+- (void)presentSearchPopover{ //why does it work?
+    isPopoverVisible = YES;
+    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     ASPopoverViewController *dateVC = [[ASPopoverViewController alloc] init];
     UINavigationController *destNav = [[UINavigationController alloc] initWithRootViewController:dateVC];/*Here dateVC is controller you want to show in popover*/
     dateVC.preferredContentSize = CGSizeMake(280,150);
@@ -104,7 +114,7 @@
     _sortPopover.delegate = self;
     _sortPopover.sourceView = self.view;
     //TODO: rotation http://stackoverflow.com/questions/9065109/how-to-make-uipopovercontroller-keep-same-position-after-rotating
-    _sortPopover.sourceRect = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, 0.0f, 0.0f, 0.0f);
+    _sortPopover.sourceRect = CGRectMake(width, 0.0f, 0.0f, 0.0f);
     destNav.modalPresentationStyle = UIModalPresentationPopover;
     destNav.navigationBarHidden = YES;
     [self presentViewController:destNav animated:YES completion:nil];
@@ -114,12 +124,54 @@
     return UIModalPresentationNone;
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
-    [self.tableView reloadData];
+//**UIPopoverController
+- (void)sortBarButtonItemTapped:(UIBarButtonItem *)sender
+{
+    [self prepareSortPopover];
+    [self.popController presentPopoverFromBarButtonItem:sender
+                            permittedArrowDirections:UIPopoverArrowDirectionAny
+                            animated:YES];
+}
+
+- (IBAction)sortButtonTapped:(id)sender {
+    [self prepareSortPopover];
+    [self.popController presentPopoverFromRect:self.sortButton.frame
+                                        inView:self.view
+                                        permittedArrowDirections:UIPopoverArrowDirectionAny
+                                        animated:YES];
+}
+
+-(void)prepareSortPopover{
+    if (self.popController == nil) {
+        ASPopoverViewController *internalView = [[ASPopoverViewController alloc] init];
+        UIPopoverController *popover = [[UIPopoverController alloc]initWithContentViewController:internalView];
+        popover.delegate = self;
+        popover.popoverContentSize=CGSizeMake(280.0, 327.0);
+        self.popController = popover;
+    }
+}
+
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController{
+    
+}
+
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    NSLog(@" popover dismissed");
+    isPopoverVisible = NO;
 }
 
 
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    //TODO: displaying popover when changing location
+    CGFloat height = [[UIScreen mainScreen] bounds].size.height;
+    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
+    if(isPopoverVisible){
+        //[self presentSearchPopover];
+        CGFloat width = [[UIScreen mainScreen] bounds].size.width;
+        _sortPopover.sourceRect = CGRectMake(width, 0.0f, 0.0f, 0.0f);
+    }
+}
 //*****************************************************************************/
 #pragma mark - View - helper methods
 //*****************************************************************************/
@@ -771,5 +823,6 @@ didStartElement:(NSString *)elementName
 //        [self endOfLoadingData];
 //    }
 //}
+
 
 @end

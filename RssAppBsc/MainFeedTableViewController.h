@@ -15,12 +15,15 @@
 #import "ASTextCleaner.h"
 #import "FeedItemTableViewCell.h"
 
-@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate, UIPopoverPresentationControllerDelegate>
+@interface MainFeedTableViewController : UITableViewController<UITabBarControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, NSFetchedResultsControllerDelegate, UIPopoverPresentationControllerDelegate, UIPopoverControllerDelegate>
 {
     NSMutableData *_responseData;
 }
 
+@property (weak, nonatomic) IBOutlet UIButton *sortButton;
 @property (nonatomic, strong) UIPopoverController *popController;
 @property (nonatomic, strong) UIPopoverPresentationController *sortPopover;
+
+- (IBAction)sortButtonTapped:(id)sender;
 
 @end
