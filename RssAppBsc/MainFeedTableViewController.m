@@ -114,7 +114,7 @@
     _sortPopover.delegate = self;
     _sortPopover.sourceView = self.view;
     //TODO: rotation http://stackoverflow.com/questions/9065109/how-to-make-uipopovercontroller-keep-same-position-after-rotating
-    _sortPopover.sourceRect = CGRectMake(width, 0.0f, 0.0f, 0.0f);
+    _sortPopover.sourceRect = [self makeSourceRectWithWidth];
     destNav.modalPresentationStyle = UIModalPresentationPopover;
     destNav.navigationBarHidden = YES;
     [self presentViewController:destNav animated:YES completion:nil];
@@ -160,17 +160,17 @@
     isPopoverVisible = NO;
 }
 
-
-
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
     //TODO: displaying popover when changing location
-    CGFloat height = [[UIScreen mainScreen] bounds].size.height;
-    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     if(isPopoverVisible){
-        //[self presentSearchPopover];
-        CGFloat width = [[UIScreen mainScreen] bounds].size.width;
-        _sortPopover.sourceRect = CGRectMake(width, 0.0f, 0.0f, 0.0f);
+        _sortPopover.sourceRect = [self makeSourceRectWithWidth];
     }
+}
+
+-(CGRect)makeSourceRectWithWidth{
+    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
+    CGRect rect = CGRectMake(width-10.0f, 0.0f, 0.0f, 0.0f);
+    return rect;
 }
 //*****************************************************************************/
 #pragma mark - View - helper methods

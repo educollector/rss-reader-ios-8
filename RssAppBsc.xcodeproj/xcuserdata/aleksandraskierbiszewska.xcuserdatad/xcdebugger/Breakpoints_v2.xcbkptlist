@@ -106,7 +106,7 @@
                   moduleName = "RssAppBsc"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandraskierbiszewska/Documents/Projects/rss-reader-ios-8/RssAppBsc/MainFeedTableViewController.m"
-                  timestampString = "455798012.23266"
+                  timestampString = "455800112.600539"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "256"
@@ -121,7 +121,7 @@
                   moduleName = "RssAppBsc"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandraskierbiszewska/Documents/Projects/rss-reader-ios-8/RssAppBsc/MainFeedTableViewController.m"
-                  timestampString = "455798012.232847"
+                  timestampString = "455800112.60093"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "256"
@@ -224,22 +224,6 @@
             startingLineNumber = "503"
             endingLineNumber = "503"
             landmarkName = "-savePostAsIsRead:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RssAppBsc/MainFeedTableViewController.m"
-            timestampString = "455797946.65163"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
-            landmarkName = "-didRotateFromInterfaceOrientation:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
