@@ -28,6 +28,7 @@
         _link = [[NSMutableString alloc]initWithString:@" "];
         _shortText = [[NSMutableString alloc]initWithString:@" "];
         _pubDate = [[NSMutableString alloc]initWithString:@" "];
+        _pubDateAsDate = [NSDate date];
         _imageLink = [[NSMutableString alloc]initWithString:@" "];
         _content = [[NSMutableString alloc]initWithString:@" "];
         _site = [[NSMutableString alloc]initWithString:@" "];

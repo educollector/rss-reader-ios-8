@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSMutableString *link;
 @property (nonatomic, strong) NSMutableString *shortText;
 @property (nonatomic, strong) NSMutableString *pubDate;
+@property (nonatomic, strong) NSDate *pubDateAsDate;
 @property (nonatomic, strong) NSMutableString *imageLink;
 @property (nonatomic, strong) NSMutableString *content;
 @property (nonatomic, strong) NSMutableString *site;

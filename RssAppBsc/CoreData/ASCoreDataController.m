@@ -359,6 +359,7 @@
                 }
                 if(el.pubDate!=nil){
                     item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                    item.pubDateAsDate = [self stringToDateConverter:el.pubDate];
                 }else{
                     item.pubDate = [NSMutableString stringWithString:@"trolololo"];
                 }
@@ -406,6 +407,10 @@
                     }
                     if(el.pubDate!=nil){
                         item.pubDate = [NSMutableString stringWithString:el.pubDate];
+                        NSDate *tmpDate = [self stringToDateConverter:el.pubDate];
+                        
+                        item.pubDateAsDate = [NSDate dateWithTimeInterval:0
+                                                                sinceDate:tmpDate];
                     }else{
                         item.pubDate = [NSMutableString stringWithString:@"trolololo"];
                     }
@@ -515,6 +520,19 @@
     }
 }
 
+/***********************************************************/
+#pragma mark - Helper methods
+/***********************************************************/
 
+-(NSDate*)stringToDateConverter:(NSString*)myDateString{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [dateFormatter setLocale:locale];
+    [dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
+    
+    NSDate *myDate = [dateFormatter dateFromString:myDateString];
+    NSLog(@"%@", myDate);
+    return  myDate;
+}
 
 @end
