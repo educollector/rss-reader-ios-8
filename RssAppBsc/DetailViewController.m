@@ -19,6 +19,8 @@ typedef enum ScrollDirection {
     UIBarButtonItem *addToFavourButton;
     CGFloat lastContentOffset;
     CGRect toolbarDefaultRect;
+    
+    ScrollDirection scrollDirection;
 }
 
 //*****************************************************************************/
@@ -252,56 +254,60 @@ typedef enum ScrollDirection {
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     NSLog(@"scrollViewDidEndDecelerating");
-    //self.navigationController.toolbarHidden = YES;
-    if(scrollView.contentOffset.y != -64){
-        //        [UIView animateWithDuration:2.0
-        //                         animations:^{
-        //                             [self.navigationController setToolbarHidden:NO animated:YES];
-        //                         }
-        //                         completion:^(BOOL finished){
-        //                             // whatever
-        //                         }];
-        [UIView beginAnimations: nil context:NULL];
-        [UIView setAnimationDuration:1.5];
-        [UIView setAnimationDelegate: self];
-        CGRect rect = self.navigationController.toolbar.frame;
-        
-        rect.origin.y += self.navigationController.toolbar.frame.size.height;
-        self.navigationController.toolbar.frame = rect;
-        [UIView commitAnimations];
-    }
-    else if(scrollView.contentOffset.y == -64){
-        self.navigationController.toolbar.hidden = NO;
-        [UIView beginAnimations: nil context:NULL];
-        [UIView setAnimationDuration:1.5];
-        [UIView setAnimationDelegate: self];
-        CGRect rect = self.navigationController.toolbar.frame;
-        rect.origin.y = toolbarDefaultRect.origin.y;
-        self.navigationController.toolbar.frame = rect;
-        [UIView commitAnimations];
+    if(scrollDirection == ScrollDirectionUp){
+        [self showToolbar];
+    }else if (scrollDirection == ScrollDirectionDown){
+        //prevent hiding toolbat when bouncing
+        if(scrollView.contentOffset.y != -64){
+            [self hideToolbar];
+        }
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if (!decelerate) {
         NSLog(@"scrollViewDidEndDragging");
+        if(ScrollDirectionUp){
+            [self showToolbar];
+        }
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    ScrollDirection scrollDirection;
+//    if (scrollView.contentOffset.y - scrollView.contentInset.bottom  >= scrollView.contentSize.height - scrollView.frame.size.height){
+//        // Don't animate
+//    }
     if (lastContentOffset > scrollView.contentOffset.y){
         scrollDirection = ScrollDirectionUp;
-        NSLog(@"up \n lastContentOffset %f", scrollView.contentOffset.y);
+        NSLog(@"DidEndDragging UP");
+        [self showToolbar];
     }
     else if (lastContentOffset < scrollView.contentOffset.y){
         scrollDirection = ScrollDirectionDown;
-        NSLog(@"down \n lastContentOffset %f", scrollView.contentOffset.y);
+        NSLog(@"DidEndDragging DOWN");
     }
-    
-    lastContentOffset = scrollView.contentOffset.y;
-    
+    lastContentOffset = scrollView.contentOffset.y;}
 
+-(void)hideToolbar{
+    [UIView beginAnimations: nil context:NULL];
+    [UIView setAnimationDuration:0.75];
+    [UIView setAnimationDelegate: self];
+    CGRect rect = self.navigationController.toolbar.frame;
+    
+    rect.origin.y += self.navigationController.toolbar.frame.size.height;
+    self.navigationController.toolbar.frame = rect;
+    [UIView commitAnimations];
+}
+
+-(void)showToolbar{
+    self.navigationController.toolbar.hidden = NO;
+    [UIView beginAnimations: nil context:NULL];
+    [UIView setAnimationDuration:0.75];
+    [UIView setAnimationDelegate: self];
+    CGRect rect = self.navigationController.toolbar.frame;
+    rect.origin.y = toolbarDefaultRect.origin.y;
+    self.navigationController.toolbar.frame = rect;
+    [UIView commitAnimations];
 }
 
 /*
